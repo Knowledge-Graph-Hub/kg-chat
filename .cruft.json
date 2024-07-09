@@ -1,0 +1,24 @@
+{
+  "template": "https://github.com/monarch-initiative/monarch-project-template",
+  "commit": "479ed9dca29e1b6a380857b09103c9bebe34ea29",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "kg-chat",
+      "github_org_name": "hrshdhgd",
+      "__project_slug": "kg_chat",
+      "project_description": "Chatbot that looks up information from provided KGs",
+      "min_python_version": "3.9",
+      "file_name": "main",
+      "greeting_recipient": "World",
+      "full_name": "Harshad Hegde",
+      "email": "hhegde@lbl.gov",
+      "__author": "Harshad Hegde <hhegde@lbl.gov>",
+      "license": "MIT",
+      "github_token_for_doc_deployment": "GH_TOKEN",
+      "github_token_for_pypi_deployment": "PYPI_TOKEN",
+      "_template": "https://github.com/monarch-initiative/monarch-project-template"
+    }
+  },
+  "directory": null
+}
