@@ -33,6 +33,9 @@ def create_edges(tx, edges):
         edges=edges,
     )
 
+def get_column_indexes(header_line, columns_of_interest):
+    headers = header_line.strip().split("\t")
+    return {col: headers.index(col) for col in columns_of_interest}
 
 def import_kg_into_neo4j():
     """Import KG into Neo4j using batching for better performance."""
@@ -48,13 +51,16 @@ def import_kg_into_neo4j():
         # Import nodes in batches
         print("Starting to import nodes...")
         nodes_batch = []
+        columns_of_interest = ["id", "name"]
         with open(NODES_FILE, "r") as nodes_file:
-            next(nodes_file)
+            header_line = nodes_file.readline()
+            column_indexes = get_column_indexes(header_line, columns_of_interest)
             for line in nodes_file:
-                id_category_label = line.strip().split("\t")[:3]
-                if len(id_category_label) == 3:
-                    node_id, _, label = id_category_label
-                    nodes_batch.append({"id": node_id, "label": label})
+                columns = line.strip().split("\t")
+                if len(columns) > column_indexes["name"]+1:
+                    node_id = columns[column_indexes["id"]]
+                    node_label = columns[column_indexes["name"]]
+                    nodes_batch.append({"id": node_id, "label": node_label})
                 if len(nodes_batch) >= NEO4J_BATCH_SIZE:
                     session.write_transaction(create_nodes, nodes_batch)
                     nodes_batch = []
@@ -65,10 +71,15 @@ def import_kg_into_neo4j():
         # Import edges in batches
         print("Starting to import edges...")
         edges_batch = []
+        edge_column_of_interest = ["subject", "predicate", "object"]
         with open(EDGES_FILE, "r") as edges_file:
-            next(edges_file)  # Skip the header line
+            header_line = edges_file.readline()
+            column_indexes = get_column_indexes(header_line, edge_column_of_interest)
             for line in edges_file:
-                source_id, relationship, target_id = line.strip().split("\t")[:3]
+                columns = line.strip().split("\t")
+                source_id = columns[column_indexes["subject"]]
+                relationship = columns[column_indexes["predicate"]]
+                target_id = columns[column_indexes["object"]]
                 edges_batch.append({"source_id": source_id, "target_id": target_id, "relationship": relationship})
 
                 if len(edges_batch) >= NEO4J_BATCH_SIZE * 5:
