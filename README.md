@@ -19,7 +19,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
     cd kg-chat
     poetry install
     ```
-8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with analogous files of choice.
+8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with corresponding files of choice.
 
 
 ### Commands
