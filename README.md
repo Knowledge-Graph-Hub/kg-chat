@@ -11,6 +11,12 @@ Chatbot that looks up information from provided KGX files (nodes and edges TSV f
 
 2. Create a new project by giving it a name of your choice
 3. Create an empty database with a name of your choice and `Start` it.
+    a. Credentials can be:
+    ```
+    username: neo4j
+    password: password
+    ```
+    It can be anything, I just kept the defaults to keep it simple. It is also hardcoded in the code. If you choose different credentials make sure to use it in the code [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
 4. Clone this repository locally
 5. Create a virtual environment of your choice and `pip install poetry` in it.
 6. 
