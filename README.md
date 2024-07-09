@@ -122,7 +122,34 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
         '| biolink:consumes             | 107037    |\n'
         '| biolink:has_phenotype        | 79168     |\n'
         '| biolink:has_chemical_role    | 237       |')
-        Ask me about your data! :
+        Ask me about your data! :    Give me node IDs and labels of any 10 nodes that have the word strep in it
+
+        > Entering new GraphCypherQAChain chain...
+        Generated Cypher:
+        cypher
+        MATCH (n:Node)
+        WHERE n.label CONTAINS 'strep'
+        RETURN n.id, n.label
+        LIMIT 10
+
+        Full Context:
+        [{'n.id': 'NCBITaxon:33035', 'n.label': 'Peptostreptococcus productus'}, {'n.id': 'NCBITaxon:596329', 'n.label': 'Peptostreptococcus anaerobius 653-L'}, {'n.id': 'NCBITaxon:1261', 'n.label': 'Peptostreptococcus anaerobius'}, {'n.id': 'NCBITaxon:596315', 'n.label': 'Peptostreptococcus stomatis DSM 17678'}, {'n.id': 'NCBITaxon:1262', 'n.label': 'Peptostreptococcus sp. 2'}, {'n.id': 'NCBITaxon:1261', 'n.label': 'Peptostreptococcus anaerobius 0009-10 Hillier'}, {'n.id': 'NCBITaxon:1262', 'n.label': 'Peptostreptococcus sp. ACS-065-V-Col13'}, {'n.id': 'NCBITaxon:796937', 'n.label': 'Peptostreptococcaceae bacterium CM2'}, {'n.id': 'NCBITaxon:796937', 'n.label': 'Peptostreptococcaceae bacterium ACC19a'}, {'n.id': 'NCBITaxon:796937', 'n.label': 'Peptostreptococcaceae bacterium CM5'}]
+
+        > Finished chain.
+        ('Here are the node IDs and labels of 10 nodes that have the word "strep" in '
+        'them:\n'
+        '\n'
+        '1. NCBITaxon:33035 - Peptostreptococcus productus\n'
+        '2. NCBITaxon:596329 - Peptostreptococcus anaerobius 653-L\n'
+        '3. NCBITaxon:1261 - Peptostreptococcus anaerobius\n'
+        '4. NCBITaxon:596315 - Peptostreptococcus stomatis DSM 17678\n'
+        '5. NCBITaxon:1262 - Peptostreptococcus sp. 2\n'
+        '6. NCBITaxon:1261 - Peptostreptococcus anaerobius 0009-10 Hillier\n'
+        '7. NCBITaxon:1262 - Peptostreptococcus sp. ACS-065-V-Col13\n'
+        '8. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM2\n'
+        '9. NCBITaxon:796937 - Peptostreptococcaceae bacterium ACC19a\n'
+        '10. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM5')
+        Ask me about your data! : 
 
 
     ```
