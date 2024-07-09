@@ -1,6 +1,6 @@
 # kg-chat
 
-Chatbot that looks up information from provided KGX files (nodes and edges TSV files)
+Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
 
 ## Requirements
 - Neo4j Desktop
@@ -20,16 +20,20 @@ Chatbot that looks up information from provided KGX files (nodes and edges TSV f
     poetry install
     ```
 8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with analogous files of choice.
-9. 
+
+
+### Commands
+
+1. `import-kg`: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.
     ```shell
     kg-chat import-kg
     ```
-    This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.
-10. To test that this worked, run the test query provided:
+    
+2. `test-query`: To test that the above worked, run a built-in test query:
     ```shell
     kg-chat test-query
     ```
-    This should return something like (as per data in the repo):
+    This should return something like (as per KGX data in the repo):
     ```shell
     {'n': {'label': 'Streptomyces thermocarboxydovorans', 'id': 'NCBITaxon:59298'}}
     {'n': {'label': 'Streptomyces thermocarboxydus', 'id': 'NCBITaxon:59299'}}
@@ -43,9 +47,7 @@ Chatbot that looks up information from provided KGX files (nodes and edges TSV f
     {'n': {'label': 'Kitasatospora sampliensis', 'id': 'NCBITaxon:228655'}}
     ```
 
-### Commands
-
-1. `qna`:
+3. `qna`: This command can be used for asking a question about the data and receiving a response.
     ```shell
     kg-chat qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
     ```
@@ -74,7 +76,7 @@ Chatbot that looks up information from provided KGX files (nodes and edges TSV f
     '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
     ```
 
-2. `start-chat`: This starts an interactive chat session where you can ask questions about your KG.
+4. `start-chat`: This starts an interactive chat session where you can ask questions about your KG.
     ```shell
     kg-chat start-chat
     ```
