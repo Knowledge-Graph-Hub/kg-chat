@@ -8,3 +8,5 @@ NODES_FILE = DATA_DIR / "nodes.tsv"
 EDGES_FILE = DATA_DIR / "edges.tsv"
 
 NEO4J_BATCH_SIZE = 2000  # Adjust the batch size as needed
+NEO4J_USERNAME = "neo4j"
+NEO4J_PASSWORD = "password"

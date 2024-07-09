@@ -9,12 +9,11 @@ from langchain_community.graphs import Neo4jGraph
 from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
 
+from kg_chat.constants import NEO4J_PASSWORD, NEO4J_USERNAME
 from kg_chat.utils import import_kg_into_neo4j
 
 # Set environment variables for Neo4j connection
 NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USERNAME = "neo4j"
-NEO4J_PASSWORD = "password"
 
 OPENAI_KEY = getenv("OPENAI_API_KEY")
 
@@ -70,8 +69,8 @@ def chat():
         # Initialize Neo4j graph connection using LangChain's Neo4jGraph
         graph = Neo4jGraph(
             url="bolt://localhost:7687",  # Replace with your Neo4j URI
-            username="neo4j",  # Replace with your Neo4j username
-            password="password",  # Replace with your Neo4j password
+            username=NEO4J_USERNAME,  # Replace with your Neo4j username
+            password=NEO4J_PASSWORD,  # Replace with your Neo4j password
         )
 
         # Initialize LLM
