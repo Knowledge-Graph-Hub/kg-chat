@@ -85,6 +85,6 @@ Chatbot that looks up information from provided KGX files (nodes and edges TSV f
     You have to make sure the question is framed properly. As of now this errors out easily. To quit type `quit` or `exit`.
 
 ---
-## Acknowledgements
+### Acknowledgements
 
 This [cookiecutter](https://cookiecutter.readthedocs.io/en/stable/README.html) project was developed from the [monarch-project-template](https://github.com/monarch-initiative/monarch-project-template) template and will be kept up-to-date using [cruft](https://cruft.github.io/cruft/).
