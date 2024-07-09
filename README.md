@@ -84,7 +84,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
     ```shell
     Ask me about your data! : 
     ```
-    You have to make sure the question is framed properly. As of now this errors out easily. To quit type `quit` or `exit`.
+    To quit type `quit` or `exit`.
 
     Example conversation:
     ```shell
