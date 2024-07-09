@@ -5,7 +5,7 @@ import logging
 import click
 
 from kg_chat import __version__
-from kg_chat.main import demo
+from kg_chat.main import execute_query_using_langchain, load_neo4j, question_and_answer
 
 __all__ = [
     "main",
@@ -36,10 +36,37 @@ def main(verbose: int, quiet: bool):
 
 
 @main.command()
-def run():
+def import_kg():
     """Run the kg-chat's demo command."""
-    demo()
+    load_neo4j()
 
+@main.command()
+def test_query():
+    """Run the kg-chat's chat command."""
+    # Example query to get all nodes
+    query = "MATCH (n) RETURN n LIMIT 10"
+    result = execute_query_using_langchain(query)
+    
+    # Print the results
+    for record in result:
+        print(record)
+
+@main.command()
+def show_schema():
+    """Run the kg-chat's chat command."""
+    # Example query to get all nodes
+    query = "CALL db.schema.visualization()"
+    result = execute_query_using_langchain(query)
+    
+    # Print the results
+    for record in result:
+        print(record)
+
+@main.command()
+@click.argument("query", type=str, required=True)
+def qna(query: str):
+    """Run the kg-chat's chat command."""
+    question_and_answer(query)
 
 if __name__ == "__main__":
     main()
