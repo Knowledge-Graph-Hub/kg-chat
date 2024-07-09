@@ -51,6 +51,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.cli">kg_chat.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.constants">kg_chat.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.main">kg_chat.main module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.chat"><code class="docutils literal notranslate"><span class="pre">chat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">execute_query_using_langchain()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.execute_query_using_neo4j"><code class="docutils literal notranslate"><span class="pre">execute_query_using_neo4j()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.load_neo4j"><code class="docutils literal notranslate"><span class="pre">load_neo4j()</span></code></a></li>
@@ -58,6 +59,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.utils">kg_chat.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.clear_database"><code class="docutils literal notranslate"><span class="pre">clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.create_edges"><code class="docutils literal notranslate"><span class="pre">create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.create_nodes"><code class="docutils literal notranslate"><span class="pre">create_nodes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.import_kg_into_neo4j"><code class="docutils literal notranslate"><span class="pre">import_kg_into_neo4j()</span></code></a></li>
 </ul>
 </li>
@@ -104,9 +108,17 @@
 </section>
 <section id="module-kg_chat.constants">
 <span id="kg-chat-constants-module"></span><h2>kg_chat.constants module<a class="headerlink" href="#module-kg_chat.constants" title="Link to this heading"></a></h2>
+<p>Constants for the Knowledge Graph Chatbot.</p>
 </section>
 <section id="module-kg_chat.main">
 <span id="kg-chat-main-module"></span><h2>kg_chat.main module<a class="headerlink" href="#module-kg_chat.main" title="Link to this heading"></a></h2>
+<p>Main module for the KG Chat application.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.main.chat">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.chat" title="Link to this definition"></a></dt>
+<dd><p>Start an interactive chat session with the KG Chatbot.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.main.execute_query_using_langchain">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">execute_query_using_langchain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.execute_query_using_langchain" title="Link to this definition"></a></dt>
@@ -128,11 +140,31 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.main.question_and_answer">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">question_and_answer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.question_and_answer" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Ask a question to the KG Chatbot and get a response.</p>
+</dd></dl>
 
 </section>
 <section id="module-kg_chat.utils">
 <span id="kg-chat-utils-module"></span><h2>kg_chat.utils module<a class="headerlink" href="#module-kg_chat.utils" title="Link to this heading"></a></h2>
+<p>Utility functions for the KG chatbot.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.clear_database">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">clear_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.clear_database" title="Link to this definition"></a></dt>
+<dd><p>Clear the Neo4j database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.create_edges">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">create_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.create_edges" title="Link to this definition"></a></dt>
+<dd><p>Create relationships between nodes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.create_nodes">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">create_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.create_nodes" title="Link to this definition"></a></dt>
+<dd><p>Create nodes in the Neo4j database.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.import_kg_into_neo4j">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">import_kg_into_neo4j</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.import_kg_into_neo4j" title="Link to this definition"></a></dt>
