@@ -86,6 +86,47 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
     ```
     You have to make sure the question is framed properly. As of now this errors out easily. To quit type `quit` or `exit`.
 
+    Example conversation:
+    ```shell
+        Ask me about your data! : Give me a brief statistic about the table
+
+
+        > Entering new GraphCypherQAChain chain...
+        Generated Cypher:
+        MATCH (n:Node)-[r:RELATIONSHIP]->(m:Node)
+        RETURN COUNT(n) AS nodeCount, COUNT(r) AS relationshipCount
+        Full Context:
+        [{'nodeCount': 598598, 'relationshipCount': 598598}]
+
+        > Finished chain.
+        'The table contains 598,598 nodes and 598,598 relationships.'
+        Ask me about your data! : give me a table of the 5 most frequent relationships
+
+
+        > Entering new GraphCypherQAChain chain...
+        Generated Cypher:
+        cypher
+        MATCH ()-[r:RELATIONSHIP]->()
+        RETURN r.type AS RelationshipType, COUNT(r) AS Frequency
+        ORDER BY Frequency DESC
+        LIMIT 5
+
+        Full Context:
+        [{'RelationshipType': 'biolink:capable_of', 'Frequency': 225052}, {'RelationshipType': 'biolink:location_of', 'Frequency': 187104}, {'RelationshipType': 'biolink:consumes', 'Frequency': 107037}, {'RelationshipType': 'biolink:has_phenotype', 'Frequency': 79168}, {'RelationshipType': 'biolink:has_chemical_role', 'Frequency': 237}]
+
+        > Finished chain.
+        ('| Relationship Type            | Frequency |\n'
+        '|------------------------------|-----------|\n'
+        '| biolink:capable_of           | 225052    |\n'
+        '| biolink:location_of          | 187104    |\n'
+        '| biolink:consumes             | 107037    |\n'
+        '| biolink:has_phenotype        | 79168     |\n'
+        '| biolink:has_chemical_role    | 237       |')
+        Ask me about your data! :
+
+
+    ```
+
 ---
 ### Acknowledgements
 
