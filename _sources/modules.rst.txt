@@ -1,0 +1,7 @@
+kg_chat
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   kg_chat

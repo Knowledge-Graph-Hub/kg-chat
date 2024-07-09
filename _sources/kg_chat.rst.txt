@@ -1,0 +1,45 @@
+kg\_chat package
+================
+
+Submodules
+----------
+
+kg\_chat.cli module
+-------------------
+
+.. automodule:: kg_chat.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+kg\_chat.constants module
+-------------------------
+
+.. automodule:: kg_chat.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+kg\_chat.main module
+--------------------
+
+.. automodule:: kg_chat.main
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+kg\_chat.utils module
+---------------------
+
+.. automodule:: kg_chat.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: kg_chat
+   :members:
+   :undoc-members:
+   :show-inheritance:
