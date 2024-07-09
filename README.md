@@ -1,6 +1,6 @@
 # kg-chat
 
-Chatbot that looks up information from provided KGs
+Chatbot that looks up information from provided KGX files (nodes and edges TSV files)
 
 ## Requirements
 - Neo4j Desktop
@@ -41,7 +41,10 @@ Chatbot that looks up information from provided KGs
     {'n': {'label': 'Kitasatospora putterlickiae', 'id': 'NCBITaxon:221725'}}
     {'n': {'label': 'Kitasatospora sampliensis', 'id': 'NCBITaxon:228655'}}
     ```
-11. Now run a prompt using the `qna` command for e.g.
+
+### Commands
+
+1. `qna`:
     ```shell
     kg-chat qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
     ```
@@ -69,6 +72,17 @@ Chatbot that looks up information from provided KGs
     '| ruegeria_mobilis             | NCBITaxon:379347| 47        |\n'
     '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
     ```
+
+2. `start-chat`: This starts an interactive chat session where you can ask questions about your KG.
+    ```shell
+    kg-chat start-chat
+    ```
+    Gives you the following:
+    ```shell
+    Ask me about your data! : 
+    ```
+    You have to make sure the question is framed properly. As of now this errors out easily. To quit type `quit` or `exit`.
+
 ---
 ## Acknowledgements
 

@@ -44,18 +44,20 @@ line-length = 120
 target-version = ["py38", "py39", "py310"]
 
 [tool.ruff]
-extend-ignore = [
+lint.extend-ignore = [
     "D211",  # `no-blank-line-before-class`
     "D212",  # `multi-line-summary-first-line`
     "D203",  # `blank-line-before-docstring`
+    "S105",  # Possible hardcoded password assigned to: "NEO4J_PASSWORD"
+    "S106",  # Possible hardcoded password assigned to argument: "password"
     ]
 line-length = 120
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["ALL"]
+lint.fixable = ["ALL"]
 
 # Select or ignore from https://beta.ruff.rs/docs/rules/
-select = [
+lint.select = [
     "B",  # bugbear
     "D",  # pydocstyle
     "E",  # pycodestyle errors
@@ -65,10 +67,10 @@ select = [
     "W",  # Warning
 ]
 
-unfixable = []
-target-version = "py310"
+lint.unfixable = []
+target-version = "py39"
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 # Unlike Flake8, default to a complexity level of 10.
 max-complexity = 10
 

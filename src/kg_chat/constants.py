@@ -1,5 +1,6 @@
-from pathlib import Path
+"""Constants for the Knowledge Graph Chatbot."""
 
+from pathlib import Path
 
 PWD = Path(__file__).parent
 DATA_DIR = PWD / "data"
