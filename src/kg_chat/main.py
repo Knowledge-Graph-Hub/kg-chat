@@ -9,7 +9,7 @@ from langchain_community.graphs import Neo4jGraph
 from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
 
-from kg_chat.constants import NEO4J_PASSWORD, NEO4J_USERNAME
+from kg_chat.constants import MODEL, NEO4J_PASSWORD, NEO4J_USERNAME
 from kg_chat.utils import import_kg_into_neo4j
 
 # Set environment variables for Neo4j connection
@@ -56,7 +56,7 @@ def execute_query_using_langchain(query):
 def question_and_answer(query: str):
     """Ask a question to the KG Chatbot and get a response."""
     graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model=MODEL, temperature=0)
     chain = GraphCypherQAChain.from_llm(graph=graph, llm=llm, verbose=True)
     response = chain.invoke({"query": query})
     pprint(response["result"])
@@ -74,7 +74,7 @@ def chat():
         )
 
         # Initialize LLM
-        llm = ChatOpenAI(model="gpt-4o", temperature=0)
+        llm = ChatOpenAI(model=MODEL, temperature=0)
 
         # Initialize chain with memory
         chain = GraphCypherQAChain.from_llm(graph=graph, llm=llm, verbose=True, memory=memory)
