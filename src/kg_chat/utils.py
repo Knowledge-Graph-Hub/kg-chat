@@ -33,9 +33,12 @@ def create_edges(tx, edges):
         edges=edges,
     )
 
+
 def get_column_indexes(header_line, columns_of_interest):
+    """Get the indexes of the columns of interest."""
     headers = header_line.strip().split("\t")
     return {col: headers.index(col) for col in columns_of_interest}
+
 
 def import_kg_into_neo4j():
     """Import KG into Neo4j using batching for better performance."""
@@ -57,7 +60,7 @@ def import_kg_into_neo4j():
             column_indexes = get_column_indexes(header_line, columns_of_interest)
             for line in nodes_file:
                 columns = line.strip().split("\t")
-                if len(columns) > column_indexes["name"]+1:
+                if len(columns) > column_indexes["name"] + 1:
                     node_id = columns[column_indexes["id"]]
                     node_label = columns[column_indexes["name"]]
                     nodes_batch.append({"id": node_id, "label": node_label})
