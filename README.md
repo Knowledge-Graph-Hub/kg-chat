@@ -2,6 +2,11 @@
 
 Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
 
+
+With GitHub, I usually insert a blockquote.
+
+> **_NOTE:_**: This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
+
 ## Requirements
 - Neo4j Desktop
 
