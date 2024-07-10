@@ -109,7 +109,7 @@ def extract_nodes_edges(structured_result):
     return nodes, edges
 
 
-def visualize_kg(nodes, edges):
+def visualize_kg(nodes, edges, app: bool = False):
     """Visualize the knowledge graph using pyvis."""
     # Create a PyVis network
     net = Network(notebook=False, cdn_resources="in_line")
@@ -148,3 +148,31 @@ def visualize_kg(nodes, edges):
 
     # Open the generated HTML file in the default web browser
     webbrowser.open(html_file)
+    if app:
+        # Generate the HTML representation
+        return net.generate_html()
+
+
+def structure_query(query: str):
+    """Structure the query to request structured results."""
+    if "show me" in query.lower():
+        # Modify the query to request structured results
+        structured_query = f"""
+        {query}
+        Please provide the result in JSON format with nodes and edges.
+        Example: {{
+            "nodes": [
+                {{"label": "A", "id": "1"}},
+                {{"label": "B", "id": "2"}},
+                {{"label": "C", "id": "3"}}
+            ],
+            "edges": [
+                {{"source": {{"label": "A", "id": "1"}},
+                "target": {{"label": "B", "id": "2"}},
+                "relationship": "biolink:related_to"}}
+            ]
+        }}
+        """
+    else:
+        structured_query = query
+    return structured_query

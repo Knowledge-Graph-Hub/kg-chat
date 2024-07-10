@@ -5,7 +5,7 @@ import logging
 import click
 
 from kg_chat import __version__
-from kg_chat.main import chat, execute_query_using_langchain, load_neo4j, question_and_answer
+from kg_chat.main import chat, execute_query_using_langchain, get_human_response, load_neo4j
 
 __all__ = [
     "main",
@@ -69,13 +69,22 @@ def show_schema():
 @click.argument("query", type=str, required=True)
 def qna(query: str):
     """Run the kg-chat's chat command."""
-    question_and_answer(query)
+    get_human_response(query)
 
 
 @main.command()
 def start_chat():
     """Run the kg-chat's chat command."""
     chat()
+
+
+@main.command()
+@click.option("--debug", is_flag=True, help="Run the server in debug mode.")
+def run_server(debug: bool = True):
+    """Run the kg-chat's chat command."""
+    from kg_chat.app import app
+
+    app.run_server(debug=debug)
 
 
 if __name__ == "__main__":

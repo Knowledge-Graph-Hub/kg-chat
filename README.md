@@ -235,6 +235,10 @@ With GitHub, I usually insert a blockquote.
 
     ![Knowledge Graph](assets/kg_viz.png)
 
+5. `run-server`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `start-chat` command.
+
+    ### Visualization
+    ![app](assets/kg_app.png)
 ---
 ### Acknowledgements
 
