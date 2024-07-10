@@ -6,7 +6,6 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 
-from kg_chat.cli import run_server
 from kg_chat.main import get_human_response, get_structured_response
 from kg_chat.utils import extract_nodes_edges, visualize_kg
 
@@ -104,8 +103,6 @@ def update_output(submit_n_clicks, reset_n_clicks, value, history):
         return "", "", [], ""
 
     return "", "", history, ""
-
-
 
 
 # # Run the app
