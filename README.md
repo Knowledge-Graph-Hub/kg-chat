@@ -164,103 +164,70 @@ With GitHub, I usually insert a blockquote.
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    Ask me about your data! : show me the node NCBITaxon:100 and all its edges
+    kg-chat $ kg-chat start-chat
+    Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
 
 
     > Entering new GraphCypherQAChain chain...
     Generated Cypher:
     cypher
-    MATCH (n:Node {id: "NCBITaxon:100"})-[r:RELATIONSHIP]->(m:Node)
+    MATCH (n:Node)
+    WHERE n.id STARTS WITH 'NCBITaxon:'
+    WITH n, size((n)-[:RELATIONSHIP]->()) AS outDegree, size((n)<-[:RELATIONSHIP]-()) AS inDegree
+    WHERE (outDegree + inDegree) >= 3 AND (outDegree + inDegree) < 10
+    WITH n LIMIT 1
+    MATCH (n)-[r:RELATIONSHIP]-(m:Node)
     RETURN {
-        nodes: collect(distinct {label: n.label, id: n.id}) + collect(distinct {label: m.label, id: m.id}),
+        nodes: collect({label: n.label, id: n.id}) + collect({label: m.label, id: m.id}),
         edges: collect({source: {label: n.label, id: n.id}, target: {label: m.label, id: m.id}, relationship: r.type})
     } AS result
 
     Full Context:
-    [{'result': {'nodes': [{'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, {'label': 'GC content > 66.3%', 'id': 'gc:high'}, {'label': 'aerobic_chemo_heterotrophy', 'id': 'pathways:aerobic_chemo_heterotrophy'}, {'label': 'thiosulfate_oxidation_dark', 'id': 'pathways:thiosulfate_oxidation_dark'}, {'label': 'hydrogen_oxidation_dark', 'id': 'pathways:hydrogen_oxidation_dark'}, {'label': 'R2A AGAR', 'id': 'medium:J346'}, {'label': 'ANCYLOBACTER-SPIROSOMA MEDIUM', 'id': 'medium:J349'}, {'label': '', 'id': 'isolation_source:Lake-large'}, {'label': '', 'id': 'isolation_source:River-Creek'}, {'label': 'mesophilic', 'id': 'temperature:mesophilic'}, {'label': 'ANCYLOBACTER - SPIROSOMA MEDIUM (DSMZ Medium 7)', 'id': 'medium:7'}, {'label': 'MINERAL MEDIUM FOR CHEMOLITHOTROPHIC GROWTH (H-3) (DSMZ Medium 81)', 'id': 'medium:81'}, {'label': 'HETEROTROPHIC MEDIUM H3P (DSMZ Medium 428)', 'id': 'medium:428'}, {'label': '', 'id': 'isolation_source:Pond-small'}, {'label': '', 'id': 'isolation_source:Wastewater'}, {'label': '', 'id': 'isolation_source:Plant-Factory'}, {'label': 'Ancylobacter', 'id': 'NCBITaxon:99'}], 'edges': [{'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:has_phenotype', 'target': {'label': 'GC content > 66.3%', 'id': 'gc:high'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:capable_of', 'target': {'label': 'aerobic_chemo_heterotrophy', 'id': 'pathways:aerobic_chemo_heterotrophy'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:capable_of', 'target': {'label': 'thiosulfate_oxidation_dark', 'id': 'pathways:thiosulfate_oxidation_dark'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:capable_of', 'target': {'label': 'hydrogen_oxidation_dark', 'id': 'pathways:hydrogen_oxidation_dark'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:occurs_in', 'target': {'label': 'R2A AGAR', 'id': 'medium:J346'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:occurs_in', 'target': {'label': 'ANCYLOBACTER-SPIROSOMA MEDIUM', 'id': 'medium:J349'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:location_of', 'target': {'label': '', 'id': 'isolation_source:Lake-large'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:location_of', 'target': {'label': '', 'id': 'isolation_source:River-Creek'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:has_phenotype', 'target': {'label': 'mesophilic', 'id': 'temperature:mesophilic'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:occurs_in', 'target': {'label': 'ANCYLOBACTER - SPIROSOMA MEDIUM (DSMZ Medium 7)', 'id': 'medium:7'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:occurs_in', 'target': {'label': 'MINERAL MEDIUM FOR CHEMOLITHOTROPHIC GROWTH (H-3) (DSMZ Medium 81)', 'id': 'medium:81'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:occurs_in', 'target': {'label': 'HETEROTROPHIC MEDIUM H3P (DSMZ Medium 428)', 'id': 'medium:428'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:location_of', 'target': {'label': '', 'id': 'isolation_source:Pond-small'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:location_of', 'target': {'label': '', 'id': 'isolation_source:Wastewater'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:location_of', 'target': {'label': '', 'id': 'isolation_source:Plant-Factory'}}, {'source': {'label': 'Ancylobacter aquaticus', 'id': 'NCBITaxon:100'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Ancylobacter', 'id': 'NCBITaxon:99'}}]}}]
+    [{'result': {'nodes': [{'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium vermiforme', 'id': 'NCBITaxon:714895'}, {'label': 'Hysterium barrianum', 'id': 'NCBITaxon:707625'}, {'label': 'Hysterium angustatum', 'id': 'NCBITaxon:574775'}, {'label': 'Hysterium hyalinum', 'id': 'NCBITaxon:574776'}, {'label': 'unclassified Hysterium', 'id': 'NCBITaxon:2649321'}, {'label': 'Hysterium rhizophorae', 'id': 'NCBITaxon:2066082'}, {'label': 'Hysterium pulicare', 'id': 'NCBITaxon:100027'}, {'label': 'Hysteriaceae', 'id': 'NCBITaxon:100025'}], 'edges': [{'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium vermiforme', 'id': 'NCBITaxon:714895'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium barrianum', 'id': 'NCBITaxon:707625'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium angustatum', 'id': 'NCBITaxon:574775'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium hyalinum', 'id': 'NCBITaxon:574776'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'unclassified Hysterium', 'id': 'NCBITaxon:2649321'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium rhizophorae', 'id': 'NCBITaxon:2066082'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium pulicare', 'id': 'NCBITaxon:100027'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysteriaceae', 'id': 'NCBITaxon:100025'}}]}}]
 
     > Finished chain.
-    ('{\n'
+    ('```json\n'
+    '{\n'
     '    "nodes": [\n'
-    '        {"label": "Ancylobacter aquaticus", "id": "NCBITaxon:100"},\n'
-    '        {"label": "GC content > 66.3%", "id": "gc:high"},\n'
-    '        {"label": "aerobic_chemo_heterotrophy", "id": '
-    '"pathways:aerobic_chemo_heterotrophy"},\n'
-    '        {"label": "thiosulfate_oxidation_dark", "id": '
-    '"pathways:thiosulfate_oxidation_dark"},\n'
-    '        {"label": "hydrogen_oxidation_dark", "id": '
-    '"pathways:hydrogen_oxidation_dark"},\n'
-    '        {"label": "R2A AGAR", "id": "medium:J346"},\n'
-    '        {"label": "ANCYLOBACTER-SPIROSOMA MEDIUM", "id": "medium:J349"},\n'
-    '        {"label": "", "id": "isolation_source:Lake-large"},\n'
-    '        {"label": "", "id": "isolation_source:River-Creek"},\n'
-    '        {"label": "mesophilic", "id": "temperature:mesophilic"},\n'
-    '        {"label": "ANCYLOBACTER - SPIROSOMA MEDIUM (DSMZ Medium 7)", "id": '
-    '"medium:7"},\n'
-    '        {"label": "MINERAL MEDIUM FOR CHEMOLITHOTROPHIC GROWTH (H-3) (DSMZ '
-    'Medium 81)", "id": "medium:81"},\n'
-    '        {"label": "HETEROTROPHIC MEDIUM H3P (DSMZ Medium 428)", "id": '
-    '"medium:428"},\n'
-    '        {"label": "", "id": "isolation_source:Pond-small"},\n'
-    '        {"label": "", "id": "isolation_source:Wastewater"},\n'
-    '        {"label": "", "id": "isolation_source:Plant-Factory"},\n'
-    '        {"label": "Ancylobacter", "id": "NCBITaxon:99"}\n'
+    '        {"label": "Hysterium", "id": "NCBITaxon:100026"},\n'
+    '        {"label": "Hysterium vermiforme", "id": "NCBITaxon:714895"},\n'
+    '        {"label": "Hysterium barrianum", "id": "NCBITaxon:707625"},\n'
+    '        {"label": "Hysterium angustatum", "id": "NCBITaxon:574775"},\n'
+    '        {"label": "Hysterium hyalinum", "id": "NCBITaxon:574776"},\n'
+    '        {"label": "unclassified Hysterium", "id": "NCBITaxon:2649321"},\n'
+    '        {"label": "Hysterium rhizophorae", "id": "NCBITaxon:2066082"},\n'
+    '        {"label": "Hysterium pulicare", "id": "NCBITaxon:100027"},\n'
+    '        {"label": "Hysteriaceae", "id": "NCBITaxon:100025"}\n'
     '    ],\n'
     '    "edges": [\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "GC content > 66.3%", "id": '
-    '"gc:high"}, "relationship": "biolink:has_phenotype"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "aerobic_chemo_heterotrophy", "id": '
-    '"pathways:aerobic_chemo_heterotrophy"}, "relationship": '
-    '"biolink:capable_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "thiosulfate_oxidation_dark", "id": '
-    '"pathways:thiosulfate_oxidation_dark"}, "relationship": '
-    '"biolink:capable_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "hydrogen_oxidation_dark", "id": '
-    '"pathways:hydrogen_oxidation_dark"}, "relationship": "biolink:capable_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "R2A AGAR", "id": "medium:J346"}, '
-    '"relationship": "biolink:occurs_in"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "ANCYLOBACTER-SPIROSOMA MEDIUM", "id": '
-    '"medium:J349"}, "relationship": "biolink:occurs_in"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "", "id": '
-    '"isolation_source:Lake-large"}, "relationship": "biolink:location_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "", "id": '
-    '"isolation_source:River-Creek"}, "relationship": "biolink:location_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "mesophilic", "id": '
-    '"temperature:mesophilic"}, "relationship": "biolink:has_phenotype"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "ANCYLOBACTER - SPIROSOMA MEDIUM (DSMZ '
-    'Medium 7)", "id": "medium:7"}, "relationship": "biolink:occurs_in"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "MINERAL MEDIUM FOR CHEMOLITHOTROPHIC '
-    'GROWTH (H-3) (DSMZ Medium 81)", "id": "medium:81"}, "relationship": '
-    '"biolink:occurs_in"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "HETEROTROPHIC MEDIUM H3P (DSMZ Medium '
-    '428)", "id": "medium:428"}, "relationship": "biolink:occurs_in"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "", "id": '
-    '"isolation_source:Pond-small"}, "relationship": "biolink:location_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "", "id": '
-    '"isolation_source:Wastewater"}, "relationship": "biolink:location_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "", "id": '
-    '"isolation_source:Plant-Factory"}, "relationship": "biolink:location_of"},\n'
-    '        {"source": {"label": "Ancylobacter aquaticus", "id": '
-    '"NCBITaxon:100"}, "target": {"label": "Ancylobacter", "id": "NCBITaxon:99"}, '
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysterium vermiforme", "id": "NCBITaxon:714895"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysterium barrianum", "id": "NCBITaxon:707625"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysterium angustatum", "id": "NCBITaxon:574775"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysterium hyalinum", "id": "NCBITaxon:574776"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "unclassified Hysterium", "id": "NCBITaxon:2649321"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysterium rhizophorae", "id": "NCBITaxon:2066082"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysterium pulicare", "id": "NCBITaxon:100027"}, '
+    '"relationship": "biolink:subclass_of"},\n'
+    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
+    '"target": {"label": "Hysteriaceae", "id": "NCBITaxon:100025"}, '
     '"relationship": "biolink:subclass_of"}\n'
     '    ]\n'
-    '}')
-    ../graph_output/knowledge_graph.html
+    '}\n'
+    '```')
+    ../kg-chat/src/kg_chat/graph_output/knowledge_graph.html
     Ask me about your data! : 
     ```
 

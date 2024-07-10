@@ -121,6 +121,10 @@ def visualize_kg(nodes, edges):
         net.add_node(node["id"], label=node["label"])
 
     for edge in edges:
+        if edge["source"]["id"] not in [node["id"] for node in nodes]:
+            net.add_node(edge["source"]["id"], label=edge["source"]["label"])
+        if edge["target"]["id"] not in [node["id"] for node in nodes]:
+            net.add_node(edge["target"]["id"], label=edge["target"]["label"])
         net.add_edge(edge["source"]["id"], edge["target"]["id"], title=edge.get("relationship"))
 
     # Generate and display the network
