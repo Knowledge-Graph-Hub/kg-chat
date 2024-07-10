@@ -80,7 +80,7 @@ def start_chat():
 
 @main.command()
 @click.option("--debug", is_flag=True, help="Run the server in debug mode.")
-def run_server(debug: bool = True):
+def run_server(debug: bool = False):
     """Run the kg-chat's chat command."""
     from kg_chat.app import app
 

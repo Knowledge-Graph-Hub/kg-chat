@@ -40,10 +40,12 @@ app.layout = html.Div(
                 "border": "1px solid #ccc",
                 "padding": "10px",
                 "background-color": "#f9f9f9",
+                "overflow-y": "auto",
             },
             children=[
                 dcc.Input(id="user-input", type="text", placeholder="Enter your prompt..."),
                 html.Button("Submit", id="submit-button"),
+                html.Button("Reset", id="reset-button", style={"margin-left": "10px"}),
                 html.Div(id="chat-output"),
             ],
         ),
@@ -59,20 +61,26 @@ app.layout = html.Div(
         Output("conversation-history", "data"),
         Output("user-input", "value"),
     ],
-    [Input("submit-button", "n_clicks")],
+    [Input("submit-button", "n_clicks"), Input("reset-button", "n_clicks")],
     [State("user-input", "value"), State("conversation-history", "data")],
 )
-def update_output(n_clicks, value, history):
+def update_output(submit_n_clicks, reset_n_clicks, value, history):
     """Update the chat output and graph visualization based on user input."""
-    if n_clicks:
+    ctx = dash.callback_context
+
+    if not ctx.triggered:
+        return "", "", history, ""
+
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+    if button_id == "submit-button" and submit_n_clicks:
         if history is None:
             history = []
 
         try:
-
             if "show me" in value.lower():
                 structured_response = get_structured_response(value)
-                history.append(f"User: {value}\n")
+                history.append(f"\n\nUser: {value}\n")
                 cleaned_result = structured_response.replace("```", "").replace("json\n", "").replace("\n", "")
                 structured_result = json.loads(cleaned_result)
                 nodes, edges = extract_nodes_edges(structured_result)
@@ -81,20 +89,25 @@ def update_output(n_clicks, value, history):
                     return "\n".join(history), html_str, history, ""
             else:
                 human_response = get_human_response(value)
-                history.append(f"User: {value}\n\nBot: {human_response}\n")
+                history.append(f"\n\nUser: {value}\n\nBot: {human_response}\n")
 
             return "\n".join(history), "", history, ""
 
         except json.JSONDecodeError:
-            history.append(f"User: {value}\nBot: Sorry, I could not understand the response format.")
+            history.append(f"\n\nUser: {value}\nBot: Sorry, I could not understand the response format.")
             return "\n".join(history), "", history, ""
         except Exception as e:
-            history.append(f"User: {value}\nBot: An error occurred: {e}")
+            history.append(f"\n\nUser: {value}\nBot: An error occurred: {e}")
             return "\n".join(history), "", history, ""
+
+    elif button_id == "reset-button" and reset_n_clicks:
+        return "", "", [], ""
 
     return "", "", history, ""
 
 
-# Run the app
-if __name__ == "__main__":
-    run_server()
+
+
+# # Run the app
+# if __name__ == "__main__":
+#     app.run_server()
