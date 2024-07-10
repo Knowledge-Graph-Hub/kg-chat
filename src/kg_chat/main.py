@@ -1,5 +1,6 @@
 """Main module for the KG Chat application."""
 
+import json
 from os import getenv
 from pprint import pprint
 
@@ -10,7 +11,7 @@ from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
 
 from kg_chat.constants import MODEL, NEO4J_PASSWORD, NEO4J_USERNAME
-from kg_chat.utils import import_kg_into_neo4j
+from kg_chat.utils import extract_nodes_edges, import_kg_into_neo4j, visualize_kg
 
 # Set environment variables for Neo4j connection
 NEO4J_URI = "bolt://localhost:7687"
@@ -84,9 +85,29 @@ def chat():
             if query.lower() in ["exit", "quit"]:
                 print("Exiting the interactive session.")
                 break
+            
+            if "show me" in query.lower():
+                # Modify the query to request structured results
+                structured_query = f"""
+                {query}
+                Please provide the result in JSON format with nodes and edges.
+                Example: {{
+                    "nodes": [
+                        {{"label": "A", "id": "1"}},
+                        {{"label": "B", "id": "2"}},
+                        {{"label": "C", "id": "3"}}
+                    ],
+                    "edges": [
+                        {{"source": {{"label": "A", "id": "1"}}, "target": {{"label": "B", "id": "2"}}, "relationship": "biolink:related_to"}}
+                    ]
+                }}
+                """
+                
+            else:
+                structured_query = query
 
-            # Invoke the chain with the query
-            response = chain.invoke({"query": query})
+            # Invoke the chain with the modified query
+            response = chain.invoke({"query": structured_query})
 
             # Store the query and response in memory
             memory.chat_memory.add_user_message(query)
@@ -94,6 +115,18 @@ def chat():
 
             # Print the result
             pprint(response["result"])
+
+            if "show me" in query.lower():
+                # Parse the string response into a dictionary
+                cleaned_result = response["result"].strip('```json\n').strip('```').replace('\n', "")
+
+                # Parse the cleaned string response into a dictionary
+                structured_result = json.loads(cleaned_result)
+
+                # Visualize the KG
+                
+                nodes, edges = extract_nodes_edges(structured_result)
+                visualize_kg(nodes, edges)
 
     except Exception as e:
         print(f"An error occurred: {e}")

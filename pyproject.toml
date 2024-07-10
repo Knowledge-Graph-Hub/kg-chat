@@ -15,6 +15,7 @@ langchain = "^0.2.7"
 langchain-community = "^0.2.7"
 langchain-openai = "^0.1.14"
 neo4j = "^5.22.0"
+pyvis = "^0.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = {version = ">=7.1.2"}
