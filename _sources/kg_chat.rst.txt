@@ -4,6 +4,14 @@ kg\_chat package
 Submodules
 ----------
 
+kg\_chat.app module
+-------------------
+
+.. automodule:: kg_chat.app
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 kg\_chat.cli module
 -------------------
 
