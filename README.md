@@ -16,7 +16,7 @@ With GitHub, I usually insert a blockquote.
 
 2. Create a new project by giving it a name of your choice
 3. Create an empty database with a name of your choice and `Start` it.
-    - Credentials can be as declared [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
+  - Credentials can be as declared [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
 4. Install the APOC plugin in Neo4j Desktop. It is listed under the `Plugins` tab which appears when you single-click the database.
 4. Clone this repository locally
 5. Create a virtual environment of your choice and `pip install poetry` in it.
