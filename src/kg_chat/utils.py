@@ -113,19 +113,34 @@ def visualize_kg(nodes, edges):
     """Visualize the knowledge graph using pyvis."""
     # Create a PyVis network
     net = Network(notebook=False, cdn_resources="in_line")
+
     if not nodes:
         print("No nodes to display.")
         return
 
+    # Track added nodes to avoid duplicates
+    added_nodes = set()
+
+    # Add nodes to the network
     for node in nodes:
         net.add_node(node["id"], label=node["label"])
+        added_nodes.add(node["id"])
 
+    # Add edges to the network
     for edge in edges:
-        if edge["source"]["id"] not in [node["id"] for node in nodes]:
-            net.add_node(edge["source"]["id"], label=edge["source"]["label"])
-        if edge["target"]["id"] not in [node["id"] for node in nodes]:
-            net.add_node(edge["target"]["id"], label=edge["target"]["label"])
-        net.add_edge(edge["source"]["id"], edge["target"]["id"], title=edge.get("relationship"))
+        source_id = edge["source"]["id"]
+        target_id = edge["target"]["id"]
+
+        # Ensure both source and target nodes are added
+        if source_id not in added_nodes:
+            net.add_node(source_id, label=edge["source"].get("label", ""))
+            added_nodes.add(source_id)
+        if target_id not in added_nodes:
+            net.add_node(target_id, label=edge["target"].get("label", ""))
+            added_nodes.add(target_id)
+
+        # Add edge with title (relationship)
+        net.add_edge(source_id, target_id, title=edge.get("relationship"))
 
     # Generate and display the network
     html_file = str(GRAPH_OUTPUT_DIR / "knowledge_graph.html")
@@ -133,7 +148,3 @@ def visualize_kg(nodes, edges):
 
     # Open the generated HTML file in the default web browser
     webbrowser.open(html_file)
-
-
-# Call the function to import the data
-# import_kg_into_neo4j()
