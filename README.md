@@ -25,7 +25,7 @@ With GitHub, I usually insert a blockquote.
     cd kg-chat
     poetry install
     ```
-8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with corresponding files of choice.
+8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with corresponding files of choice that needs to be queried against.
 
 
 ### Commands
