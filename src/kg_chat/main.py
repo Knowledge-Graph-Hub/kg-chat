@@ -85,7 +85,7 @@ def chat():
             if query.lower() in ["exit", "quit"]:
                 print("Exiting the interactive session.")
                 break
-            
+
             if "show me" in query.lower():
                 # Modify the query to request structured results
                 structured_query = f"""
@@ -98,11 +98,13 @@ def chat():
                         {{"label": "C", "id": "3"}}
                     ],
                     "edges": [
-                        {{"source": {{"label": "A", "id": "1"}}, "target": {{"label": "B", "id": "2"}}, "relationship": "biolink:related_to"}}
+                        {{"source": {{"label": "A", "id": "1"}},
+                        "target": {{"label": "B", "id": "2"}},
+                        "relationship": "biolink:related_to"}}
                     ]
                 }}
                 """
-                
+
             else:
                 structured_query = query
 
@@ -118,13 +120,13 @@ def chat():
 
             if "show me" in query.lower():
                 # Parse the string response into a dictionary
-                cleaned_result = response["result"].strip('```json\n').strip('```').replace('\n', "")
+                cleaned_result = response["result"].replace("```", "").replace("json\n", "").replace("\n", "")
 
                 # Parse the cleaned string response into a dictionary
                 structured_result = json.loads(cleaned_result)
 
                 # Visualize the KG
-                
+
                 nodes, edges = extract_nodes_edges(structured_result)
                 visualize_kg(nodes, edges)
 

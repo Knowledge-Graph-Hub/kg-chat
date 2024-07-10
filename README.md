@@ -164,7 +164,7 @@ With GitHub, I usually insert a blockquote.
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    Ask me about your data! : show me the node NCBITaxon:100 and all its edges                         
+    Ask me about your data! : show me the node NCBITaxon:100 and all its edges
 
 
     > Entering new GraphCypherQAChain chain...

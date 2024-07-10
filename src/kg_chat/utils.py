@@ -1,10 +1,10 @@
 """Utility functions for the KG chatbot."""
 
-import re
 import webbrowser
+
 from neo4j import GraphDatabase
 from pyvis.network import Network
-import networkx as nx
+
 from kg_chat.constants import EDGES_FILE, GRAPH_OUTPUT_DIR, NEO4J_BATCH_SIZE, NODES_FILE
 
 
@@ -103,24 +103,25 @@ def import_kg_into_neo4j():
 
 def extract_nodes_edges(structured_result):
     """Extract nodes and edges from the structured result."""
-    nodes = structured_result.get('nodes', [])
-    edges = structured_result.get('edges', [])
+    nodes = structured_result.get("nodes", [])
+    edges = structured_result.get("edges", [])
 
     return nodes, edges
+
 
 def visualize_kg(nodes, edges):
     """Visualize the knowledge graph using pyvis."""
     # Create a PyVis network
-    net = Network(notebook=False, cdn_resources='in_line')
+    net = Network(notebook=False, cdn_resources="in_line")
     if not nodes:
         print("No nodes to display.")
         return
 
     for node in nodes:
-        net.add_node(node['id'], label=node['label'])
+        net.add_node(node["id"], label=node["label"])
 
     for edge in edges:
-        net.add_edge(edge['source']['id'], edge['target']['id'], title=edge.get('relationship') or edge.get('type') or None)
+        net.add_edge(edge["source"]["id"], edge["target"]["id"], title=edge.get("relationship"))
 
     # Generate and display the network
     html_file = str(GRAPH_OUTPUT_DIR / "knowledge_graph.html")
