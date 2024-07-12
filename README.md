@@ -19,6 +19,13 @@ With GitHub, I usually insert a blockquote.
     - Credentials can be as declared [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
 4. Install the APOC plugin in Neo4j Desktop. It is listed under the `Plugins` tab which appears when you single-click the database.
 5. Click on `Settings` which is visible when you click on the 3 dots that appears to the right of the db on single-clicking as well. It should match []`neo4j_db_settings.conf`](https://github.com/hrshdhgd/kg-chat/blob/main/neo4j_db_settings.conf)
+ - The main edits you'll need to do are these 3 lines:
+    ```conf
+    dbms.memory.heap.initial_size=4G
+    dbms.memory.heap.max_size=16G
+    dbms.security.procedures.allowlist=apoc.coll.*,apoc.load.*,gds.*,apoc.meta.data
+    ```
+    Update the memory heaps as per your preference.
 4. Clone this repository locally
 5. Create a virtual environment of your choice and `pip install poetry` in it.
 6. 
@@ -83,9 +90,9 @@ With GitHub, I usually insert a blockquote.
     '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
     ```
 
-4. `start-chat`: This starts an interactive chat session where you can ask questions about your KG.
+4. `run-chat`: This starts an interactive chat session where you can ask questions about your KG.
     ```shell
-    kg-chat start-chat
+    kg-chat run-chat
     ```
     Gives you the following:
     ```shell
@@ -164,7 +171,7 @@ With GitHub, I usually insert a blockquote.
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    kg-chat $ kg-chat start-chat
+    kg-chat $ kg-chat run-chat
     Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
 
 
@@ -233,12 +240,12 @@ With GitHub, I usually insert a blockquote.
 
     This results in the formation of the `knowledge_graph.html` file.
 
-    ![Knowledge Graph](assets/kg_viz.png)
+    ![Knowledge Graph](src/kg_chat/assets/kg_viz.png)
 
-5. `run-server`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `start-chat` command.
+5. `run-server`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `run-chat` command.
 
     ### Visualization
-    ![app](assets/kg_app.png)
+    ![app](src/kg_chat/assets/kg_app.png)
 ---
 ### Acknowledgements
 

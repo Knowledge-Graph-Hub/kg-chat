@@ -5,13 +5,22 @@ import logging
 import click
 
 from kg_chat import __version__
-from kg_chat.main import chat, execute_query_using_langchain, get_human_response, load_neo4j
+from kg_chat.app import create_app
+from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
+from kg_chat.main import KnowledgeGraphChat
 
 __all__ = [
     "main",
 ]
 
 logger = logging.getLogger(__name__)
+database_options = click.option(
+    "--database",
+    "-d",
+    type=click.Choice(["neo4j", "duckdb"], case_sensitive=False),
+    help="Database to use.",
+    default="neo4j",
+)
 
 
 @click.group()
@@ -36,54 +45,93 @@ def main(verbose: int, quiet: bool):
 
 
 @main.command()
-def import_kg():
+@database_options
+def import_kg(database: str = "neo4j"):
     """Run the kg-chat's demo command."""
-    load_neo4j()
+    if database == "neo4j":
+        impl = Neo4jImplementation()
+        impl.load_kg()
+    elif database == "duckdb":
+        raise NotImplementedError("DuckDB not implemented yet.")
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
-def test_query():
+@database_options
+def test_query(database: str = "neo4j"):
     """Run the kg-chat's chat command."""
-    # Example query to get all nodes
-    query = "MATCH (n) RETURN n LIMIT 10"
-    result = execute_query_using_langchain(query)
-
-    # Print the results
-    for record in result:
-        print(record)
+    if database == "neo4j":
+        impl = Neo4jImplementation()
+        query = "MATCH (n) RETURN n LIMIT 10"
+        result = impl.execute_query(query)
+        for record in result:
+            print(record)
+    elif database == "duckdb":
+        raise NotImplementedError("DuckDB not implemented yet.")
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
-def show_schema():
+@database_options
+def show_schema(database: str = "neo4j"):
     """Run the kg-chat's chat command."""
-    # Example query to get all nodes
-    query = "CALL db.schema.visualization()"
-    result = execute_query_using_langchain(query)
-
-    # Print the results
-    for record in result:
-        print(record)
+    if database == "neo4j":
+        impl = Neo4jImplementation()
+        impl.show_schema()
+    elif database == "duckdb":
+        raise NotImplementedError("DuckDB not implemented yet.")
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
+@database_options
 @click.argument("query", type=str, required=True)
-def qna(query: str):
+def qna(query: str, database: str = "neo4j"):
     """Run the kg-chat's chat command."""
-    get_human_response(query)
+    if database == "neo4j":
+        impl = Neo4jImplementation()
+        response = impl.get_human_response(query, impl)
+        print(response)
+    elif database == "duckdb":
+        raise NotImplementedError("DuckDB not implemented yet.")
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
-def start_chat():
+@database_options
+def run_chat(database: str = "neo4j"):
     """Run the kg-chat's chat command."""
-    chat()
+    if database == "neo4j":
+        impl = Neo4jImplementation()
+        kgc = KnowledgeGraphChat(impl)
+        kgc.chat()
+    elif database == "duckdb":
+        raise NotImplementedError("DuckDB not implemented yet.")
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
-@click.option("--debug", is_flag=True, help="Run the server in debug mode.")
-def run_server(debug: bool = False):
+@click.option("--debug", is_flag=True, help="Run the app in debug mode.")
+@database_options
+def run_app(
+    debug: bool = False,
+    database: str = "neo4j",
+):
     """Run the kg-chat's chat command."""
-    from kg_chat.app import app
+    if database == "neo4j":
+        impl = Neo4jImplementation()
+        kgc = KnowledgeGraphChat(impl)
+    elif database == "duckdb":
+        raise NotImplementedError("DuckDB not implemented yet.")
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
+    app = create_app(kgc)
     app.run_server(debug=debug)
 
 

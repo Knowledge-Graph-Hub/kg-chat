@@ -1,107 +1,71 @@
 """Main module for the KG Chat application."""
 
 import json
-from os import getenv
 from pprint import pprint
 
 from langchain.memory import ConversationBufferMemory
-from langchain_community.graphs import Neo4jGraph
-from neo4j import GraphDatabase
 
-from kg_chat.constants import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USERNAME, _initialize_neo4j_wrapper_chain
-from kg_chat.utils import extract_nodes_edges, import_kg_into_neo4j, structure_query, visualize_kg
-
-OPENAI_KEY = getenv("OPENAI_API_KEY")
+from kg_chat.interface.database_interface import DatabaseInterface
+from kg_chat.utils import extract_nodes_edges, structure_query, visualize_kg
 
 
-def load_neo4j():
-    """Define API."""
-    import_kg_into_neo4j()
+class KnowledgeGraphChat:
+    """Main class for the KG Chatbot application."""
 
+    def __init__(self, db: DatabaseInterface):
+        """Initialize the KG Chatbot with a database interface."""
+        self.db = db
+        self.memory = ConversationBufferMemory()
 
-def execute_query_using_neo4j(query):
-    """Execute a Cypher query against the Neo4j database."""
-    # Initialize the Neo4j driver
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
+    def load_database(self):
+        """Load the Knowledge Graph into the database."""
+        self.db.load_kg()
 
-    def run_query(tx):
-        """Run the query within a transaction."""
-        return list(tx.run(query))
+    def execute_query(self, query: str):
+        """Execute a Cypher query against the Neo4j database."""
+        # result = db.execute_query(query) #! Also an option to run directly through database
+        return self.db.execute_query_using_langchain(query)
 
-    # Execute the query within a session
-    with driver.session() as session:
-        result = session.read_transaction(run_query)
+    def get_human_response(self, query: str):
+        """Ask a question to the KG Chatbot and get a response."""
+        return self.db.get_human_response(query)
 
-    # Close the driver connection
-    driver.close()
+    def get_structured_response(self, query: str):
+        """Ask a question to the KG Chatbot and get a structured response."""
+        return self.db.get_structured_response(query)
 
-    return result
-
-
-def execute_query_using_langchain(query):
-    """Execute a Cypher query against the Neo4j database."""
-    # Initialize the Neo4jGraph object
-    neo4j_graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
-
-    # Execute the query
-    result = neo4j_graph.query(query)
-
-    return result
-
-
-def get_human_response(query: str):
-    """Ask a question to the KG Chatbot and get a response."""
-    chain = _initialize_neo4j_wrapper_chain()
-    human_response = chain.invoke({"query": query})
-    pprint(human_response["result"])
-    return human_response["result"]
-
-
-def get_structured_response(query: str):
-    """Ask a question to the KG Chatbot and get a structured response."""
-    chain = _initialize_neo4j_wrapper_chain()
-    response = chain.invoke({"query": structure_query(query)})
-    return response["result"]
-
-
-def chat():
-    """Start an interactive chat session with the KG Chatbot."""
-    memory = ConversationBufferMemory()
-    try:
+    def chat(self):
+        """Start an interactive chat session with the KG Chatbot."""
         # Initialize chain with memory
-        chain = _initialize_neo4j_wrapper_chain()
+        memory = ConversationBufferMemory()
+        try:
+            while True:
+                query = input("Ask me about your data! : ")
+                if query.lower() in ["exit", "quit"]:
+                    print("Exiting the interactive session.")
+                    break
 
-        while True:
-            query = input("Ask me about your data! : ")
-            if query.lower() in ["exit", "quit"]:
-                print("Exiting the interactive session.")
-                break
+                # Invoke the chain with the modified query
+                response = self.db.chain.invoke({"query": structure_query(query)})
 
-            # Invoke the chain with the modified query
-            response = chain.invoke({"query": structure_query(query)})
+                # Store the query and response in memory
+                memory.chat_memory.add_user_message(query)
+                memory.chat_memory.add_ai_message(response["result"])
 
-            # Store the query and response in memory
-            memory.chat_memory.add_user_message(query)
-            memory.chat_memory.add_ai_message(response["result"])
+                # Print the result
+                pprint(response["result"])
 
-            # Print the result
-            pprint(response["result"])
+                if "show me" in query.lower():
+                    # Parse the string response into a dictionary
+                    cleaned_result = response["result"].replace("```", "").replace("json\n", "").replace("\n", "")
 
-            if "show me" in query.lower():
-                # Parse the string response into a dictionary
-                cleaned_result = response["result"].replace("```", "").replace("json\n", "").replace("\n", "")
+                    # Parse the cleaned string response into a dictionary
+                    structured_result = json.loads(cleaned_result)
 
-                # Parse the cleaned string response into a dictionary
-                structured_result = json.loads(cleaned_result)
+                    # Visualize the KG
 
-                # Visualize the KG
+                    nodes, edges = extract_nodes_edges(structured_result)
+                    visualize_kg(nodes, edges)
 
-                nodes, edges = extract_nodes_edges(structured_result)
-                visualize_kg(nodes, edges)
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-
-if __name__ == "__main__":
-    load_neo4j()
+        except Exception as e:
+            print(f"An error occurred: {e}")
