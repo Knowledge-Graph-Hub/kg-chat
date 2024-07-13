@@ -5,12 +5,11 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
 With GitHub, I usually insert a blockquote.
 
-> **_NOTE:_**: This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
-
-## Requirements
-- Neo4j Desktop
+> This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
 
 ## Setup
+
+> Follow steps 1 through 5 only if you want to work with Neo4j as the backend. If you intend to use just DuckDB feel free to skip these steps.
 
 1. Install Neo4j desktop from [here](https://neo4j.com/download/?utm_source=Google&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=download%20neo4j&utm_adgroup=download&gad_source=1&gbraid=0AAAAADk9OYqwuLc9mMDBV2n4GXbXo8LzS&gclid=Cj0KCQjwv7O0BhDwARIsAC0sjWOzlSRw10D0r0jnxU2FtVs1MlC1lMVhl2GqH8pa4HAoaVS85DQO9nsaArSfEALw_wcB)
 
@@ -40,11 +39,9 @@ With GitHub, I usually insert a blockquote.
  - DuckDB [default]
  - Neo4j
 
-### Supported LLMs (Assuming you already have the API key saved as an environmental variable)
+### Supported LLMs from
 
- - OpenAI:
-    - GPT-3x
-    - GPT-4x
+ - OpenAI
 
 ### Commands
 
