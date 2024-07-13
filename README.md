@@ -1,6 +1,6 @@
 # kg-chat
 
-Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
+Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and ['DuckDB'](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
 
 
 With GitHub, I usually insert a blockquote.
@@ -35,6 +35,16 @@ With GitHub, I usually insert a blockquote.
     ```
 8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with corresponding files of choice that needs to be queried against.
 
+### Supported backends
+
+ - DuckDB [default]
+ - Neo4j
+
+### Supported LLMs (Assuming you already have the API key saved as an environmental variable)
+
+ - OpenAI:
+    - GPT-3x
+    - GPT-4x
 
 ### Commands
 
@@ -45,7 +55,7 @@ With GitHub, I usually insert a blockquote.
     
 2. `test-query`: To test that the above worked, run a built-in test query:
     ```shell
-    kg-chat test-query
+    kg-chat test-query --database neo4j
     ```
     This should return something like (as per KGX data in the repo):
     ```shell
@@ -63,7 +73,7 @@ With GitHub, I usually insert a blockquote.
 
 3. `qna`: This command can be used for asking a question about the data and receiving a response.
     ```shell
-    kg-chat qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
+    kg-chat qna --database neo4j "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
     ```
     This should return
     ```shell
@@ -92,7 +102,7 @@ With GitHub, I usually insert a blockquote.
 
 4. `run-chat`: This starts an interactive chat session where you can ask questions about your KG.
     ```shell
-    kg-chat run-chat
+    kg-chat run-chat --database neo4j
     ```
     Gives you the following:
     ```shell
@@ -171,7 +181,7 @@ With GitHub, I usually insert a blockquote.
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    kg-chat $ kg-chat run-chat
+    kg-chat $ kg-chat run-chat --database neo4j
     Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
 
 
