@@ -5,6 +5,8 @@ from pprint import pprint
 
 from langchain.memory import ConversationBufferMemory
 
+from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
+from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.interface.database_interface import DatabaseInterface
 from kg_chat.utils import extract_nodes_edges, structure_query, visualize_kg
 
@@ -40,24 +42,29 @@ class KnowledgeGraphChat:
         memory = ConversationBufferMemory()
         try:
             while True:
-                query = input("Ask me about your data! : ")
-                if query.lower() in ["exit", "quit"]:
+                prompt = input("Ask me about your data! : ")
+                if prompt.lower() in ["exit", "quit"]:
                     print("Exiting the interactive session.")
                     break
 
                 # Invoke the chain with the modified query
-                response = self.db.chain.invoke({"query": structure_query(query)})
+                if isinstance(self.db, Neo4jImplementation):
+                    response = self.db.chain.invoke({"query": structure_query(prompt)})
+                    result = response["result"]
+                elif isinstance(self.db, DuckDBImplementation):
+                    response = self.db.agent.invoke(structure_query(prompt))
+                    result = response["output"]
 
                 # Store the query and response in memory
-                memory.chat_memory.add_user_message(query)
-                memory.chat_memory.add_ai_message(response["result"])
+                memory.chat_memory.add_user_message(prompt)
+                memory.chat_memory.add_ai_message(result)
 
                 # Print the result
-                pprint(response["result"])
+                pprint(result)
 
-                if "show me" in query.lower():
+                if "show me" in prompt.lower():
                     # Parse the string response into a dictionary
-                    cleaned_result = response["result"].replace("```", "").replace("json\n", "").replace("\n", "")
+                    cleaned_result = result.replace("```", "").replace("json\n", "").replace("\n", "")
 
                     # Parse the cleaned string response into a dictionary
                     structured_result = json.loads(cleaned_result)

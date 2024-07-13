@@ -1,11 +1,13 @@
 """Command line interface for kg-chat."""
 
 import logging
+from pprint import pprint
 
 import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
+from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
 from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.main import KnowledgeGraphChat
 
@@ -19,7 +21,7 @@ database_options = click.option(
     "-d",
     type=click.Choice(["neo4j", "duckdb"], case_sensitive=False),
     help="Database to use.",
-    default="neo4j",
+    default="duckdb",
 )
 
 
@@ -46,20 +48,21 @@ def main(verbose: int, quiet: bool):
 
 @main.command()
 @database_options
-def import_kg(database: str = "neo4j"):
+def import_kg(database: str = "duckdb"):
     """Run the kg-chat's demo command."""
     if database == "neo4j":
-        impl = Neo4jImplementation()
+        impl = Neo4jImplementation(read_only=False)
         impl.load_kg()
     elif database == "duckdb":
-        raise NotImplementedError("DuckDB not implemented yet.")
+        impl = DuckDBImplementation(read_only=False)
+        impl.load_kg()
     else:
         raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
 @database_options
-def test_query(database: str = "neo4j"):
+def test_query(database: str = "duckdb"):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation()
@@ -68,20 +71,25 @@ def test_query(database: str = "neo4j"):
         for record in result:
             print(record)
     elif database == "duckdb":
-        raise NotImplementedError("DuckDB not implemented yet.")
+        impl = DuckDBImplementation()
+        query = "SELECT * FROM nodes LIMIT 10"
+        result = impl.execute_query(query)
+        for record in result:
+            print(record)
     else:
         raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
 @database_options
-def show_schema(database: str = "neo4j"):
+def show_schema(database: str = "duckdb"):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation()
         impl.show_schema()
     elif database == "duckdb":
-        raise NotImplementedError("DuckDB not implemented yet.")
+        impl = DuckDBImplementation()
+        impl.show_schema()
     else:
         raise ValueError(f"Database {database} not supported.")
 
@@ -89,28 +97,32 @@ def show_schema(database: str = "neo4j"):
 @main.command()
 @database_options
 @click.argument("query", type=str, required=True)
-def qna(query: str, database: str = "neo4j"):
+def qna(query: str, database: str = "duckdb"):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation()
         response = impl.get_human_response(query, impl)
-        print(response)
+        pprint(response)
     elif database == "duckdb":
-        raise NotImplementedError("DuckDB not implemented yet.")
+        impl = DuckDBImplementation()
+        response = impl.get_human_response(query)
+        pprint(response)
     else:
         raise ValueError(f"Database {database} not supported.")
 
 
 @main.command()
 @database_options
-def run_chat(database: str = "neo4j"):
+def run_chat(database: str = "duckdb"):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation()
         kgc = KnowledgeGraphChat(impl)
         kgc.chat()
     elif database == "duckdb":
-        raise NotImplementedError("DuckDB not implemented yet.")
+        impl = DuckDBImplementation()
+        kgc = KnowledgeGraphChat(impl)
+        kgc.chat()
     else:
         raise ValueError(f"Database {database} not supported.")
 
@@ -120,14 +132,15 @@ def run_chat(database: str = "neo4j"):
 @database_options
 def run_app(
     debug: bool = False,
-    database: str = "neo4j",
+    database: str = "duckdb",
 ):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation()
         kgc = KnowledgeGraphChat(impl)
     elif database == "duckdb":
-        raise NotImplementedError("DuckDB not implemented yet.")
+        impl = DuckDBImplementation()
+        kgc = KnowledgeGraphChat(impl)
     else:
         raise ValueError(f"Database {database} not supported.")
 

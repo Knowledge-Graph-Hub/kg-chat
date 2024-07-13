@@ -3,6 +3,11 @@
 import csv
 from pprint import pprint
 
+from langchain.chains import GraphCypherQAChain
+from langchain_community.graphs import Neo4jGraph
+from langchain_openai import ChatOpenAI
+from neo4j import GraphDatabase
+
 from kg_chat.constants import (
     DATALOAD_BATCH_SIZE,
     EDGES_FILE,
@@ -15,21 +20,18 @@ from kg_chat.constants import (
 )
 from kg_chat.interface.database_interface import DatabaseInterface
 from kg_chat.utils import structure_query
-from langchain.chains import GraphCypherQAChain
-from langchain_community.graphs import Neo4jGraph
-from langchain_openai import ChatOpenAI
-from neo4j import GraphDatabase
 
 
 class Neo4jImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for Neo4j."""
 
-    def __init__(self):
+    def __init__(self, read_only=True):
         """Initialize the Neo4j database and the Langchain components."""
         self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
         self.graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
         self.llm = ChatOpenAI(model=MODEL, temperature=0, api_key=OPENAI_KEY)
         self.chain = GraphCypherQAChain.from_llm(graph=self.graph, llm=self.llm, verbose=True)
+        self.read_only = read_only
 
     def execute_query(self, query: str):
         """Execute a Cypher query against the Neo4j database."""
@@ -44,6 +46,8 @@ class Neo4jImplementation(DatabaseInterface):
 
     def clear_database(self, tx):
         """Clear the Neo4j database."""
+        if self.read_only:
+            raise PermissionError("Write operations are not allowed in read-only mode.")
         tx.run("MATCH (n) DETACH DELETE n")
 
     def get_human_response(self, query: str):
@@ -59,6 +63,8 @@ class Neo4jImplementation(DatabaseInterface):
 
     def create_edges(self, tx, edges):
         """Create relationships between nodes."""
+        if self.read_only:
+            raise PermissionError("Write operations are not allowed in read-only mode.")
         tx.run(
             """
             UNWIND $edges AS edge
@@ -71,6 +77,8 @@ class Neo4jImplementation(DatabaseInterface):
 
     def create_nodes(self, tx, nodes):
         """Create nodes in the Neo4j database."""
+        if self.read_only:
+            raise PermissionError("Write operations are not allowed in read-only mode.")
         tx.run(
             """
             UNWIND $nodes AS node
@@ -87,20 +95,28 @@ class Neo4jImplementation(DatabaseInterface):
 
     def ensure_index(self, tx):
         """Ensure that the index on :Node(id) exists."""
+        if self.read_only:
+            raise PermissionError("Write operations are not allowed in read-only mode.")
+
+        # Use SHOW INDEXES to check if the index already exists
         query = (
-            "CALL db.indexes() YIELD name, state, type, entityType, labelsOrTypes, properties "
+            "SHOW INDEXES YIELD name, state, type, entityType, labelsOrTypes, properties "
             "WHERE labelsOrTypes = ['Node'] AND properties = ['id'] RETURN name"
         )
         result = tx.run(query)
+
         if not result.single():
             print("Creating index on :Node(id)...")
-            tx.run("CREATE INDEX ON :Node(id)")
+            # Use the latest syntax for creating an index in Neo4j 4.x and above
+            tx.run("CREATE INDEX node_id_index IF NOT EXISTS FOR (n:Node) ON (n.id)")
             print("Index created.")
         else:
             print("Index on :Node(id) already exists.")
 
     def load_kg(self):
         """Load the Knowledge Graph into the Neo4j database."""
+        if self.read_only:
+            raise PermissionError("Write operations are not allowed in read-only mode.")
         with self.driver.session() as session:
             # Clear the existing database
             print("Clearing the existing database...")

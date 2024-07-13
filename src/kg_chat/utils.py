@@ -7,12 +7,6 @@ from pyvis.network import Network
 from kg_chat.constants import GRAPH_OUTPUT_DIR
 
 
-def get_column_indexes(header_line, columns_of_interest):
-    """Get the indexes of the columns of interest."""
-    headers = header_line.strip().split("\t")
-    return {col: headers.index(col) for col in columns_of_interest}
-
-
 def extract_nodes_edges(structured_result):
     """Extract nodes and edges from the structured result."""
     nodes = structured_result.get("nodes", [])
@@ -27,7 +21,7 @@ def structure_query(query: str):
         # Modify the query to request structured results
         structured_query = f"""
         {query}
-        Please provide the result in JSON format with nodes and edges.
+        Please provide the result in JSON format with nodes and edges. Return JSON ONLY.
         Example: {{
             "nodes": [
                 {{"label": "A", "id": "1"}},

@@ -14,7 +14,7 @@ With GitHub, I usually insert a blockquote.
 
 1. Install Neo4j desktop from [here](https://neo4j.com/download/?utm_source=Google&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=download%20neo4j&utm_adgroup=download&gad_source=1&gbraid=0AAAAADk9OYqwuLc9mMDBV2n4GXbXo8LzS&gclid=Cj0KCQjwv7O0BhDwARIsAC0sjWOzlSRw10D0r0jnxU2FtVs1MlC1lMVhl2GqH8pa4HAoaVS85DQO9nsaArSfEALw_wcB)
 
-2. Create a new project by giving it a name of your choice
+2. Create a new project by giving it a name of your choice. Make sure to choose the latest version of Neo4j. At this time it is (v5.21.2).
 3. Create an empty database with a name of your choice and `Start` it.
     - Credentials can be as declared [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
 4. Install the APOC plugin in Neo4j Desktop. It is listed under the `Plugins` tab which appears when you single-click the database.
@@ -22,7 +22,7 @@ With GitHub, I usually insert a blockquote.
  - The main edits you'll need to do are these 3 lines:
     ```conf
     dbms.memory.heap.initial_size=4G
-    dbms.memory.heap.max_size=16G
+    dbms.memory.heap.max_size=8G
     dbms.security.procedures.allowlist=apoc.coll.*,apoc.load.*,gds.*,apoc.meta.data
     ```
     Update the memory heaps as per your preference.
