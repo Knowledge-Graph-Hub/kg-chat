@@ -249,7 +249,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
     ![Knowledge Graph](src/kg_chat/assets/kg_viz.png)
 
-5. `run-server`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `run-chat` command.
+5. `run-app`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `run-chat` command.
 
     ### Visualization
     ![app](src/kg_chat/assets/kg_app.png)
