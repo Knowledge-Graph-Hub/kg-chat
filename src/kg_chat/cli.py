@@ -145,6 +145,7 @@ def run_app(
         raise ValueError(f"Database {database} not supported.")
 
     app = create_app(kgc)
+    # use_reloader=False to avoid running the app twice in debug mode
     app.run(debug=debug, use_reloader=False)
 
 
