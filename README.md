@@ -47,12 +47,12 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
 1. `import-kg`: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.
     ```shell
-    kg-chat import-kg
+    kg import-kg
     ```
     
 2. `test-query`: To test that the above worked, run a built-in test query:
     ```shell
-    kg-chat test-query --database neo4j
+    kg test-query --database neo4j
     ```
     This should return something like (as per KGX data in the repo):
     ```shell
@@ -70,7 +70,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
 3. `qna`: This command can be used for asking a question about the data and receiving a response.
     ```shell
-    kg-chat qna --database neo4j "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
+    kg qna --database neo4j "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
     ```
     This should return
     ```shell
@@ -99,7 +99,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
 4. `run-chat`: This starts an interactive chat session where you can ask questions about your KG.
     ```shell
-    kg-chat run-chat --database neo4j
+    kg run-chat --database neo4j
     ```
     Gives you the following:
     ```shell
@@ -178,7 +178,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    kg-chat $ kg-chat run-chat --database neo4j
+    kg-chat $ kg run-chat --database neo4j
     Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
 
 

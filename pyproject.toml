@@ -35,7 +35,7 @@ sphinx-click = {version = ">=4.3.0"}
 myst-parser = {version = ">=0.18.1"}
 
 [tool.poetry.scripts]
-kg-chat = "kg_chat.cli:main"
+kg = "kg_chat.cli:main"
 
 [tool.poetry-dynamic-versioning]
 enable = true
