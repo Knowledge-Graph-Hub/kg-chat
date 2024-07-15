@@ -1,7 +1,8 @@
 """Interface for the Database."""
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict
+from typing import Any, Dict, List
+
 
 class DatabaseInterface(ABC):
     """Interface for the Database."""
