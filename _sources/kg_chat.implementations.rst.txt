@@ -1,0 +1,29 @@
+kg\_chat.implementations package
+================================
+
+Submodules
+----------
+
+kg\_chat.implementations.duckdb\_implementation module
+------------------------------------------------------
+
+.. automodule:: kg_chat.implementations.duckdb_implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+kg\_chat.implementations.neo4j\_implementation module
+-----------------------------------------------------
+
+.. automodule:: kg_chat.implementations.neo4j_implementation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: kg_chat.implementations
+   :members:
+   :undoc-members:
+   :show-inheritance:

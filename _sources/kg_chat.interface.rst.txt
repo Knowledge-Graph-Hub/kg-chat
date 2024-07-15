@@ -1,0 +1,21 @@
+kg\_chat.interface package
+==========================
+
+Submodules
+----------
+
+kg\_chat.interface.database\_interface module
+---------------------------------------------
+
+.. automodule:: kg_chat.interface.database_interface
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: kg_chat.interface
+   :members:
+   :undoc-members:
+   :show-inheritance:

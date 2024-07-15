@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kg_chat.interface package &mdash; kg-chat 0.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=7026087e"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="kg_chat.implementations package" href="kg_chat.implementations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            kg-chat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">kg_chat</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="kg_chat.html">kg_chat package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="kg_chat.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html">kg_chat.implementations package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">kg_chat.interface package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#module-kg_chat.app">kg_chat.app module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#module-kg_chat.cli">kg_chat.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#module-kg_chat.constants">kg_chat.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#module-kg_chat.main">kg_chat.main module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#module-kg_chat.utils">kg_chat.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.html#module-kg_chat">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">kg-chat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">kg_chat</a></li>
+          <li class="breadcrumb-item"><a href="kg_chat.html">kg_chat package</a></li>
+      <li class="breadcrumb-item active">kg_chat.interface package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/kg_chat.interface.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="kg-chat-interface-package">
+<h1>kg_chat.interface package<a class="headerlink" href="#kg-chat-interface-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-kg_chat.interface.database_interface">
+<span id="kg-chat-interface-database-interface-module"></span><h2>kg_chat.interface.database_interface module<a class="headerlink" href="#module-kg_chat.interface.database_interface" title="Link to this heading"></a></h2>
+<p>Interface for the Database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kg_chat.interface.database_interface.</span></span><span class="sig-name descname"><span class="pre">DatabaseInterface</span></span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Interface for the Database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.clear_database">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.clear_database" title="Link to this definition"></a></dt>
+<dd><p>Clear the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.create_edges">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.create_edges" title="Link to this definition"></a></dt>
+<dd><p>Create edges in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.create_nodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.create_nodes" title="Link to this definition"></a></dt>
+<dd><p>Create nodes in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.execute_query">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.execute_query" title="Link to this definition"></a></dt>
+<dd><p>Execute a query against the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.execute_query_using_langchain">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_query_using_langchain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.execute_query_using_langchain" title="Link to this definition"></a></dt>
+<dd><p>Execute a query against the database using Langchain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.execute_unsafe_operation">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_unsafe_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.execute_unsafe_operation" title="Link to this definition"></a></dt>
+<dd><p>Execute an unsafe operation with safety measures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.get_human_response">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_human_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.get_human_response" title="Link to this definition"></a></dt>
+<dd><p>Get a human response from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.get_structured_response">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_structured_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.get_structured_response" title="Link to this definition"></a></dt>
+<dd><p>Get a structured response from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.is_safe_command">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_safe_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.is_safe_command" title="Link to this definition"></a></dt>
+<dd><p>Check if a command is safe to execute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.load_kg">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_kg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.load_kg" title="Link to this definition"></a></dt>
+<dd><p>Load the Knowledge Graph into the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.show_schema">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">show_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.show_schema" title="Link to this definition"></a></dt>
+<dd><p>Show the schema of the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.database_interface.DatabaseInterface.toggle_safe_mode">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">toggle_safe_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.database_interface.DatabaseInterface.toggle_safe_mode" title="Link to this definition"></a></dt>
+<dd><p>Toggle safe mode on or off.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-kg_chat.interface">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-kg_chat.interface" title="Link to this heading"></a></h2>
+<p>Initialize the interface package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kg_chat.interface.</span></span><span class="sig-name descname"><span class="pre">DatabaseInterface</span></span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Interface for the Database.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.clear_database">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.clear_database" title="Link to this definition"></a></dt>
+<dd><p>Clear the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.create_edges">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.create_edges" title="Link to this definition"></a></dt>
+<dd><p>Create edges in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.create_nodes">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.create_nodes" title="Link to this definition"></a></dt>
+<dd><p>Create nodes in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.execute_query">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.execute_query" title="Link to this definition"></a></dt>
+<dd><p>Execute a query against the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.execute_query_using_langchain">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_query_using_langchain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.execute_query_using_langchain" title="Link to this definition"></a></dt>
+<dd><p>Execute a query against the database using Langchain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.execute_unsafe_operation">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_unsafe_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.execute_unsafe_operation" title="Link to this definition"></a></dt>
+<dd><p>Execute an unsafe operation with safety measures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.get_human_response">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_human_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.get_human_response" title="Link to this definition"></a></dt>
+<dd><p>Get a human response from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.get_structured_response">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_structured_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.get_structured_response" title="Link to this definition"></a></dt>
+<dd><p>Get a structured response from the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.is_safe_command">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_safe_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.is_safe_command" title="Link to this definition"></a></dt>
+<dd><p>Check if a command is safe to execute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.load_kg">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_kg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.load_kg" title="Link to this definition"></a></dt>
+<dd><p>Load the Knowledge Graph into the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.show_schema">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">show_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.show_schema" title="Link to this definition"></a></dt>
+<dd><p>Show the schema of the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.interface.DatabaseInterface.toggle_safe_mode">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">toggle_safe_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.interface.DatabaseInterface.toggle_safe_mode" title="Link to this definition"></a></dt>
+<dd><p>Toggle safe mode on or off.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="kg_chat.implementations.html" class="btn btn-neutral float-left" title="kg_chat.implementations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Harshad Hegde &lt;hhegde@lbl.gov&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

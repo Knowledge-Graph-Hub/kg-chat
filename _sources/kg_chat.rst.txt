@@ -1,6 +1,15 @@
 kg\_chat package
 ================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   kg_chat.implementations
+   kg_chat.interface
+
 Submodules
 ----------
 

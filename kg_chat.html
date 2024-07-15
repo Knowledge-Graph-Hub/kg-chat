@@ -21,6 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="kg_chat.implementations package" href="kg_chat.implementations.html" />
     <link rel="prev" title="kg_chat" href="modules.html" /> 
 </head>
 
@@ -47,29 +48,24 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">kg_chat</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">kg_chat package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html">kg_chat.implementations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html">kg_chat.interface package</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.app">kg_chat.app module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.app.update_output"><code class="docutils literal notranslate"><span class="pre">update_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.app.create_app"><code class="docutils literal notranslate"><span class="pre">create_app()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.cli">kg_chat.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.constants">kg_chat.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.main">kg_chat.main module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.chat"><code class="docutils literal notranslate"><span class="pre">chat()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">execute_query_using_langchain()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.execute_query_using_neo4j"><code class="docutils literal notranslate"><span class="pre">execute_query_using_neo4j()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.get_human_response"><code class="docutils literal notranslate"><span class="pre">get_human_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.get_structured_response"><code class="docutils literal notranslate"><span class="pre">get_structured_response()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.load_neo4j"><code class="docutils literal notranslate"><span class="pre">load_neo4j()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.main.KnowledgeGraphChat"><code class="docutils literal notranslate"><span class="pre">KnowledgeGraphChat</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.utils">kg_chat.utils module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.clear_database"><code class="docutils literal notranslate"><span class="pre">clear_database()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.create_edges"><code class="docutils literal notranslate"><span class="pre">create_edges()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.create_nodes"><code class="docutils literal notranslate"><span class="pre">create_nodes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.extract_nodes_edges"><code class="docutils literal notranslate"><span class="pre">extract_nodes_edges()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_column_indexes"><code class="docutils literal notranslate"><span class="pre">get_column_indexes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.import_kg_into_neo4j"><code class="docutils literal notranslate"><span class="pre">import_kg_into_neo4j()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.structure_query"><code class="docutils literal notranslate"><span class="pre">structure_query()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.visualize_kg"><code class="docutils literal notranslate"><span class="pre">visualize_kg()</span></code></a></li>
 </ul>
@@ -108,6 +104,128 @@
              
   <section id="kg-chat-package">
 <h1>kg_chat package<a class="headerlink" href="#kg-chat-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kg_chat.implementations.html">kg_chat.implementations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.implementations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.implementations.html#module-kg_chat.implementations.duckdb_implementation">kg_chat.implementations.duckdb_implementation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.clear_database"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.create_edges"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.create_nodes"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.create_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.execute_query"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.execute_query_using_langchain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.execute_unsafe_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.get_human_response"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.get_human_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.get_structured_response"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.is_safe_command"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.is_safe_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.load_kg"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.load_kg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.show_schema"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.show_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.duckdb_implementation.DuckDBImplementation.toggle_safe_mode"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.toggle_safe_mode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.implementations.html#module-kg_chat.implementations.neo4j_implementation">kg_chat.implementations.neo4j_implementation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.clear_database"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.create_edges"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.create_nodes"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.create_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.ensure_index"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.ensure_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.execute_query"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_query_using_langchain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_unsafe_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.get_human_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_human_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.get_structured_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.is_safe_command"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.is_safe_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.load_kg"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.load_kg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.show_schema"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.show_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.toggle_safe_mode"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.toggle_safe_mode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.implementations.html#module-kg_chat.implementations">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.clear_database"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.create_edges"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.create_nodes"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.create_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.execute_query"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.execute_query_using_langchain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.execute_unsafe_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.get_human_response"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.get_human_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.get_structured_response"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.is_safe_command"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.is_safe_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.load_kg"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.load_kg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.show_schema"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.show_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.DuckDBImplementation.toggle_safe_mode"><code class="docutils literal notranslate"><span class="pre">DuckDBImplementation.toggle_safe_mode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.clear_database"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.create_edges"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.create_nodes"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.create_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.ensure_index"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.ensure_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.execute_query"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_query_using_langchain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_unsafe_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.get_human_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_human_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.get_structured_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.is_safe_command"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.is_safe_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.load_kg"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.load_kg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.show_schema"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.show_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.toggle_safe_mode"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.toggle_safe_mode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kg_chat.interface.html">kg_chat.interface package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.interface.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.interface.html#module-kg_chat.interface.database_interface">kg_chat.interface.database_interface module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.clear_database"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.create_edges"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.create_nodes"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.create_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.execute_query"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.execute_query_using_langchain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.execute_unsafe_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.get_human_response"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.get_human_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.get_structured_response"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.is_safe_command"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.is_safe_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.load_kg"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.load_kg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.show_schema"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.show_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.database_interface.DatabaseInterface.toggle_safe_mode"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.toggle_safe_mode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kg_chat.interface.html#module-kg_chat.interface">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.clear_database"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.clear_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.create_edges"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.create_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.create_nodes"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.create_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.execute_query"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.execute_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.execute_query_using_langchain"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.execute_query_using_langchain()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.execute_unsafe_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.get_human_response"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.get_human_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.get_structured_response"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.is_safe_command"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.is_safe_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.load_kg"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.load_kg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.show_schema"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.show_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.interface.html#kg_chat.interface.DatabaseInterface.toggle_safe_mode"><code class="docutils literal notranslate"><span class="pre">DatabaseInterface.toggle_safe_mode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
@@ -115,9 +233,9 @@
 <span id="kg-chat-app-module"></span><h2>kg_chat.app module<a class="headerlink" href="#module-kg_chat.app" title="Link to this heading"></a></h2>
 <p>Dash based app for the KG Chatbot.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.app.update_output">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.app.</span></span><span class="sig-name descname"><span class="pre">update_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submit_n_clicks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_n_clicks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.app.update_output" title="Link to this definition"></a></dt>
-<dd><p>Update the chat output and graph visualization based on user input.</p>
+<dt class="sig sig-object py" id="kg_chat.app.create_app">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.app.</span></span><span class="sig-name descname"><span class="pre">create_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kg_chatbot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.app.create_app" title="Link to this definition"></a></dt>
+<dd><p>Create a Dash app for the KG Chatbot.</p>
 </dd></dl>
 
 </section>
@@ -132,40 +250,41 @@
 <section id="module-kg_chat.main">
 <span id="kg-chat-main-module"></span><h2>kg_chat.main module<a class="headerlink" href="#module-kg_chat.main" title="Link to this heading"></a></h2>
 <p>Main module for the KG Chat application.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.main.chat">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.chat" title="Link to this definition"></a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kg_chat.main.KnowledgeGraphChat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">KnowledgeGraphChat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.KnowledgeGraphChat" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main class for the KG Chatbot application.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.main.KnowledgeGraphChat.chat">
+<span class="sig-name descname"><span class="pre">chat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.KnowledgeGraphChat.chat" title="Link to this definition"></a></dt>
 <dd><p>Start an interactive chat session with the KG Chatbot.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.main.execute_query_using_langchain">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">execute_query_using_langchain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.execute_query_using_langchain" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.main.KnowledgeGraphChat.execute_query">
+<span class="sig-name descname"><span class="pre">execute_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.KnowledgeGraphChat.execute_query" title="Link to this definition"></a></dt>
 <dd><p>Execute a Cypher query against the Neo4j database.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.main.execute_query_using_neo4j">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">execute_query_using_neo4j</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.execute_query_using_neo4j" title="Link to this definition"></a></dt>
-<dd><p>Execute a Cypher query against the Neo4j database.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.main.get_human_response">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">get_human_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.get_human_response" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.main.KnowledgeGraphChat.get_human_response">
+<span class="sig-name descname"><span class="pre">get_human_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.KnowledgeGraphChat.get_human_response" title="Link to this definition"></a></dt>
 <dd><p>Ask a question to the KG Chatbot and get a response.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.main.get_structured_response">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">get_structured_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.get_structured_response" title="Link to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.main.KnowledgeGraphChat.get_structured_response">
+<span class="sig-name descname"><span class="pre">get_structured_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.KnowledgeGraphChat.get_structured_response" title="Link to this definition"></a></dt>
 <dd><p>Ask a question to the KG Chatbot and get a structured response.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.main.load_neo4j">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.main.</span></span><span class="sig-name descname"><span class="pre">load_neo4j</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.load_neo4j" title="Link to this definition"></a></dt>
-<dd><p>Define API.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kg_chat.main.KnowledgeGraphChat.load_database">
+<span class="sig-name descname"><span class="pre">load_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.main.KnowledgeGraphChat.load_database" title="Link to this definition"></a></dt>
+<dd><p>Load the Knowledge Graph into the database.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -173,39 +292,9 @@
 <span id="kg-chat-utils-module"></span><h2>kg_chat.utils module<a class="headerlink" href="#module-kg_chat.utils" title="Link to this heading"></a></h2>
 <p>Utility functions for the KG chatbot.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.utils.clear_database">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">clear_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.clear_database" title="Link to this definition"></a></dt>
-<dd><p>Clear the Neo4j database.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.utils.create_edges">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">create_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.create_edges" title="Link to this definition"></a></dt>
-<dd><p>Create relationships between nodes.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.utils.create_nodes">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">create_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.create_nodes" title="Link to this definition"></a></dt>
-<dd><p>Create nodes in the Neo4j database.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.extract_nodes_edges">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">extract_nodes_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structured_result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.extract_nodes_edges" title="Link to this definition"></a></dt>
 <dd><p>Extract nodes and edges from the structured result.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.utils.get_column_indexes">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_column_indexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_of_interest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_column_indexes" title="Link to this definition"></a></dt>
-<dd><p>Get the indexes of the columns of interest.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.utils.import_kg_into_neo4j">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">import_kg_into_neo4j</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.import_kg_into_neo4j" title="Link to this definition"></a></dt>
-<dd><p>Import KG into Neo4j using batching for better performance.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -232,6 +321,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="modules.html" class="btn btn-neutral float-left" title="kg_chat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kg_chat.implementations.html" class="btn btn-neutral float-right" title="kg_chat.implementations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
