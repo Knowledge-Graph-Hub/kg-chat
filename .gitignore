@@ -130,3 +130,4 @@ dmypy.json
 src/kg_chat/data/merged-kg_nodes.tsv
 src/kg_chat/data/merged-kg_edges.tsv
 src/kg_chat/graph_output/knowledge_graph.html
+src/kg_chat/database/*

@@ -1,24 +1,30 @@
 # kg-chat
 
-Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
+Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and ['DuckDB'](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
 
 
 With GitHub, I usually insert a blockquote.
 
-> **_NOTE:_**: This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
-
-## Requirements
-- Neo4j Desktop
+> This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
 
 ## Setup
 
+> Follow steps 1 through 5 only if you want to work with Neo4j as the backend. If you intend to use just DuckDB feel free to skip these steps.
+
 1. Install Neo4j desktop from [here](https://neo4j.com/download/?utm_source=Google&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=download%20neo4j&utm_adgroup=download&gad_source=1&gbraid=0AAAAADk9OYqwuLc9mMDBV2n4GXbXo8LzS&gclid=Cj0KCQjwv7O0BhDwARIsAC0sjWOzlSRw10D0r0jnxU2FtVs1MlC1lMVhl2GqH8pa4HAoaVS85DQO9nsaArSfEALw_wcB)
 
-2. Create a new project by giving it a name of your choice
+2. Create a new project by giving it a name of your choice. Make sure to choose the latest version of Neo4j. At this time it is (v5.21.2).
 3. Create an empty database with a name of your choice and `Start` it.
     - Credentials can be as declared [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
 4. Install the APOC plugin in Neo4j Desktop. It is listed under the `Plugins` tab which appears when you single-click the database.
-5. Click on `Settings` which is visible when you click on the 3 dots that appears to the right of the db on single-clicking as well. It should match []`neo4j_db_settings.conf`](https://github.com/hrshdhgd/kg-chat/blob/main/neo4j_db_settings.conf)
+5. Click on `Settings` which is visible when you click on the 3 dots that appears to the right of the db on single-clicking as well. It should match []`neo4j_db_settings.conf`](conf_files/neo4j_db_settings.conf)
+ - The main edits you'll need to do are these 3 lines:
+    ```conf
+    dbms.memory.heap.initial_size=4G
+    dbms.memory.heap.max_size=8G
+    dbms.security.procedures.allowlist=apoc.coll.*,apoc.load.*,gds.*,apoc.meta.data
+    ```
+    Update the memory heaps as per your preference.
 4. Clone this repository locally
 5. Create a virtual environment of your choice and `pip install poetry` in it.
 6. 
@@ -28,6 +34,14 @@ With GitHub, I usually insert a blockquote.
     ```
 8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with corresponding files of choice that needs to be queried against.
 
+### Supported backends
+
+ - DuckDB [default]
+ - Neo4j
+
+### Supported LLMs from
+
+ - OpenAI
 
 ### Commands
 
@@ -38,7 +52,7 @@ With GitHub, I usually insert a blockquote.
     
 2. `test-query`: To test that the above worked, run a built-in test query:
     ```shell
-    kg-chat test-query
+    kg-chat test-query --database neo4j
     ```
     This should return something like (as per KGX data in the repo):
     ```shell
@@ -56,7 +70,7 @@ With GitHub, I usually insert a blockquote.
 
 3. `qna`: This command can be used for asking a question about the data and receiving a response.
     ```shell
-    kg-chat qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
+    kg-chat qna --database neo4j "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
     ```
     This should return
     ```shell
@@ -83,9 +97,9 @@ With GitHub, I usually insert a blockquote.
     '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
     ```
 
-4. `start-chat`: This starts an interactive chat session where you can ask questions about your KG.
+4. `run-chat`: This starts an interactive chat session where you can ask questions about your KG.
     ```shell
-    kg-chat start-chat
+    kg-chat run-chat --database neo4j
     ```
     Gives you the following:
     ```shell
@@ -164,7 +178,7 @@ With GitHub, I usually insert a blockquote.
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    kg-chat $ kg-chat start-chat
+    kg-chat $ kg-chat run-chat --database neo4j
     Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
 
 
@@ -233,12 +247,12 @@ With GitHub, I usually insert a blockquote.
 
     This results in the formation of the `knowledge_graph.html` file.
 
-    ![Knowledge Graph](assets/kg_viz.png)
+    ![Knowledge Graph](src/kg_chat/assets/kg_viz.png)
 
-5. `run-server`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `start-chat` command.
+5. `run-server`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `run-chat` command.
 
     ### Visualization
-    ![app](assets/kg_app.png)
+    ![app](src/kg_chat/assets/kg_app.png)
 ---
 ### Acknowledgements
 
