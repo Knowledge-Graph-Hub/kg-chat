@@ -3,12 +3,12 @@
 Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and ['DuckDB'](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
 
 
-> **Note**  
+> **_NOTE:_**  
 > This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
 
 ## Setup
 
-> **Note**  
+> **_NOTE:_**  
 > Follow steps 1 through 5 only if you want to work with Neo4j as the backend. If you intend to use just DuckDB feel free to skip these steps.
 
 1. Install Neo4j desktop from [here](https://neo4j.com/download/?utm_source=Google&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=download%20neo4j&utm_adgroup=download&gad_source=1&gbraid=0AAAAADk9OYqwuLc9mMDBV2n4GXbXo8LzS&gclid=Cj0KCQjwv7O0BhDwARIsAC0sjWOzlSRw10D0r0jnxU2FtVs1MlC1lMVhl2GqH8pa4HAoaVS85DQO9nsaArSfEALw_wcB)
