@@ -26,6 +26,7 @@ class DuckDBImplementation(DatabaseInterface):
     def __init__(self, read_only=True):
         """Initialize the DuckDB database and the Langchain components."""
         self.conn = duckdb.connect(database=str(DATABASE_DIR / "kg_chat.db"))
+        # self.read_only_conn = duckdb.connect(database=str(DATABASE_DIR / "kg_chat.db"), read_only=True)
         self.llm = ChatOpenAI(model=MODEL, temperature=0, api_key=OPENAI_KEY)
         # Langchain relevant portion
         self.engine = create_engine("duckdb:///src/kg_chat/database/kg_chat.db")
@@ -35,7 +36,11 @@ class DuckDBImplementation(DatabaseInterface):
 
     def execute_query(self, query: str):
         """Execute a query against the DuckDB database."""
-        result = self.conn.execute(query).fetchall()
+        if self.read_only:
+            result = self.conn.execute(query).fetchall()
+        else:
+            result = self.conn.execute(query).fetchall()
+            self.conn.close()
         return result
 
     def clear_database(self):
@@ -44,6 +49,7 @@ class DuckDBImplementation(DatabaseInterface):
             raise PermissionError("Write operations are not allowed in read-only mode.")
         self.conn.execute("DROP TABLE IF EXISTS edges")
         self.conn.execute("DROP TABLE IF EXISTS nodes")
+        self.conn.close()
 
     def get_human_response(self, prompt: str):
         """Get a human response from the DuckDB database."""
@@ -166,5 +172,6 @@ class DuckDBImplementation(DatabaseInterface):
         self.conn.execute("CREATE INDEX idx_edges_source_id ON edges(source_id);")
         self.conn.execute("CREATE INDEX idx_edges_target_id ON edges(target_id);")
         print("Indexes created.")
+        self.conn.close()
 
         print("Import process finished.")

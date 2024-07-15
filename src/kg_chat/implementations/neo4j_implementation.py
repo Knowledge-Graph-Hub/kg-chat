@@ -2,6 +2,7 @@
 
 import csv
 from pprint import pprint
+import time
 
 from langchain.chains import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
@@ -48,7 +49,35 @@ class Neo4jImplementation(DatabaseInterface):
         """Clear the Neo4j database."""
         if self.read_only:
             raise PermissionError("Write operations are not allowed in read-only mode.")
-        tx.run("MATCH (n) DETACH DELETE n")
+        
+        with self.driver.session() as session:
+            session.write_transaction(self._clear_database)
+
+    @staticmethod
+    def _clear_database(tx):
+        """Helper method to clear the Neo4j database using APOC."""
+        tx.run("""
+        CALL apoc.periodic.iterate(
+            'MATCH (n) RETURN n',
+            'DETACH DELETE n',
+            {batchSize:1000, parallel:true}
+        )
+        """)
+
+    def ensure_index(self, tx):
+        """Ensure that the index on :Node(id) exists."""
+        if self.read_only:
+            raise PermissionError("Write operations are not allowed in read-only mode.")
+        
+        # Use APOC to ensure the index exists
+        tx.run("""
+        CALL apoc.schema.assert(
+            {Node: [['id']]},
+            {RELATIONSHIP: [['source_id'], ['target_id']]}
+        )
+        """)
+        print("Indexes ensured using APOC.")
+    
 
     def get_human_response(self, query: str):
         """Get a human response from the Neo4j database."""
@@ -86,32 +115,33 @@ class Neo4jImplementation(DatabaseInterface):
         """,
             nodes=nodes,
         )
+    # def create_nodes(self, tx, file_path):
+    #     query = """
+    #     CALL apoc.periodic.iterate($load_query,
+    #     "CREATE (:Node {node_id: row.id, node_label: row.name})",
+    #     {batchSize:10000, iterateList:true, parallel:true}
+    #     )
+    #     """
+    #     load_query = f"CALL apoc.load.csv('{file_path}', {{sep: '\t'}}) YIELD map AS row RETURN row"
+    #     return tx.run(query, load_query=load_query)
+
+    # def create_edges(self, tx, file_path):
+    #     query = """
+    #     CALL apoc.periodic.iterate($load_query,
+    #     "MATCH (source:Node {node_id: row.subject})
+    #     MATCH (target:Node {node_id: row.object})
+    #     CREATE (source)-[r:RELATIONSHIP {type: row.predicate}]->(target)",
+    #     {batchSize:10000, iterateList:true, parallel:true}
+    #     )
+    #     """
+    #     load_query = f"CALL apoc.load.csv('{file_path}', {{sep: '\t'}}) YIELD map AS row RETURN row"
+    #     return tx.run(query, load_query=load_query)
 
     def show_schema(self):
         """Show the schema of the Neo4j database."""
         with self.driver.session() as session:
             result = session.read_transaction(lambda tx: list(tx.run("CALL db.schema.visualization()")))
             pprint(result)
-
-    def ensure_index(self, tx):
-        """Ensure that the index on :Node(id) exists."""
-        if self.read_only:
-            raise PermissionError("Write operations are not allowed in read-only mode.")
-
-        # Use SHOW INDEXES to check if the index already exists
-        query = (
-            "SHOW INDEXES YIELD name, state, type, entityType, labelsOrTypes, properties "
-            "WHERE labelsOrTypes = ['Node'] AND properties = ['id'] RETURN name"
-        )
-        result = tx.run(query)
-
-        if not result.single():
-            print("Creating index on :Node(id)...")
-            # Use the latest syntax for creating an index in Neo4j 4.x and above
-            tx.run("CREATE INDEX node_id_index IF NOT EXISTS FOR (n:Node) ON (n.id)")
-            print("Index created.")
-        else:
-            print("Index on :Node(id) already exists.")
 
     def load_kg(self):
         """Load the Knowledge Graph into the Neo4j database."""
@@ -130,6 +160,7 @@ class Neo4jImplementation(DatabaseInterface):
 
             # Import nodes in batches
             print("Starting to import nodes...")
+            start_time = time.time()
             nodes_batch = []
             columns_of_interest = ["id", "name"]
 
@@ -150,11 +181,20 @@ class Neo4jImplementation(DatabaseInterface):
 
                 if nodes_batch:
                     session.write_transaction(self.create_nodes, nodes_batch)
-
-            print(f"Nodes import completed {node_batch_loaded}.")
+            
+            elapsed_time_seconds = time.time() - start_time
+            
+            if elapsed_time_seconds >= 3600:
+                elapsed_time_hours = elapsed_time_seconds / 3600
+                print(f"Nodes import completed: {node_batch_loaded} nodes in {elapsed_time_hours:.2f} hours.")
+            else:
+                elapsed_time_minutes = elapsed_time_seconds / 60
+                print(f"Nodes import completed: {node_batch_loaded} nodes in {elapsed_time_minutes:.2f} minutes.")
+            
 
             # Import edges in batches
             print("Starting to import edges...")
+            start_time = time.time()
             edges_batch = []
             edge_column_of_interest = ["subject", "predicate", "object"]
 
@@ -169,16 +209,21 @@ class Neo4jImplementation(DatabaseInterface):
                     edges_batch.append({"source_id": source_id, "target_id": target_id, "relationship": relationship})
                     edge_batch_loaded += 1
 
-                    if len(edges_batch) >= DATALOAD_BATCH_SIZE / 5:
+                    if len(edges_batch) >= DATALOAD_BATCH_SIZE / 2:
                         session.write_transaction(self.create_edges, edges_batch)
                         edges_batch = []
                         # print(f"Batch loaded (edges): {edge_batch_loaded}")
 
                 if edges_batch:
                     session.write_transaction(self.create_edges, edges_batch)
-                    print(f"Batch written (edges): {edge_batch_loaded}")
 
-            print(f"Edges import completed: {edge_batch_loaded} edges.")
+            elapsed_time_seconds = time.time() - start_time
+            if elapsed_time_seconds >= 3600:
+                elapsed_time_hours = elapsed_time_seconds / 3600
+                print(f"Edges import completed: {edge_batch_loaded} edges in {elapsed_time_hours:.2f} hours.")
+            else:
+                elapsed_time_minutes = elapsed_time_seconds / 60
+                print(f"Edges import completed: {edge_batch_loaded} edges in {elapsed_time_minutes:.2f} minutes.")
 
         self.driver.close()
         print("Import process finished and connection closed.")
