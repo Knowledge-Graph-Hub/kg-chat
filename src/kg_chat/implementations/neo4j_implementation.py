@@ -26,35 +26,54 @@ from kg_chat.utils import structure_query
 class Neo4jImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for Neo4j."""
 
-    def __init__(self, read_only=True):
+    def __init__(self):
         """Initialize the Neo4j database and the Langchain components."""
         self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
         self.graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
         self.llm = ChatOpenAI(model=MODEL, temperature=0, api_key=OPENAI_KEY)
         self.chain = GraphCypherQAChain.from_llm(graph=self.graph, llm=self.llm, verbose=True)
-        self.read_only = read_only
+        self.safe_mode = True
+
+    def toggle_safe_mode(self, enabled: bool):
+        self.safe_mode = enabled
+
+    def is_safe_command(self, command: str) -> bool:
+        unsafe_keywords = ['CREATE', 'DELETE', 'REMOVE', 'SET', 'MERGE', 'DROP']
+        return not any(keyword in command.upper() for keyword in unsafe_keywords)
+
+    def execute_unsafe_operation(self, operation: callable, *args, **kwargs):
+        original_safe_mode = self.safe_mode
+        self.safe_mode = False
+        try:
+            result = operation(*args, **kwargs)
+        finally:
+            self.safe_mode = original_safe_mode
+        return result
 
     def execute_query(self, query: str):
         """Execute a Cypher query against the Neo4j database."""
+        if self.safe_mode and not self.is_safe_command(query):
+            raise ValueError(f"Unsafe command detected: {query}")
         with self.driver.session() as session:
             result = session.read_transaction(lambda tx: list(tx.run(query)))
         return result
 
     def execute_query_using_langchain(self, query: str):
         """Execute a Cypher query against the Neo4j database using Langchain."""
+        if self.safe_mode and not self.is_safe_command(query):
+            raise ValueError(f"Unsafe command detected: {query}")
         result = self.graph.query(query)
         return result
 
-    def clear_database(self, tx):
+    def clear_database(self):
         """Clear the Neo4j database."""
-        if self.read_only:
-            raise PermissionError("Write operations are not allowed in read-only mode.")
-        
-        with self.driver.session() as session:
-            session.write_transaction(self._clear_database)
+        def _clear_database():
+            with self.driver.session() as session:
+                session.write_transaction(self._clear_database_tx)
+        return self.execute_unsafe_operation(_clear_database)
 
     @staticmethod
-    def _clear_database(tx):
+    def _clear_database_tx(tx):
         """Helper method to clear the Neo4j database using APOC."""
         tx.run("""
         CALL apoc.periodic.iterate(
@@ -64,12 +83,16 @@ class Neo4jImplementation(DatabaseInterface):
         )
         """)
 
-    def ensure_index(self, tx):
+    def ensure_index(self):
         """Ensure that the index on :Node(id) exists."""
-        if self.read_only:
-            raise PermissionError("Write operations are not allowed in read-only mode.")
-        
-        # Use APOC to ensure the index exists
+        def _ensure_index():
+            with self.driver.session() as session:
+                session.write_transaction(self._ensure_index_tx)
+        return self.execute_unsafe_operation(_ensure_index)
+
+    @staticmethod
+    def _ensure_index_tx(tx):
+        """Helper method to ensure the index exists."""
         tx.run("""
         CALL apoc.schema.assert(
             {Node: [['id']]},
@@ -77,7 +100,6 @@ class Neo4jImplementation(DatabaseInterface):
         )
         """)
         print("Indexes ensured using APOC.")
-    
 
     def get_human_response(self, query: str):
         """Get a human response from the Neo4j database."""
@@ -90,10 +112,15 @@ class Neo4jImplementation(DatabaseInterface):
         response = self.chain.invoke({"query": structure_query(query)})
         return response["result"]
 
-    def create_edges(self, tx, edges):
+    def create_edges(self, edges):
         """Create relationships between nodes."""
-        if self.read_only:
-            raise PermissionError("Write operations are not allowed in read-only mode.")
+        def _create_edges():
+            with self.driver.session() as session:
+                session.write_transaction(self._create_edges_tx, edges)
+        return self.execute_unsafe_operation(_create_edges)
+
+    @staticmethod
+    def _create_edges_tx(tx, edges):
         tx.run(
             """
             UNWIND $edges AS edge
@@ -104,10 +131,15 @@ class Neo4jImplementation(DatabaseInterface):
             edges=edges,
         )
 
-    def create_nodes(self, tx, nodes):
+    def create_nodes(self, nodes):
         """Create nodes in the Neo4j database."""
-        if self.read_only:
-            raise PermissionError("Write operations are not allowed in read-only mode.")
+        def _create_nodes():
+            with self.driver.session() as session:
+                session.write_transaction(self._create_nodes_tx, nodes)
+        return self.execute_unsafe_operation(_create_nodes)
+
+    @staticmethod
+    def _create_nodes_tx(tx, nodes):
         tx.run(
             """
             UNWIND $nodes AS node
@@ -115,27 +147,6 @@ class Neo4jImplementation(DatabaseInterface):
         """,
             nodes=nodes,
         )
-    # def create_nodes(self, tx, file_path):
-    #     query = """
-    #     CALL apoc.periodic.iterate($load_query,
-    #     "CREATE (:Node {node_id: row.id, node_label: row.name})",
-    #     {batchSize:10000, iterateList:true, parallel:true}
-    #     )
-    #     """
-    #     load_query = f"CALL apoc.load.csv('{file_path}', {{sep: '\t'}}) YIELD map AS row RETURN row"
-    #     return tx.run(query, load_query=load_query)
-
-    # def create_edges(self, tx, file_path):
-    #     query = """
-    #     CALL apoc.periodic.iterate($load_query,
-    #     "MATCH (source:Node {node_id: row.subject})
-    #     MATCH (target:Node {node_id: row.object})
-    #     CREATE (source)-[r:RELATIONSHIP {type: row.predicate}]->(target)",
-    #     {batchSize:10000, iterateList:true, parallel:true}
-    #     )
-    #     """
-    #     load_query = f"CALL apoc.load.csv('{file_path}', {{sep: '\t'}}) YIELD map AS row RETURN row"
-    #     return tx.run(query, load_query=load_query)
 
     def show_schema(self):
         """Show the schema of the Neo4j database."""
@@ -145,85 +156,88 @@ class Neo4jImplementation(DatabaseInterface):
 
     def load_kg(self):
         """Load the Knowledge Graph into the Neo4j database."""
-        if self.read_only:
-            raise PermissionError("Write operations are not allowed in read-only mode.")
-        with self.driver.session() as session:
-            # Clear the existing database
-            print("Clearing the existing database...")
-            session.write_transaction(self.clear_database)
-            print("Database cleared.")
+        def _load_kg():
+            with self.driver.session() as session:
+                # Clear the existing database
+                print("Clearing the existing database...")
+                self.clear_database()
+                print("Database cleared.")
 
-            # Ensure indexes are created
-            print("Ensuring indexes...")
-            session.write_transaction(self.ensure_index)
-            print("Indexes ensured.")
+                # Ensure indexes are created
+                print("Ensuring indexes...")
+                self.ensure_index()
+                print("Indexes ensured.")
 
-            # Import nodes in batches
-            print("Starting to import nodes...")
-            start_time = time.time()
-            nodes_batch = []
-            columns_of_interest = ["id", "name"]
+                # Import nodes in batches
+                print("Starting to import nodes...")
+                start_time = time.time()
+                nodes_batch = []
+                columns_of_interest = ["id", "name"]
 
-            with open(NODES_FILE, "r") as nodes_file:
-                reader = csv.DictReader(nodes_file, delimiter="\t")
-                node_batch_loaded = 0
+                with open(NODES_FILE, "r") as nodes_file:
+                    reader = csv.DictReader(nodes_file, delimiter="\t")
+                    node_batch_loaded = 0
 
-                for row in reader:
-                    node_id = row[columns_of_interest[0]]
-                    node_label = row[columns_of_interest[1]]
-                    nodes_batch.append({"id": node_id, "label": node_label})
-                    node_batch_loaded += 1
+                    for row in reader:
+                        node_id = row[columns_of_interest[0]]
+                        node_label = row[columns_of_interest[1]]
+                        nodes_batch.append({"id": node_id, "label": node_label})
+                        node_batch_loaded += 1
 
-                    if len(nodes_batch) >= DATALOAD_BATCH_SIZE:
-                        session.write_transaction(self.create_nodes, nodes_batch)
-                        nodes_batch = []
-                        # print(f"Batch loaded (nodes): {node_batch_loaded} nodes")
+                        if len(nodes_batch) >= DATALOAD_BATCH_SIZE:
+                            self.create_nodes(nodes_batch)
+                            nodes_batch = []
 
-                if nodes_batch:
-                    session.write_transaction(self.create_nodes, nodes_batch)
-            
-            elapsed_time_seconds = time.time() - start_time
-            
-            if elapsed_time_seconds >= 3600:
-                elapsed_time_hours = elapsed_time_seconds / 3600
-                print(f"Nodes import completed: {node_batch_loaded} nodes in {elapsed_time_hours:.2f} hours.")
-            else:
-                elapsed_time_minutes = elapsed_time_seconds / 60
-                print(f"Nodes import completed: {node_batch_loaded} nodes in {elapsed_time_minutes:.2f} minutes.")
-            
+                    if nodes_batch:
+                        self.create_nodes(nodes_batch)
+                
+                elapsed_time_seconds = time.time() - start_time
+                
+                if elapsed_time_seconds >= 3600:
+                    elapsed_time_hours = elapsed_time_seconds / 3600
+                    print(f"Nodes import completed: {node_batch_loaded} nodes in {elapsed_time_hours:.2f} hours.")
+                else:
+                    elapsed_time_minutes = elapsed_time_seconds / 60
+                    print(f"Nodes import completed: {node_batch_loaded} nodes in {elapsed_time_minutes:.2f} minutes.")
+                
 
-            # Import edges in batches
-            print("Starting to import edges...")
-            start_time = time.time()
-            edges_batch = []
-            edge_column_of_interest = ["subject", "predicate", "object"]
+                # Import edges in batches
+                print("Starting to import edges...")
+                start_time = time.time()
+                edges_batch = []
+                edge_column_of_interest = ["subject", "predicate", "object"]
 
-            with open(EDGES_FILE, "r") as edges_file:
-                reader = csv.DictReader(edges_file, delimiter="\t")
-                edge_batch_loaded = 0
+                with open(EDGES_FILE, "r") as edges_file:
+                    reader = csv.DictReader(edges_file, delimiter="\t")
+                    edge_batch_loaded = 0
 
-                for row in reader:
-                    source_id = row[edge_column_of_interest[0]]
-                    relationship = row[edge_column_of_interest[1]]
-                    target_id = row[edge_column_of_interest[2]]
-                    edges_batch.append({"source_id": source_id, "target_id": target_id, "relationship": relationship})
-                    edge_batch_loaded += 1
+                    for row in reader:
+                        source_id = row[edge_column_of_interest[0]]
+                        relationship = row[edge_column_of_interest[1]]
+                        target_id = row[edge_column_of_interest[2]]
+                        edges_batch.append({"source_id": source_id, "target_id": target_id, "relationship": relationship})
+                        edge_batch_loaded += 1
 
-                    if len(edges_batch) >= DATALOAD_BATCH_SIZE / 2:
-                        session.write_transaction(self.create_edges, edges_batch)
-                        edges_batch = []
-                        # print(f"Batch loaded (edges): {edge_batch_loaded}")
+                        if len(edges_batch) >= DATALOAD_BATCH_SIZE / 2:
+                            self.create_edges(edges_batch)
+                            edges_batch = []
 
-                if edges_batch:
-                    session.write_transaction(self.create_edges, edges_batch)
+                    if edges_batch:
+                        self.create_edges(edges_batch)
 
-            elapsed_time_seconds = time.time() - start_time
-            if elapsed_time_seconds >= 3600:
-                elapsed_time_hours = elapsed_time_seconds / 3600
-                print(f"Edges import completed: {edge_batch_loaded} edges in {elapsed_time_hours:.2f} hours.")
-            else:
-                elapsed_time_minutes = elapsed_time_seconds / 60
-                print(f"Edges import completed: {edge_batch_loaded} edges in {elapsed_time_minutes:.2f} minutes.")
+                elapsed_time_seconds = time.time() - start_time
+                if elapsed_time_seconds >= 3600:
+                    elapsed_time_hours = elapsed_time_seconds / 3600
+                    print(f"Edges import completed: {edge_batch_loaded} edges in {elapsed_time_hours:.2f} hours.")
+                else:
+                    elapsed_time_minutes = elapsed_time_seconds / 60
+                    print(f"Edges import completed: {edge_batch_loaded} edges in {elapsed_time_minutes:.2f} minutes.")
 
-        self.driver.close()
-        print("Import process finished and connection closed.")
+            print("Import process finished.")
+
+        return self.execute_unsafe_operation(_load_kg)
+
+    def __del__(self):
+        """Ensure the driver is closed when the object is destroyed."""
+        if hasattr(self, 'driver'):
+            self.driver.close()
