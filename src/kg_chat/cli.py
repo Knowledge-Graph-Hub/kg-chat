@@ -145,7 +145,7 @@ def run_app(
         raise ValueError(f"Database {database} not supported.")
 
     app = create_app(kgc)
-    app.run_server(debug=debug)
+    app.run(debug=debug, use_reloader=False)
 
 
 if __name__ == "__main__":

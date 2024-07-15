@@ -21,8 +21,8 @@ body {
 
 #chat-interface {
     position: fixed;
-    bottom: 0;
-    right: 0;
+    bottom: 10px;
+    right: 10px;
     width: 300px;
     height: 400px;
     border: 1px solid #ccc;
@@ -31,6 +31,8 @@ body {
     overflow-y: auto;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+    resize: both; /* Allow resizing */
+    overflow: auto; /* Ensure scrollbars appear if content overflows */
 }
 
 #user-input {
