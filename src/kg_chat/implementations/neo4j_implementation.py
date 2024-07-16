@@ -31,7 +31,15 @@ class Neo4jImplementation(DatabaseInterface):
         self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
         self.graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
         self.llm = ChatOpenAI(model=MODEL, temperature=0, api_key=OPENAI_KEY)
-        self.chain = GraphCypherQAChain.from_llm(graph=self.graph, llm=self.llm, verbose=True)
+
+        self.chain = GraphCypherQAChain.from_llm(
+            graph=self.graph,
+            llm=self.llm,
+            verbose=True,
+            use_function_response=True,
+            # function_response_system="Respond as a Data Scientist!",
+            validate_cypher=True,
+        )
         self.safe_mode = True
 
     def toggle_safe_mode(self, enabled: bool):
