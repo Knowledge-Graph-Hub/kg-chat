@@ -12,8 +12,8 @@ from sqlalchemy import create_engine
 from kg_chat.constants import (
     DATABASE_DIR,
     EDGES_FILE,
-    OPEN_AI_MODEL,
     NODES_FILE,
+    OPEN_AI_MODEL,
     OPENAI_KEY,
 )
 from kg_chat.interface.database_interface import DatabaseInterface

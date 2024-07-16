@@ -12,11 +12,11 @@ from neo4j import GraphDatabase
 from kg_chat.constants import (
     DATALOAD_BATCH_SIZE,
     EDGES_FILE,
-    OPEN_AI_MODEL,
     NEO4J_PASSWORD,
     NEO4J_URI,
     NEO4J_USERNAME,
     NODES_FILE,
+    OPEN_AI_MODEL,
     OPENAI_KEY,
 )
 from kg_chat.interface.database_interface import DatabaseInterface
