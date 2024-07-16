@@ -15,7 +15,6 @@ Welcome to kg-chat's documentation!
    supported_backends
    supported_llms
    commands
-   visualization
    modules
 
 Indices and tables
