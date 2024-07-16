@@ -1,258 +1,62 @@
 # kg-chat
 
-Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and ['DuckDB'](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) under the hood.
-
+Chatbot that looks up information from provided [KGX](https://github.com/biolink/kgx) files (nodes and edges TSV files). It uses [`langchain`](https://github.com/langchain-ai/langchain) and ['DuckDB'](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j).
 
 > **_NOTE:_**  
-> This project assumes that you have `OPENAI_API_KEY` already set as an environmental variable.
+> Ensure `OPENAI_API_KEY` is set as an environmental variable.
 
 ## Setup
 
-> **_NOTE:_**  
-> Follow steps 1 through 5 **ONLY** if you want to work with Neo4j as the backend. If you intend to use just DuckDB feel free to skip these steps.
+### For Neo4j Backend (Optional)
+1. Install Neo4j desktop from [here](https://neo4j.com/download/).
+2. Create a new project and database, then start it.
+3. Install the APOC plugin in Neo4j Desktop.
+4. Update settings to match [`neo4j_db_settings.conf`](conf_files/neo4j_db_settings.conf).
 
-1. Install Neo4j desktop from [here](https://neo4j.com/download/?utm_source=Google&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=download%20neo4j&utm_adgroup=download&gad_source=1&gbraid=0AAAAADk9OYqwuLc9mMDBV2n4GXbXo8LzS&gclid=Cj0KCQjwv7O0BhDwARIsAC0sjWOzlSRw10D0r0jnxU2FtVs1MlC1lMVhl2GqH8pa4HAoaVS85DQO9nsaArSfEALw_wcB)
-
-2. Create a new project by giving it a name of your choice. Make sure to choose the latest version of Neo4j. At this time it is (v5.21.2).
-3. Create an empty database with a name of your choice and `Start` it.
-    - Credentials can be as declared [here](https://github.com/hrshdhgd/kg-chat/blob/9ffd530e0da60da772403a327707fc3128d916e5/src/kg_chat/constants.py#L11-L12)
-4. Install the APOC plugin in Neo4j Desktop. It is listed under the `Plugins` tab which appears when you single-click the database.
-5. Click on `Settings` which is visible when you click on the 3 dots that appears to the right of the db on single-clicking as well. It should match []`neo4j_db_settings.conf`](conf_files/neo4j_db_settings.conf)
- - The main edits you'll need to do are these 3 lines:
-    ```conf
-    dbms.memory.heap.initial_size=1G
-    dbms.memory.heap.max_size=16G
-    dbms.security.procedures.allowlist=apoc.coll.*,apoc.load.*,gds.*,apoc.meta.data
-    ```
-    Update the memory heaps as per your preference.
-4. Clone this repository locally
-5. Create a virtual environment of your choice and `pip install poetry` in it.
-6. 
+### General Setup
+1. Clone this repository.
+2. Create a virtual environment and install dependencies:
     ```shell
     cd kg-chat
+    pip install poetry
     poetry install
     ```
-8. replace the `data/nodes.tsv` and `data/edges.tsv` file in the project with corresponding files of choice that needs to be queried against.
+3. Replace `data/nodes.tsv` and `data/edges.tsv` with your files.
 
-### Supported backends
-
- - DuckDB [default]
- - Neo4j
-
-### Supported LLMs from
-
- - OpenAI
+### Supported Backends
+- DuckDB [default]
+- Neo4j
 
 ### Commands
 
-1. `import-kg`: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.
+1. **Import KG**: Load nodes and edges into Neo4j.
     ```shell
     kg import-kg
     ```
-    
-2. `test-query`: To test that the above worked, run a built-in test query:
+
+2. **Test Query**: Run a test query.
     ```shell
     kg test-query --database neo4j
     ```
-    This should return something like (as per KGX data in the repo):
+
+3. **QnA**: Ask questions about the data.
     ```shell
-    {'n': {'label': 'Streptomyces thermocarboxydovorans', 'id': 'NCBITaxon:59298'}}
-    {'n': {'label': 'Streptomyces thermocarboxydus', 'id': 'NCBITaxon:59299'}}
-    {'n': {'label': 'Streptomyces thermogriseus', 'id': 'NCBITaxon:75292'}}
-    {'n': {'label': 'Streptomyces thermospinosisporus', 'id': 'NCBITaxon:161482'}}
-    {'n': {'label': 'Streptomyces vitaminophilus', 'id': 'NCBITaxon:76728'}}
-    {'n': {'label': 'Streptomyces yanii', 'id': 'NCBITaxon:78510'}}
-    {'n': {'label': 'Kitasatospora azatica', 'id': 'NCBITaxon:58347'}}
-    {'n': {'label': 'Kitasatospora paracochleata', 'id': 'NCBITaxon:58354'}}
-    {'n': {'label': 'Kitasatospora putterlickiae', 'id': 'NCBITaxon:221725'}}
-    {'n': {'label': 'Kitasatospora sampliensis', 'id': 'NCBITaxon:228655'}}
+    kg qna --database neo4j "your question here"
     ```
 
-3. `qna`: This command can be used for asking a question about the data and receiving a response.
-    ```shell
-    kg qna --database neo4j "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
-    ```
-    This should return
-    ```shell
-    > Entering new GraphCypherQAChain chain...
-    Generated Cypher:
-    MATCH (n:Node)-[r:RELATIONSHIP]->(m:Node)
-    RETURN n.label AS label, n.id AS id, COUNT(r) AS frequency
-    ORDER BY frequency DESC
-    Full Context:
-    [{'label': 'hydrocarbon', 'id': 'CHEBI:24632', 'frequency': 2381}, {'label': 'Marinobacterium coralli', 'id': 'NCBITaxon:693965', 'frequency': 55}, {'label': 'Marinobacterium coralli LMG 25435', 'id': 'NCBITaxon:693965', 'frequency': 55}, {'label': 'Ruegeria mobilis DSM 23403', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria mobilis S1942', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria pelagia', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'ruegeria_pelagia', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'ruegeria_mobilis', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria mobilis', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria mobilis 45A6', 'id': 'NCBITaxon:379347', 'frequency': 47}]
-
-    > Finished chain.
-    ('| Label                        | ID              | Frequency |\n'
-    '|------------------------------|-----------------|-----------|\n'
-    '| hydrocarbon                  | CHEBI:24632     | 2381      |\n'
-    '| Marinobacterium coralli      | NCBITaxon:693965| 55        |\n'
-    '| Ruegeria mobilis             | NCBITaxon:379347| 47        |\n'
-    '| Ruegeria pelagia             | NCBITaxon:379347| 47        |\n'
-    '| Ruegeria mobilis DSM 23403   | NCBITaxon:379347| 47        |\n'
-    '| Ruegeria mobilis S1942       | NCBITaxon:379347| 47        |\n'
-    '| Ruegeria pelagia             | NCBITaxon:379347| 47        |\n'
-    '| ruegeria_pelagia             | NCBITaxon:379347| 47        |\n'
-    '| ruegeria_mobilis             | NCBITaxon:379347| 47        |\n'
-    '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
-    ```
-
-4. `chat`: This starts an interactive chat session where you can ask questions about your KG.
+4. **Chat**: Start an interactive chat session.
     ```shell
     kg chat --database neo4j
     ```
-    Gives you the following:
+
+5. **App**: Deploy a local web application.
     ```shell
-    Ask me about your data! : 
-    ```
-    To quit type `quit` or `exit`.
-
-    Example conversation:
-    ```shell
-        Ask me about your data! : Give me a brief statistic about the table
-
-
-        > Entering new GraphCypherQAChain chain...
-        Generated Cypher:
-        MATCH (n:Node)-[r:RELATIONSHIP]->(m:Node)
-        RETURN COUNT(n) AS nodeCount, COUNT(r) AS relationshipCount
-        Full Context:
-        [{'nodeCount': 598598, 'relationshipCount': 598598}]
-
-        > Finished chain.
-        'The table contains 598,598 nodes and 598,598 relationships.'
-        Ask me about your data! : give me a table of the 5 most frequent relationships
-
-
-        > Entering new GraphCypherQAChain chain...
-        Generated Cypher:
-        cypher
-        MATCH ()-[r:RELATIONSHIP]->()
-        RETURN r.type AS RelationshipType, COUNT(r) AS Frequency
-        ORDER BY Frequency DESC
-        LIMIT 5
-
-        Full Context:
-        [{'RelationshipType': 'biolink:capable_of', 'Frequency': 225052}, {'RelationshipType': 'biolink:location_of', 'Frequency': 187104}, {'RelationshipType': 'biolink:consumes', 'Frequency': 107037}, {'RelationshipType': 'biolink:has_phenotype', 'Frequency': 79168}, {'RelationshipType': 'biolink:has_chemical_role', 'Frequency': 237}]
-
-        > Finished chain.
-        ('| Relationship Type            | Frequency |\n'
-        '|------------------------------|-----------|\n'
-        '| biolink:capable_of           | 225052    |\n'
-        '| biolink:location_of          | 187104    |\n'
-        '| biolink:consumes             | 107037    |\n'
-        '| biolink:has_phenotype        | 79168     |\n'
-        '| biolink:has_chemical_role    | 237       |')
-        Ask me about your data! :    Give me node IDs and labels of any 10 nodes that have the word strep in it
-
-        > Entering new GraphCypherQAChain chain...
-        Generated Cypher:
-        cypher
-        MATCH (n:Node)
-        WHERE n.label CONTAINS 'strep'
-        RETURN n.id, n.label
-        LIMIT 10
-
-        Full Context:
-        [{'n.id': 'NCBITaxon:33035', 'n.label': 'Peptostreptococcus productus'}, {'n.id': 'NCBITaxon:596329', 'n.label': 'Peptostreptococcus anaerobius 653-L'}, {'n.id': 'NCBITaxon:1261', 'n.label': 'Peptostreptococcus anaerobius'}, {'n.id': 'NCBITaxon:596315', 'n.label': 'Peptostreptococcus stomatis DSM 17678'}, {'n.id': 'NCBITaxon:1262', 'n.label': 'Peptostreptococcus sp. 2'}, {'n.id': 'NCBITaxon:1261', 'n.label': 'Peptostreptococcus anaerobius 0009-10 Hillier'}, {'n.id': 'NCBITaxon:1262', 'n.label': 'Peptostreptococcus sp. ACS-065-V-Col13'}, {'n.id': 'NCBITaxon:796937', 'n.label': 'Peptostreptococcaceae bacterium CM2'}, {'n.id': 'NCBITaxon:796937', 'n.label': 'Peptostreptococcaceae bacterium ACC19a'}, {'n.id': 'NCBITaxon:796937', 'n.label': 'Peptostreptococcaceae bacterium CM5'}]
-
-        > Finished chain.
-        ('Here are the node IDs and labels of 10 nodes that have the word "strep" in '
-        'them:\n'
-        '\n'
-        '1. NCBITaxon:33035 - Peptostreptococcus productus\n'
-        '2. NCBITaxon:596329 - Peptostreptococcus anaerobius 653-L\n'
-        '3. NCBITaxon:1261 - Peptostreptococcus anaerobius\n'
-        '4. NCBITaxon:596315 - Peptostreptococcus stomatis DSM 17678\n'
-        '5. NCBITaxon:1262 - Peptostreptococcus sp. 2\n'
-        '6. NCBITaxon:1261 - Peptostreptococcus anaerobius 0009-10 Hillier\n'
-        '7. NCBITaxon:1262 - Peptostreptococcus sp. ACS-065-V-Col13\n'
-        '8. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM2\n'
-        '9. NCBITaxon:796937 - Peptostreptococcaceae bacterium ACC19a\n'
-        '10. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM5')
-        Ask me about your data! : 
-
-
+    kg app
     ```
 
-    ### Visualization
-    If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
-    ```shell
-    kg-chat $ kg chat --database neo4j
-    Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
+### Visualization
+Use `show me` in prompts for HTML output with KG representation.
 
-
-    > Entering new GraphCypherQAChain chain...
-    Generated Cypher:
-    cypher
-    MATCH (n:Node)
-    WHERE n.id STARTS WITH 'NCBITaxon:'
-    WITH n, size((n)-[:RELATIONSHIP]->()) AS outDegree, size((n)<-[:RELATIONSHIP]-()) AS inDegree
-    WHERE (outDegree + inDegree) >= 3 AND (outDegree + inDegree) < 10
-    WITH n LIMIT 1
-    MATCH (n)-[r:RELATIONSHIP]-(m:Node)
-    RETURN {
-        nodes: collect({label: n.label, id: n.id}) + collect({label: m.label, id: m.id}),
-        edges: collect({source: {label: n.label, id: n.id}, target: {label: m.label, id: m.id}, relationship: r.type})
-    } AS result
-
-    Full Context:
-    [{'result': {'nodes': [{'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium vermiforme', 'id': 'NCBITaxon:714895'}, {'label': 'Hysterium barrianum', 'id': 'NCBITaxon:707625'}, {'label': 'Hysterium angustatum', 'id': 'NCBITaxon:574775'}, {'label': 'Hysterium hyalinum', 'id': 'NCBITaxon:574776'}, {'label': 'unclassified Hysterium', 'id': 'NCBITaxon:2649321'}, {'label': 'Hysterium rhizophorae', 'id': 'NCBITaxon:2066082'}, {'label': 'Hysterium pulicare', 'id': 'NCBITaxon:100027'}, {'label': 'Hysteriaceae', 'id': 'NCBITaxon:100025'}], 'edges': [{'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium vermiforme', 'id': 'NCBITaxon:714895'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium barrianum', 'id': 'NCBITaxon:707625'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium angustatum', 'id': 'NCBITaxon:574775'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium hyalinum', 'id': 'NCBITaxon:574776'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'unclassified Hysterium', 'id': 'NCBITaxon:2649321'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium rhizophorae', 'id': 'NCBITaxon:2066082'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium pulicare', 'id': 'NCBITaxon:100027'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysteriaceae', 'id': 'NCBITaxon:100025'}}]}}]
-
-    > Finished chain.
-    ('```json\n'
-    '{\n'
-    '    "nodes": [\n'
-    '        {"label": "Hysterium", "id": "NCBITaxon:100026"},\n'
-    '        {"label": "Hysterium vermiforme", "id": "NCBITaxon:714895"},\n'
-    '        {"label": "Hysterium barrianum", "id": "NCBITaxon:707625"},\n'
-    '        {"label": "Hysterium angustatum", "id": "NCBITaxon:574775"},\n'
-    '        {"label": "Hysterium hyalinum", "id": "NCBITaxon:574776"},\n'
-    '        {"label": "unclassified Hysterium", "id": "NCBITaxon:2649321"},\n'
-    '        {"label": "Hysterium rhizophorae", "id": "NCBITaxon:2066082"},\n'
-    '        {"label": "Hysterium pulicare", "id": "NCBITaxon:100027"},\n'
-    '        {"label": "Hysteriaceae", "id": "NCBITaxon:100025"}\n'
-    '    ],\n'
-    '    "edges": [\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysterium vermiforme", "id": "NCBITaxon:714895"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysterium barrianum", "id": "NCBITaxon:707625"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysterium angustatum", "id": "NCBITaxon:574775"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysterium hyalinum", "id": "NCBITaxon:574776"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "unclassified Hysterium", "id": "NCBITaxon:2649321"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysterium rhizophorae", "id": "NCBITaxon:2066082"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysterium pulicare", "id": "NCBITaxon:100027"}, '
-    '"relationship": "biolink:subclass_of"},\n'
-    '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-    '"target": {"label": "Hysteriaceae", "id": "NCBITaxon:100025"}, '
-    '"relationship": "biolink:subclass_of"}\n'
-    '    ]\n'
-    '}\n'
-    '```')
-    ../kg-chat/src/kg_chat/graph_output/knowledge_graph.html
-    Ask me about your data! : 
-    ```
-
-    This results in the formation of the `knowledge_graph.html` file.
-
-    ![Knowledge Graph](src/kg_chat/assets/kg_viz.png)
-
-5. `app`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `chat` command.
-
-    ### Visualization
-    ![app](src/kg_chat/assets/kg_app.png)
 ---
 ### Acknowledgements
 
