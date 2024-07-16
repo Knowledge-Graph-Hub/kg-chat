@@ -21,17 +21,19 @@ def structure_query(query: str):
         # Modify the query to request structured results
         structured_query = f"""
         {query}
-        Please provide the result in JSON format with nodes and edges. Return JSON ONLY.
+        Please provide the result in JSON format with ALL nodes and ALL edges. Return JSON ONLY.
         Example: {{
             "nodes": [
                 {{"label": "A", "id": "1"}},
                 {{"label": "B", "id": "2"}},
-                {{"label": "C", "id": "3"}}
+                {{"label": "C", "id": "3"}},
+                ..and so on
             ],
             "edges": [
                 {{"source": {{"label": "A", "id": "1"}},
                 "target": {{"label": "B", "id": "2"}},
-                "relationship": "biolink:related_to"}}
+                "relationship": "biolink:related_to"}},
+                ..and so on
             ]
         }}
         """
