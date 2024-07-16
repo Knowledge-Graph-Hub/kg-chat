@@ -10,6 +10,12 @@ Welcome to kg-chat's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
+   setup
+   supported_backends
+   supported_llms
+   commands
+   visualization
    modules
 
 Indices and tables

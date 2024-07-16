@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commands &mdash; kg-chat 0.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=7026087e"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Visualization" href="visualization.html" />
+    <link rel="prev" title="Supported LLMs" href="supported_llms.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            kg-chat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supported_backends.html">Supported Backends</a></li>
+<li class="toctree-l1"><a class="reference internal" href="supported_llms.html">Supported LLMs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">kg_chat</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">kg-chat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Commands</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/commands.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="commands">
+<h1>Commands<a class="headerlink" href="#commands" title="Link to this heading"></a></h1>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">import-kg</span></code>: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kg<span class="w"> </span>import-kg
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test-query</span></code>: To test that the above worked, run a built-in test query:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kg<span class="w"> </span>test-query<span class="w"> </span>--database<span class="w"> </span>neo4j
+</pre></div>
+</div>
+<p>This should return something like (as per KGX data in the repo):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;S</span><span class="kc">tre</span><span class="err">p</span><span class="kc">t</span><span class="err">omyces</span><span class="w"> </span><span class="kc">t</span><span class="err">hermocarboxydovora</span><span class="kc">ns</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">59298</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;S</span><span class="kc">tre</span><span class="err">p</span><span class="kc">t</span><span class="err">omyces</span><span class="w"> </span><span class="kc">t</span><span class="err">hermocarboxydus&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">59299</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;S</span><span class="kc">tre</span><span class="err">p</span><span class="kc">t</span><span class="err">omyces</span><span class="w"> </span><span class="kc">t</span><span class="err">hermogriseus&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">75292</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;S</span><span class="kc">tre</span><span class="err">p</span><span class="kc">t</span><span class="err">omyces</span><span class="w"> </span><span class="kc">t</span><span class="err">hermospi</span><span class="kc">n</span><span class="err">osisporus&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">161482</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;S</span><span class="kc">tre</span><span class="err">p</span><span class="kc">t</span><span class="err">omyces</span><span class="w"> </span><span class="err">vi</span><span class="kc">ta</span><span class="err">mi</span><span class="kc">n</span><span class="err">ophilus&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">76728</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;S</span><span class="kc">tre</span><span class="err">p</span><span class="kc">t</span><span class="err">omyces</span><span class="w"> </span><span class="err">ya</span><span class="kc">n</span><span class="err">ii&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">78510</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Ki</span><span class="kc">tasat</span><span class="err">ospora</span><span class="w"> </span><span class="err">aza</span><span class="kc">t</span><span class="err">ica&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">58347</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Ki</span><span class="kc">tasat</span><span class="err">ospora</span><span class="w"> </span><span class="err">paracochlea</span><span class="kc">ta</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">58354</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Ki</span><span class="kc">tasat</span><span class="err">ospora</span><span class="w"> </span><span class="err">pu</span><span class="kc">tterl</span><span class="err">ickiae&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">221725</span><span class="err">&#39;</span><span class="p">}}</span>
+<span class="p">{</span><span class="err">&#39;</span><span class="kc">n</span><span class="err">&#39;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="err">&#39;label&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;Ki</span><span class="kc">tasat</span><span class="err">ospora</span><span class="w"> </span><span class="err">samplie</span><span class="kc">ns</span><span class="err">is&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;id&#39;</span><span class="p">:</span><span class="w"> </span><span class="err">&#39;NCBITaxo</span><span class="kc">n</span><span class="p">:</span><span class="mi">228655</span><span class="err">&#39;</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">qna</span></code>: This command can be used for asking a question about the data and receiving a response.</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kg<span class="w"> </span>qna<span class="w"> </span>--database<span class="w"> </span>neo4j<span class="w"> </span><span class="s2">&quot;give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table &quot;</span>
+</pre></div>
+</div>
+<p>This should return</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&gt; Entering new GraphCypherQAChain chain...
+Generated Cypher:
+MATCH (n:Node)-[r:RELATIONSHIP]-&gt;(m:Node)
+RETURN n.label AS label, n.id AS id, COUNT(r) AS frequency
+ORDER BY frequency DESC
+Full Context:
+[{&#39;label&#39;: &#39;hydrocarbon&#39;, &#39;id&#39;: &#39;CHEBI:24632&#39;, &#39;frequency&#39;: 2381}, {&#39;label&#39;: &#39;Marinobacterium coralli&#39;, &#39;id&#39;: &#39;NCBITaxon:693965&#39;, &#39;frequency&#39;: 55}, {&#39;label&#39;: &#39;Marinobacterium coralli LMG 25435&#39;, &#39;id&#39;: &#39;NCBITaxon:693965&#39;, &#39;frequency&#39;: 55}, {&#39;label&#39;: &#39;Ruegeria mobilis DSM 23403&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}, {&#39;label&#39;: &#39;Ruegeria mobilis S1942&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}, {&#39;label&#39;: &#39;Ruegeria pelagia&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}, {&#39;label&#39;: &#39;ruegeria_pelagia&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}, {&#39;label&#39;: &#39;ruegeria_mobilis&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}, {&#39;label&#39;: &#39;Ruegeria mobilis&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}, {&#39;label&#39;: &#39;Ruegeria mobilis 45A6&#39;, &#39;id&#39;: &#39;NCBITaxon:379347&#39;, &#39;frequency&#39;: 47}]
+
+&gt; Finished chain.
+(&#39;| Label                        | ID              | Frequency |\n&#39;
+&#39;|------------------------------|-----------------|-----------|\n&#39;
+&#39;| hydrocarbon                  | CHEBI:24632     | 2381      |\n&#39;
+&#39;| Marinobacterium coralli      | NCBITaxon:693965| 55        |\n&#39;
+&#39;| Ruegeria mobilis             | NCBITaxon:379347| 47        |\n&#39;
+&#39;| Ruegeria pelagia             | NCBITaxon:379347| 47        |\n&#39;
+&#39;| Ruegeria mobilis DSM 23403   | NCBITaxon:379347| 47        |\n&#39;
+&#39;| Ruegeria mobilis S1942       | NCBITaxon:379347| 47        |\n&#39;
+&#39;| Ruegeria pelagia             | NCBITaxon:379347| 47        |\n&#39;
+&#39;| ruegeria_pelagia             | NCBITaxon:379347| 47        |\n&#39;
+&#39;| ruegeria_mobilis             | NCBITaxon:379347| 47        |\n&#39;
+&#39;| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |&#39;)
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">chat</span></code>: This starts an interactive chat session where you can ask questions about your KG.</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kg<span class="w"> </span>chat<span class="w"> </span>--database<span class="w"> </span>neo4j
+</pre></div>
+</div>
+<p>Gives you the following:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Ask<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>your<span class="w"> </span>data!<span class="w"> </span>:
+</pre></div>
+</div>
+<p>To quit type <code class="docutils literal notranslate"><span class="pre">quit</span></code> or <code class="docutils literal notranslate"><span class="pre">exit</span></code>.</p>
+<p>Example conversation:
+.. code-block:: shell</p>
+<blockquote>
+<div><p>Ask me about your data! : Give me a brief statistic about the table</p>
+<p>&gt; Entering new GraphCypherQAChain chain…
+Generated Cypher:
+MATCH (n:Node)-[r:RELATIONSHIP]-&gt;(m:Node)
+RETURN COUNT(n) AS nodeCount, COUNT(r) AS relationshipCount
+Full Context:
+[{‘nodeCount’: 598598, ‘relationshipCount’: 598598}]</p>
+<p>&gt; Finished chain.
+‘The table contains 598,598 nodes and 598,598 relationships.’
+Ask me about your data! : give me a table of the 5 most frequent relationships</p>
+<p>&gt; Entering new GraphCypherQAChain chain…
+Generated Cypher:
+cypher
+MATCH ()-[r:RELATIONSHIP]-&gt;()
+RETURN r.type AS RelationshipType, COUNT(r) AS Frequency
+ORDER BY Frequency DESC
+LIMIT 5</p>
+<p>Full Context:
+[{‘RelationshipType’: ‘biolink:capable_of’, ‘Frequency’: 225052}, {‘RelationshipType’: ‘biolink:location_of’, ‘Frequency’: 187104}, {‘RelationshipType’: ‘biolink:consumes’, ‘Frequency’: 107037}, {‘RelationshipType’: ‘biolink:has_phenotype’, ‘Frequency’: 79168}, {‘RelationshipType’: ‘biolink:has_chemical_role’, ‘Frequency’: 237}]</p>
+<p>&gt; Finished chain.
+(’| Relationship Type            | Frequency <a href="#id3"><span class="problematic" id="id4">|\n'
+'|</span></a>——————————<a href="#id5"><span class="problematic" id="id6">|-----------|</span></a>n’
+‘| biolink:capable_of           | 225052    <a href="#id7"><span class="problematic" id="id8">|\n'
+'|</span></a> biolink:location_of          | 187104    <a href="#id9"><span class="problematic" id="id10">|\n'
+'|</span></a> biolink:consumes             | 107037    <a href="#id11"><span class="problematic" id="id12">|\n'
+'|</span></a> biolink:has_phenotype        | 79168     <a href="#id13"><span class="problematic" id="id14">|\n'
+'|</span></a> biolink:has_chemical_role    | 237       <a href="#id1"><span class="problematic" id="id2">|</span></a>’)
+Ask me about your data! : Give me node IDs and labels of any 10 nodes that have the word strep in it</p>
+<p>&gt; Entering new GraphCypherQAChain chain…
+Generated Cypher:
+cypher
+MATCH (n:Node)
+WHERE n.label CONTAINS ‘strep’
+RETURN n.id, n.label
+LIMIT 10</p>
+<p>Full Context:
+[{‘n.id’: ‘NCBITaxon:33035’, ‘n.label’: ‘Peptostreptococcus productus’}, {‘n.id’: ‘NCBITaxon:596329’, ‘n.label’: ‘Peptostreptococcus anaerobius 653-L’}, {‘n.id’: ‘NCBITaxon:1261’, ‘n.label’: ‘Peptostreptococcus anaerobius’}, {‘n.id’: ‘NCBITaxon:596315’, ‘n.label’: ‘Peptostreptococcus stomatis DSM 17678’}, {‘n.id’: ‘NCBITaxon:1262’, ‘n.label’: ‘Peptostreptococcus sp. 2’}, {‘n.id’: ‘NCBITaxon:1261’, ‘n.label’: ‘Peptostreptococcus anaerobius 0009-10 Hillier’}, {‘n.id’: ‘NCBITaxon:1262’, ‘n.label’: ‘Peptostreptococcus sp. ACS-065-V-Col13’}, {‘n.id’: ‘NCBITaxon:796937’, ‘n.label’: ‘Peptostreptococcaceae bacterium CM2’}, {‘n.id’: ‘NCBITaxon:796937’, ‘n.label’: ‘Peptostreptococcaceae bacterium ACC19a’}, {‘n.id’: ‘NCBITaxon:796937’, ‘n.label’: ‘Peptostreptococcaceae bacterium CM5’}]</p>
+<p>&gt; Finished chain.
+(‘Here are the node IDs and labels of 10 nodes that have the word “strep” in ‘
+‘them:n’
+‘n’
+‘1. NCBITaxon:33035 - Peptostreptococcus productusn’
+‘2. NCBITaxon:596329 - Peptostreptococcus anaerobius 653-Ln’
+‘3. NCBITaxon:1261 - Peptostreptococcus anaerobiusn’
+‘4. NCBITaxon:596315 - Peptostreptococcus stomatis DSM 17678n’
+‘5. NCBITaxon:1262 - Peptostreptococcus sp. 2n’
+‘6. NCBITaxon:1261 - Peptostreptococcus anaerobius 0009-10 Hilliern’
+‘7. NCBITaxon:1262 - Peptostreptococcus sp. ACS-065-V-Col13n’
+‘8. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM2n’
+‘9. NCBITaxon:796937 - Peptostreptococcaceae bacterium ACC19an’
+‘10. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM5’)</p>
+</div></blockquote>
+</div></blockquote>
+</li>
+</ol>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="supported_llms.html" class="btn btn-neutral float-left" title="Supported LLMs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="visualization.html" class="btn btn-neutral float-right" title="Visualization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Harshad Hegde &lt;hhegde@lbl.gov&gt;.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
