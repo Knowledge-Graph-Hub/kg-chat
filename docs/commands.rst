@@ -220,9 +220,9 @@ Commands
         :align: center
 
     .. raw:: html
-    
-        <iframe src="https://raw.githubusercontent.com/hrshdhgd/kg-chat/main/src/kg_chat/graph_output/example.html" width="100%" height="500px"></iframe>
-    
+
+        .. include:: ../src/kg_chat/graph_output/example.html
+
 
 5. ``app``: This command can be used to start the KG chat app.
 
