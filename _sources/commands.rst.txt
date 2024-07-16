@@ -15,7 +15,7 @@ Commands
 
     This should return something like (as per KGX data in the repo):
 
-    .. code-block:: json
+    .. code-block:: shell
 
         {'n': {'label': 'Streptomyces thermocarboxydovorans', 'id': 'NCBITaxon:59298'}}
         {'n': {'label': 'Streptomyces thermocarboxydus', 'id': 'NCBITaxon:59299'}}
