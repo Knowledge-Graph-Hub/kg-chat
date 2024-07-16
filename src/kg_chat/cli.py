@@ -111,7 +111,7 @@ def qna(query: str, database: str = "duckdb"):
         raise ValueError(f"Database {database} not supported.")
 
 
-@main.command()
+@main.command("chat")
 @database_options
 def run_chat(database: str = "duckdb"):
     """Run the kg-chat's chat command."""
@@ -127,7 +127,7 @@ def run_chat(database: str = "duckdb"):
         raise ValueError(f"Database {database} not supported.")
 
 
-@main.command()
+@main.command("app")
 @click.option("--debug", is_flag=True, help="Run the app in debug mode.")
 @database_options
 def run_app(

@@ -97,9 +97,9 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
     '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
     ```
 
-4. `run-chat`: This starts an interactive chat session where you can ask questions about your KG.
+4. `chat`: This starts an interactive chat session where you can ask questions about your KG.
     ```shell
-    kg run-chat --database neo4j
+    kg chat --database neo4j
     ```
     Gives you the following:
     ```shell
@@ -178,7 +178,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
     ### Visualization
     If the prompt has the phrase `show me` in it, `kg-chat` would render an html output with KG representation of the response. For e.g.:
     ```shell
-    kg-chat $ kg run-chat --database neo4j
+    kg-chat $ kg chat --database neo4j
     Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
 
 
@@ -249,7 +249,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
     ![Knowledge Graph](src/kg_chat/assets/kg_viz.png)
 
-5. `run-app`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `run-chat` command.
+5. `app`: This deploys a local `dash` based web application with a chat interface. The prompts can be similar to the ones used for the `chat` command.
 
     ### Visualization
     ![app](src/kg_chat/assets/kg_app.png)
