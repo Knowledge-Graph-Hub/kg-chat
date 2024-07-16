@@ -74,7 +74,8 @@ Commands
 
     To quit type ``quit`` or ``exit``.
 
-    Example conversation: 
+    **Example conversation**:
+    
     .. code-block:: shell
 
         Ask me about your data! : Give me a brief statistic about the table

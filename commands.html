@@ -150,61 +150,68 @@ Full Context:
 </pre></div>
 </div>
 <p>To quit type <code class="docutils literal notranslate"><span class="pre">quit</span></code> or <code class="docutils literal notranslate"><span class="pre">exit</span></code>.</p>
-<p>Example conversation:
-.. code-block:: shell</p>
-<blockquote>
-<div><p>Ask me about your data! : Give me a brief statistic about the table</p>
-<p>&gt; Entering new GraphCypherQAChain chain…
-Generated Cypher:
-MATCH (n:Node)-[r:RELATIONSHIP]-&gt;(m:Node)
-RETURN COUNT(n) AS nodeCount, COUNT(r) AS relationshipCount
-Full Context:
-[{‘nodeCount’: 598598, ‘relationshipCount’: 598598}]</p>
-<p>&gt; Finished chain.
-‘The table contains 598,598 nodes and 598,598 relationships.’
-Ask me about your data! : give me a table of the 5 most frequent relationships</p>
-<p>&gt; Entering new GraphCypherQAChain chain…
-Generated Cypher:
+<p><strong>Example conversation</strong>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Ask<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>your<span class="w"> </span>data!<span class="w"> </span>:<span class="w"> </span>Give<span class="w"> </span>me<span class="w"> </span>a<span class="w"> </span>brief<span class="w"> </span>statistic<span class="w"> </span>about<span class="w"> </span>the<span class="w"> </span>table
+
+&gt;<span class="w"> </span>Entering<span class="w"> </span>new<span class="w"> </span>GraphCypherQAChain<span class="w"> </span>chain...
+Generated<span class="w"> </span>Cypher:
+MATCH<span class="w"> </span><span class="o">(</span>n:Node<span class="o">)</span>-<span class="o">[</span>r:RELATIONSHIP<span class="o">]</span>-&gt;<span class="o">(</span>m:Node<span class="o">)</span>
+RETURN<span class="w"> </span>COUNT<span class="o">(</span>n<span class="o">)</span><span class="w"> </span>AS<span class="w"> </span>nodeCount,<span class="w"> </span>COUNT<span class="o">(</span>r<span class="o">)</span><span class="w"> </span>AS<span class="w"> </span>relationshipCount
+Full<span class="w"> </span>Context:
+<span class="o">[{</span><span class="s1">&#39;nodeCount&#39;</span>:<span class="w"> </span><span class="m">598598</span>,<span class="w"> </span><span class="s1">&#39;relationshipCount&#39;</span>:<span class="w"> </span><span class="m">598598</span><span class="o">}]</span>
+
+&gt;<span class="w"> </span>Finished<span class="w"> </span>chain.
+<span class="s1">&#39;The table contains 598,598 nodes and 598,598 relationships.&#39;</span>
+Ask<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>your<span class="w"> </span>data!<span class="w"> </span>:<span class="w"> </span>give<span class="w"> </span>me<span class="w"> </span>a<span class="w"> </span>table<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span><span class="m">5</span><span class="w"> </span>most<span class="w"> </span>frequent<span class="w"> </span>relationships
+
+&gt;<span class="w"> </span>Entering<span class="w"> </span>new<span class="w"> </span>GraphCypherQAChain<span class="w"> </span>chain...
+Generated<span class="w"> </span>Cypher:
 cypher
-MATCH ()-[r:RELATIONSHIP]-&gt;()
-RETURN r.type AS RelationshipType, COUNT(r) AS Frequency
-ORDER BY Frequency DESC
-LIMIT 5</p>
-<p>Full Context:
-[{‘RelationshipType’: ‘biolink:capable_of’, ‘Frequency’: 225052}, {‘RelationshipType’: ‘biolink:location_of’, ‘Frequency’: 187104}, {‘RelationshipType’: ‘biolink:consumes’, ‘Frequency’: 107037}, {‘RelationshipType’: ‘biolink:has_phenotype’, ‘Frequency’: 79168}, {‘RelationshipType’: ‘biolink:has_chemical_role’, ‘Frequency’: 237}]</p>
-<p>&gt; Finished chain.
-(’| Relationship Type            | Frequency <a href="#id3"><span class="problematic" id="id4">|\n'
-'|</span></a>——————————<a href="#id5"><span class="problematic" id="id6">|-----------|</span></a>n’
-‘| biolink:capable_of           | 225052    <a href="#id7"><span class="problematic" id="id8">|\n'
-'|</span></a> biolink:location_of          | 187104    <a href="#id9"><span class="problematic" id="id10">|\n'
-'|</span></a> biolink:consumes             | 107037    <a href="#id11"><span class="problematic" id="id12">|\n'
-'|</span></a> biolink:has_phenotype        | 79168     <a href="#id13"><span class="problematic" id="id14">|\n'
-'|</span></a> biolink:has_chemical_role    | 237       <a href="#id1"><span class="problematic" id="id2">|</span></a>’)
-Ask me about your data! : Give me node IDs and labels of any 10 nodes that have the word strep in it</p>
-<p>&gt; Entering new GraphCypherQAChain chain…
-Generated Cypher:
+MATCH<span class="w"> </span><span class="o">()</span>-<span class="o">[</span>r:RELATIONSHIP<span class="o">]</span>-&gt;<span class="o">()</span>
+RETURN<span class="w"> </span>r.type<span class="w"> </span>AS<span class="w"> </span>RelationshipType,<span class="w"> </span>COUNT<span class="o">(</span>r<span class="o">)</span><span class="w"> </span>AS<span class="w"> </span>Frequency
+ORDER<span class="w"> </span>BY<span class="w"> </span>Frequency<span class="w"> </span>DESC
+LIMIT<span class="w"> </span><span class="m">5</span>
+
+Full<span class="w"> </span>Context:
+<span class="o">[{</span><span class="s1">&#39;RelationshipType&#39;</span>:<span class="w"> </span><span class="s1">&#39;biolink:capable_of&#39;</span>,<span class="w"> </span><span class="s1">&#39;Frequency&#39;</span>:<span class="w"> </span><span class="m">225052</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;RelationshipType&#39;</span>:<span class="w"> </span><span class="s1">&#39;biolink:location_of&#39;</span>,<span class="w"> </span><span class="s1">&#39;Frequency&#39;</span>:<span class="w"> </span><span class="m">187104</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;RelationshipType&#39;</span>:<span class="w"> </span><span class="s1">&#39;biolink:consumes&#39;</span>,<span class="w"> </span><span class="s1">&#39;Frequency&#39;</span>:<span class="w"> </span><span class="m">107037</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;RelationshipType&#39;</span>:<span class="w"> </span><span class="s1">&#39;biolink:has_phenotype&#39;</span>,<span class="w"> </span><span class="s1">&#39;Frequency&#39;</span>:<span class="w"> </span><span class="m">79168</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;RelationshipType&#39;</span>:<span class="w"> </span><span class="s1">&#39;biolink:has_chemical_role&#39;</span>,<span class="w"> </span><span class="s1">&#39;Frequency&#39;</span>:<span class="w"> </span><span class="m">237</span><span class="o">}]</span>
+
+&gt;<span class="w"> </span>Finished<span class="w"> </span>chain.
+<span class="o">(</span><span class="s1">&#39;| Relationship Type            | Frequency |\n&#39;</span>
+<span class="s1">&#39;|------------------------------|-----------|\n&#39;</span>
+<span class="s1">&#39;| biolink:capable_of           | 225052    |\n&#39;</span>
+<span class="s1">&#39;| biolink:location_of          | 187104    |\n&#39;</span>
+<span class="s1">&#39;| biolink:consumes             | 107037    |\n&#39;</span>
+<span class="s1">&#39;| biolink:has_phenotype        | 79168     |\n&#39;</span>
+<span class="s1">&#39;| biolink:has_chemical_role    | 237       |&#39;</span><span class="o">)</span>
+Ask<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>your<span class="w"> </span>data!<span class="w"> </span>:<span class="w"> </span>Give<span class="w"> </span>me<span class="w"> </span>node<span class="w"> </span>IDs<span class="w"> </span>and<span class="w"> </span>labels<span class="w"> </span>of<span class="w"> </span>any<span class="w"> </span><span class="m">10</span><span class="w"> </span>nodes<span class="w"> </span>that<span class="w"> </span>have<span class="w"> </span>the<span class="w"> </span>word<span class="w"> </span>strep<span class="w"> </span><span class="k">in</span><span class="w"> </span>it
+
+&gt;<span class="w"> </span>Entering<span class="w"> </span>new<span class="w"> </span>GraphCypherQAChain<span class="w"> </span>chain...
+Generated<span class="w"> </span>Cypher:
 cypher
-MATCH (n:Node)
-WHERE n.label CONTAINS ‘strep’
-RETURN n.id, n.label
-LIMIT 10</p>
-<p>Full Context:
-[{‘n.id’: ‘NCBITaxon:33035’, ‘n.label’: ‘Peptostreptococcus productus’}, {‘n.id’: ‘NCBITaxon:596329’, ‘n.label’: ‘Peptostreptococcus anaerobius 653-L’}, {‘n.id’: ‘NCBITaxon:1261’, ‘n.label’: ‘Peptostreptococcus anaerobius’}, {‘n.id’: ‘NCBITaxon:596315’, ‘n.label’: ‘Peptostreptococcus stomatis DSM 17678’}, {‘n.id’: ‘NCBITaxon:1262’, ‘n.label’: ‘Peptostreptococcus sp. 2’}, {‘n.id’: ‘NCBITaxon:1261’, ‘n.label’: ‘Peptostreptococcus anaerobius 0009-10 Hillier’}, {‘n.id’: ‘NCBITaxon:1262’, ‘n.label’: ‘Peptostreptococcus sp. ACS-065-V-Col13’}, {‘n.id’: ‘NCBITaxon:796937’, ‘n.label’: ‘Peptostreptococcaceae bacterium CM2’}, {‘n.id’: ‘NCBITaxon:796937’, ‘n.label’: ‘Peptostreptococcaceae bacterium ACC19a’}, {‘n.id’: ‘NCBITaxon:796937’, ‘n.label’: ‘Peptostreptococcaceae bacterium CM5’}]</p>
-<p>&gt; Finished chain.
-(‘Here are the node IDs and labels of 10 nodes that have the word “strep” in ‘
-‘them:n’
-‘n’
-‘1. NCBITaxon:33035 - Peptostreptococcus productusn’
-‘2. NCBITaxon:596329 - Peptostreptococcus anaerobius 653-Ln’
-‘3. NCBITaxon:1261 - Peptostreptococcus anaerobiusn’
-‘4. NCBITaxon:596315 - Peptostreptococcus stomatis DSM 17678n’
-‘5. NCBITaxon:1262 - Peptostreptococcus sp. 2n’
-‘6. NCBITaxon:1261 - Peptostreptococcus anaerobius 0009-10 Hilliern’
-‘7. NCBITaxon:1262 - Peptostreptococcus sp. ACS-065-V-Col13n’
-‘8. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM2n’
-‘9. NCBITaxon:796937 - Peptostreptococcaceae bacterium ACC19an’
-‘10. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM5’)</p>
-</div></blockquote>
+MATCH<span class="w"> </span><span class="o">(</span>n:Node<span class="o">)</span>
+WHERE<span class="w"> </span>n.label<span class="w"> </span>CONTAINS<span class="w"> </span><span class="s1">&#39;strep&#39;</span>
+RETURN<span class="w"> </span>n.id,<span class="w"> </span>n.label
+LIMIT<span class="w"> </span><span class="m">10</span>
+
+Full<span class="w"> </span>Context:
+<span class="o">[{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:33035&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus productus&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:596329&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus anaerobius 653-L&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:1261&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus anaerobius&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:596315&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus stomatis DSM 17678&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:1262&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus sp. 2&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:1261&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus anaerobius 0009-10 Hillier&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:1262&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcus sp. ACS-065-V-Col13&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:796937&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcaceae bacterium CM2&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:796937&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcaceae bacterium ACC19a&#39;</span><span class="o">}</span>,<span class="w"> </span><span class="o">{</span><span class="s1">&#39;n.id&#39;</span>:<span class="w"> </span><span class="s1">&#39;NCBITaxon:796937&#39;</span>,<span class="w"> </span><span class="s1">&#39;n.label&#39;</span>:<span class="w"> </span><span class="s1">&#39;Peptostreptococcaceae bacterium CM5&#39;</span><span class="o">}]</span>
+
+&gt;<span class="w"> </span>Finished<span class="w"> </span>chain.
+<span class="o">(</span><span class="s1">&#39;Here are the node IDs and labels of 10 nodes that have the word &quot;strep&quot; in &#39;</span>
+<span class="s1">&#39;them:\n&#39;</span>
+<span class="s1">&#39;\n&#39;</span>
+<span class="s1">&#39;1. NCBITaxon:33035 - Peptostreptococcus productus\n&#39;</span>
+<span class="s1">&#39;2. NCBITaxon:596329 - Peptostreptococcus anaerobius 653-L\n&#39;</span>
+<span class="s1">&#39;3. NCBITaxon:1261 - Peptostreptococcus anaerobius\n&#39;</span>
+<span class="s1">&#39;4. NCBITaxon:596315 - Peptostreptococcus stomatis DSM 17678\n&#39;</span>
+<span class="s1">&#39;5. NCBITaxon:1262 - Peptostreptococcus sp. 2\n&#39;</span>
+<span class="s1">&#39;6. NCBITaxon:1261 - Peptostreptococcus anaerobius 0009-10 Hillier\n&#39;</span>
+<span class="s1">&#39;7. NCBITaxon:1262 - Peptostreptococcus sp. ACS-065-V-Col13\n&#39;</span>
+<span class="s1">&#39;8. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM2\n&#39;</span>
+<span class="s1">&#39;9. NCBITaxon:796937 - Peptostreptococcaceae bacterium ACC19a\n&#39;</span>
+<span class="s1">&#39;10. NCBITaxon:796937 - Peptostreptococcaceae bacterium CM5&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
 </div></blockquote>
 </li>
 </ol>
