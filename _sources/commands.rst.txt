@@ -213,7 +213,7 @@ Commands
 
 
     This results in the formation of the knowledge_graph.html file.
-    .. image:: src/kg_chat/assets/kg_viz.png
+    .. image:: ../src/kg_chat/assets/kg_viz.png
     :alt: alternate text
     :width: 200px
     :height: 100px
@@ -230,7 +230,7 @@ Commands
 
     Example:
 
-    .. image:: src/kg_chat/assets/kg_app.png
+    .. image:: ../src/kg_chat/assets/kg_app.png
        :alt: chat interface
        :width: 200px
        :height: 100px
