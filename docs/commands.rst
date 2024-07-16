@@ -215,11 +215,9 @@ Commands
     This results in the formation of the knowledge_graph.html file.
     
     .. image:: ../src/kg_chat/assets/kg_viz.png
-    :alt: alternate text
-    :width: 200px
-    :height: 100px
-    :scale: 50%
-    :align: center
+        :alt: alternate text
+        :scale: 100%
+        :align: center
 
     .. raw:: html
     
@@ -238,8 +236,6 @@ Commands
 
     .. image:: ../src/kg_chat/assets/kg_app.png
        :alt: chat interface
-       :width: 200px
-       :height: 100px
-       :scale: 50%
+       :scale: 100%
        :align: center
     
