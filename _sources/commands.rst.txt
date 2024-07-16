@@ -213,12 +213,18 @@ Commands
 
 
     This results in the formation of the knowledge_graph.html file.
+    
     .. image:: ../src/kg_chat/assets/kg_viz.png
     :alt: alternate text
     :width: 200px
     :height: 100px
     :scale: 50%
     :align: center
+
+    .. raw:: html
+    
+        <iframe src="../src/kg_chat/graph_output/example.html" width="100%" height="500px"></iframe>
+    
 
 5. ``app``: This command can be used to start the KG chat app.
 
