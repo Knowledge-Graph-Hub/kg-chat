@@ -236,6 +236,5 @@ Commands
 
     .. image:: ../src/kg_chat/assets/kg_app.png
        :alt: chat interface
-       :scale: 100%
        :align: center
     
