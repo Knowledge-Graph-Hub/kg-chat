@@ -20,8 +20,8 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 5. Click on `Settings` which is visible when you click on the 3 dots that appears to the right of the db on single-clicking as well. It should match []`neo4j_db_settings.conf`](conf_files/neo4j_db_settings.conf)
  - The main edits you'll need to do are these 3 lines:
     ```conf
-    dbms.memory.heap.initial_size=4G
-    dbms.memory.heap.max_size=8G
+    dbms.memory.heap.initial_size=1G
+    dbms.memory.heap.max_size=16G
     dbms.security.procedures.allowlist=apoc.coll.*,apoc.load.*,gds.*,apoc.meta.data
     ```
     Update the memory heaps as per your preference.
