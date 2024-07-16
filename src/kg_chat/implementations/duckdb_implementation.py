@@ -12,7 +12,7 @@ from sqlalchemy import create_engine
 from kg_chat.constants import (
     DATABASE_DIR,
     EDGES_FILE,
-    MODEL,
+    OPEN_AI_MODEL,
     NODES_FILE,
     OPENAI_KEY,
 )
@@ -27,7 +27,7 @@ class DuckDBImplementation(DatabaseInterface):
         """Initialize the DuckDB database and the Langchain components."""
         self.safe_mode = True
         self.conn = duckdb.connect(database=str(DATABASE_DIR / "kg_chat.db"))
-        self.llm = ChatOpenAI(model=MODEL, temperature=0, api_key=OPENAI_KEY)
+        self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
         self.engine = create_engine("duckdb:///src/kg_chat/database/kg_chat.db")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.agent = create_sql_agent(llm=self.llm, db=self.db, agent_type="openai-tools", verbose=True)
