@@ -216,12 +216,7 @@ Commands
     
     .. image:: ../src/kg_chat/assets/kg_viz.png
         :alt: alternate text
-        :scale: 100%
         :align: center
-
-    .. raw:: html
-
-        .. include:: ../src/kg_chat/graph_output/example.html
 
 
 5. ``app``: This command can be used to start the KG chat app.
