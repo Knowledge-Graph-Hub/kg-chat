@@ -12,7 +12,7 @@ from neo4j import GraphDatabase
 from kg_chat.constants import (
     DATALOAD_BATCH_SIZE,
     EDGES_FILE,
-    MODEL,
+    OPEN_AI_MODEL,
     NEO4J_PASSWORD,
     NEO4J_URI,
     NEO4J_USERNAME,
@@ -30,7 +30,7 @@ class Neo4jImplementation(DatabaseInterface):
         """Initialize the Neo4j database and the Langchain components."""
         self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
         self.graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
-        self.llm = ChatOpenAI(model=MODEL, temperature=0, api_key=OPENAI_KEY)
+        self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
 
         self.chain = GraphCypherQAChain.from_llm(
             graph=self.graph,

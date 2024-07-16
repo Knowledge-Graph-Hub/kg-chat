@@ -14,7 +14,7 @@ NODES_FILE = DATA_DIR / "merged-kg_nodes.tsv"
 EDGES_FILE = DATA_DIR / "merged-kg_edges.tsv"
 
 OPENAI_KEY = getenv("OPENAI_API_KEY")
-MODEL = "gpt-4o"
+OPEN_AI_MODEL = "gpt-4o"
 
 DATALOAD_BATCH_SIZE = 5000  # Adjust the batch size as needed
 
