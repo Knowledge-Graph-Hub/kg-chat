@@ -1169,13 +1169,13 @@ langchain-core = ">=0.2.10,<0.3.0"
 
 [[package]]
 name = "langsmith"
-version = "0.1.85"
+version = "0.1.86"
 description = "Client library to connect to the LangSmith LLM Tracing and Evaluation Platform."
 optional = false
 python-versions = "<4.0,>=3.8.1"
 files = [
-    {file = "langsmith-0.1.85-py3-none-any.whl", hash = "sha256:c1f94384f10cea96f7b4d33fd3db7ec180c03c7468877d50846f881d2017ff94"},
-    {file = "langsmith-0.1.85.tar.gz", hash = "sha256:acff31f9e53efa48586cf8e32f65625a335c74d7c4fa306d1655ac18452296f6"},
+    {file = "langsmith-0.1.86-py3-none-any.whl", hash = "sha256:55ed80cc6e98f9761f9b3ec3c49e01f6745d13e40bef80d9f831acabfd9a8a1e"},
+    {file = "langsmith-0.1.86.tar.gz", hash = "sha256:2e66577817253327b99b727588c3173fbba217fe0ca07ac6b7cdd23fc4894104"},
 ]
 
 [package.dependencies]
@@ -2900,4 +2900,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "24c04e9e2655c7cdd76a14898a55d90a61bd1505681e1636e4d7d8ae5225a3a0"
+content-hash = "3a8c7b431afd64182e1dbae1cc786023236fd54ec3a42c84c121a601d4b4c32d"
