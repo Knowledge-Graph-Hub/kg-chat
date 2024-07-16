@@ -1,11 +1,11 @@
 Commands
 ========
 
-1. ``import-kg``: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.
+1. ``import``: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.
 
     .. code-block:: shell
 
-        kg import-kg
+        kg import
 
 2. ``test-query``: To test that the above worked, run a built-in test query:
 

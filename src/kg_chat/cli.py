@@ -46,7 +46,7 @@ def main(verbose: int, quiet: bool):
         logger.setLevel(level=logging.ERROR)
 
 
-@main.command()
+@main.command("import")
 @database_options
 def import_kg(database: str = "duckdb"):
     """Run the kg-chat's demo command."""

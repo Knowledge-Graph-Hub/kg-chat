@@ -31,7 +31,7 @@ Chatbot that looks up information from provided [KGX](https://github.com/biolink
 
 1. **Import KG**: Load nodes and edges into Neo4j.
     ```shell
-    kg import-kg
+    kg import
     ```
 
 2. **Test Query**: Run a test query.
