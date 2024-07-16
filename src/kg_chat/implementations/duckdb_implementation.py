@@ -4,7 +4,7 @@ import tempfile
 from pprint import pprint
 
 import duckdb
-from langchain_community.agent_toolkits import create_sql_agent
+from langchain_community.agent_toolkits import create_sql_agent, SQLDatabaseToolkit
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_openai import ChatOpenAI
 from sqlalchemy import create_engine
@@ -30,7 +30,8 @@ class DuckDBImplementation(DatabaseInterface):
         self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
         self.engine = create_engine("duckdb:///src/kg_chat/database/kg_chat.db")
         self.db = SQLDatabase(self.engine, view_support=True)
-        self.agent = create_sql_agent(llm=self.llm, db=self.db, agent_type="openai-tools", verbose=True)
+        self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
+        self.agent = create_sql_agent(llm=self.llm, agent_type="openai-tools", verbose=True, toolkit=self.toolkit)
 
     def toggle_safe_mode(self, enabled: bool):
         """Toggle safe mode on or off."""
