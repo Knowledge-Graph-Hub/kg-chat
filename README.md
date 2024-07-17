@@ -21,7 +21,7 @@ Chatbot that looks up information from provided [`KGX`](https://github.com/bioli
     pip install poetry
     poetry install
     ```
-3. Replace [`data/nodes.tsv`](src/kg_chat/data/nodes.tsv) and [`data/edges.tsv`](src/kg_chat/data/edges.tsv) with your files.
+3. Replace [`data/nodes.tsv`](src/kg_chat/data/nodes.tsv) and [`data/edges.tsv`](src/kg_chat/data/edges.tsv) with corresponding KGX files.
 
 ### Supported Backends
 - DuckDB [default]
