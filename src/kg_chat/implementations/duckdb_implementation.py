@@ -4,7 +4,7 @@ import tempfile
 from pprint import pprint
 
 import duckdb
-from langchain_community.agent_toolkits import create_sql_agent, SQLDatabaseToolkit
+from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_openai import ChatOpenAI
 from sqlalchemy import create_engine
