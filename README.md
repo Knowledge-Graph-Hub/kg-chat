@@ -29,7 +29,7 @@ Chatbot that looks up information from provided [`KGX`](https://github.com/bioli
 
 ### Commands
 
-1. **Import KG**: Load nodes and edges into Neo4j.
+1. **Import KG**: Load nodes and edges into a database (default: duckdb).
     ```shell
     kg import
     ```
