@@ -36,17 +36,17 @@ Chatbot that looks up information from provided [`KGX`](https://github.com/bioli
 
 2. **Test Query**: Run a test query.
     ```shell
-    kg test-query --database neo4j
+    kg test-query
     ```
 
 3. **QnA**: Ask questions about the data.
     ```shell
-    kg qna --database neo4j "your question here"
+    kg qna "your question here"
     ```
 
 4. **Chat**: Start an interactive chat session.
     ```shell
-    kg chat --database neo4j
+    kg chat
     ```
 
 5. **App**: Deploy a local web application.
