@@ -4,7 +4,7 @@ import csv
 import time
 from pprint import pprint
 
-from langchain.chains import GraphCypherQAChain
+from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
 from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
