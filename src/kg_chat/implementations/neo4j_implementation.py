@@ -112,11 +112,11 @@ class Neo4jImplementation(DatabaseInterface):
         """Index existence check."""
         tx.run(
             """
-        CALL apoc.schema.assert(
-            {Node: [['id']]},
-            {RELATIONSHIP: [['source_id'], ['target_id']]}
-        )
-        """
+            CALL apoc.schema.assert(
+                {Node: [['id'], ['label']]},
+                {RELATIONSHIP: [['source_id'], ['target_id'], ['relationship']]}
+            )
+            """
         )
         print("Indexes ensured using APOC.")
 
