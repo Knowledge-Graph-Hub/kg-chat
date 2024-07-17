@@ -55,7 +55,7 @@ Chatbot that looks up information from provided [`KGX`](https://github.com/bioli
     ```
 
 ### Visualization
-Use `show me` in prompts for HTML output with KG representation.
+Use `show me` in prompts for KG representation.
 
 ---
 ### Acknowledgements
