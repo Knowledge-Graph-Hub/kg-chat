@@ -51,10 +51,10 @@ def main(verbose: int, quiet: bool):
 def import_kg(database: str = "duckdb"):
     """Run the kg-chat's demo command."""
     if database == "neo4j":
-        impl = Neo4jImplementation(read_only=False)
+        impl = Neo4jImplementation()
         impl.load_kg()
     elif database == "duckdb":
-        impl = DuckDBImplementation(read_only=False)
+        impl = DuckDBImplementation()
         impl.load_kg()
     else:
         raise ValueError(f"Database {database} not supported.")
