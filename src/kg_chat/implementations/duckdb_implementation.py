@@ -1,6 +1,7 @@
 """Implementation of the DatabaseInterface for DuckDB."""
 
 import tempfile
+import time
 from pprint import pprint
 
 import duckdb
@@ -140,13 +141,30 @@ class DuckDBImplementation(DatabaseInterface):
 
             # Import nodes
             print("Starting to import nodes...")
+            start_time = time.time()
             self._import_nodes()
-            print("Nodes import completed.")
+
+            elapsed_time_seconds = time.time() - start_time
+
+            if elapsed_time_seconds >= 3600:
+                elapsed_time_hours = elapsed_time_seconds / 3600
+                print(f"Nodes import completed in {elapsed_time_hours:.2f} hours.")
+            else:
+                elapsed_time_minutes = elapsed_time_seconds / 60
+                print(f"Nodes import completed in {elapsed_time_minutes:.2f} minutes.")
 
             # Import edges
             print("Starting to import edges...")
+            start_time = time.time()
             self._import_edges()
-            print("Edges import completed.")
+
+            elapsed_time_seconds = time.time() - start_time
+            if elapsed_time_seconds >= 3600:
+                elapsed_time_hours = elapsed_time_seconds / 3600
+                print(f"Edges import completed in {elapsed_time_hours:.2f} hours.")
+            else:
+                elapsed_time_minutes = elapsed_time_seconds / 60
+                print(f"Edges import completed in {elapsed_time_minutes:.2f} minutes.")
 
             # Create indexes for faster querying
             print("Creating indexes...")
