@@ -38,8 +38,6 @@ class KnowledgeGraphChat:
 
     def chat(self):
         """Start an interactive chat session with the KG Chatbot."""
-        # Initialize chain with memory
-        memory = ConversationBufferMemory()
         try:
             while True:
                 prompt = input("Ask me about your data! : ")
@@ -49,15 +47,15 @@ class KnowledgeGraphChat:
 
                 # Invoke the chain with the modified query
                 if isinstance(self.db, Neo4jImplementation):
-                    response = self.db.chain.invoke({"query": structure_query(prompt)})
+                    response = self.db.chain.invoke({"query": structure_query(prompt), "memory": self.memory})
                     result = response["result"]
                 elif isinstance(self.db, DuckDBImplementation):
-                    response = self.db.agent.invoke(structure_query(prompt))
+                    response = self.db.agent.invoke(structure_query(prompt), "memory", self.memory)
                     result = response["output"]
 
                 # Store the query and response in memory
-                memory.chat_memory.add_user_message(prompt)
-                memory.chat_memory.add_ai_message(result)
+                self.memory.chat_memory.add_user_message(prompt)
+                self.memory.chat_memory.add_ai_message(result)
 
                 # Print the result
                 pprint(result)
