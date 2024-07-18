@@ -31,7 +31,8 @@ body {
     overflow-y: auto;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     border-radius: 10px;
-    resize: both; /* Allow resizing */
+    resize: horizontal; /* Allow resizing */
+    direction: ltr; /* Flip the resize handle to the left */
     overflow: auto; /* Ensure scrollbars appear if content overflows */
 }
 
