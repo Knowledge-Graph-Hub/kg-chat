@@ -8,10 +8,10 @@ DATA_DIR = PWD / "data"
 GRAPH_OUTPUT_DIR = PWD / "graph_output"
 ASSETS_DIR = PWD / "assets"
 
-# NODES_FILE = DATA_DIR / "nodes.tsv"
-# EDGES_FILE = DATA_DIR / "edges.tsv"
-NODES_FILE = DATA_DIR / "merged-kg_nodes.tsv"
-EDGES_FILE = DATA_DIR / "merged-kg_edges.tsv"
+NODES_FILE = DATA_DIR / "nodes.tsv"
+EDGES_FILE = DATA_DIR / "edges.tsv"
+# NODES_FILE = DATA_DIR / "merged-kg_nodes.tsv"
+# EDGES_FILE = DATA_DIR / "merged-kg_edges.tsv"
 
 OPENAI_KEY = getenv("OPENAI_API_KEY")
 OPEN_AI_MODEL = "gpt-4o"
