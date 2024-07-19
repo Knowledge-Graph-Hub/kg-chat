@@ -102,6 +102,7 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
         [State("user-input", "value"), State("conversation-history", "data")],
     )
     def wrapped_update_output(submit_n_clicks, reset_n_clicks, n_submit, value, history):
+        """Wrapper function to pass the database instance to the update_output function."""
         return update_output(submit_n_clicks, reset_n_clicks, n_submit, value, history, kg_chatbot)
 
     return app
