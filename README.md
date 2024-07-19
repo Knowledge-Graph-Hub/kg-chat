@@ -31,27 +31,27 @@ Chatbot that looks up information from provided [`KGX`](https://github.com/bioli
 
 1. **Import KG**: Load nodes and edges into a database (default: duckdb).
     ```shell
-    kg import
+    poetry run kg import
     ```
 
 2. **Test Query**: Run a test query.
     ```shell
-    kg test-query
+    poetry run kg test-query
     ```
 
 3. **QnA**: Ask questions about the data.
     ```shell
-    kg qna "how many nodes do we have here?"
+    poetry run kg qna "how many nodes do we have here?"
     ```
 
 4. **Chat**: Start an interactive chat session.
     ```shell
-    kg chat
+    poetry run kg chat
     ```
 
 5. **App**: Deploy a local web application.
     ```shell
-    kg app
+    poetry run kg app
     ```
 
 ### Visualization
