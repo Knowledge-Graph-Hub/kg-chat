@@ -84,7 +84,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         def _create_edges():
             self.conn.executemany(
-                "INSERT INTO edges (source_id, target_id, relationship) VALUES (?, ?, ?)",
+                "INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)",
                 edges,
             )
 
@@ -95,7 +95,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         def _create_nodes():
             self.conn.executemany(
-                "INSERT INTO nodes (id, label) VALUES (?, ?)",
+                "INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)",
                 nodes,
             )
 
@@ -125,6 +125,7 @@ class DuckDBImplementation(DatabaseInterface):
                 """
                 CREATE TABLE nodes (
                     id VARCHAR PRIMARY KEY,
+                    category VARCHAR,
                     label VARCHAR
                 )
             """
@@ -132,9 +133,9 @@ class DuckDBImplementation(DatabaseInterface):
             self.conn.execute(
                 """
                 CREATE TABLE edges (
-                    source_id VARCHAR,
-                    relationship VARCHAR,
-                    target_id VARCHAR
+                    subject VARCHAR,
+                    predicate VARCHAR,
+                    object VARCHAR
                 )
             """
             )
@@ -168,17 +169,26 @@ class DuckDBImplementation(DatabaseInterface):
 
             # Create indexes for faster querying
             print("Creating indexes...")
+            start_time = time.time()
             self.conn.execute("CREATE INDEX idx_nodes_id ON nodes(id);")
-            self.conn.execute("CREATE INDEX idx_edges_source_id ON edges(source_id);")
-            self.conn.execute("CREATE INDEX idx_edges_target_id ON edges(target_id);")
-            print("Indexes created.")
+            # self.conn.execute("CREATE INDEX idx_nodes_category ON nodes(category);")
+            self.conn.execute("CREATE INDEX idx_edges_subject ON edges(subject);")
+            # self.conn.execute("CREATE INDEX idx_edges_predicate ON edges(predicate);")
+            self.conn.execute("CREATE INDEX idx_edges_object ON edges(object);")
+            elapsed_time_seconds = time.time() - start_time
+            if elapsed_time_seconds >= 3600:
+                elapsed_time_hours = elapsed_time_seconds / 3600
+                print(f"Index creation completed in {elapsed_time_hours:.2f} hours.")
+            else:
+                elapsed_time_minutes = elapsed_time_seconds / 60
+                print(f"Index creation completed completed in {elapsed_time_minutes:.2f} minutes.")
 
             print("Import process finished.")
 
         return self.execute_unsafe_operation(_load_kg)
 
     def _import_nodes(self):
-        columns_of_interest = ["id", "name"]
+        columns_of_interest = ["id", "category", "name"]
         with open(NODES_FILE, "r") as nodes_file:
             header_line = nodes_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in columns_of_interest}
@@ -189,8 +199,9 @@ class DuckDBImplementation(DatabaseInterface):
                     columns = line.strip().split("\t")
                     if len(columns) > max(column_indexes.values()):
                         node_id = columns[column_indexes["id"]]
+                        node_category = columns[column_indexes["category"]]
                         node_label = columns[column_indexes["name"]]
-                        temp_nodes_file.write(f"{node_id}\t{node_label}\n")
+                        temp_nodes_file.write(f"{node_id}\t{node_category}\t{node_label}\n")
                 temp_nodes_file.flush()
 
                 # Load data from temporary file into DuckDB
@@ -206,10 +217,10 @@ class DuckDBImplementation(DatabaseInterface):
                 temp_edges_file.write("\t".join(edge_column_of_interest) + "\n")
                 for line in edges_file:
                     columns = line.strip().split("\t")
-                    source_id = columns[column_indexes["subject"]]
-                    relationship = columns[column_indexes["predicate"]]
-                    target_id = columns[column_indexes["object"]]
-                    temp_edges_file.write(f"{source_id}\t{relationship}\t{target_id}\n")
+                    subject = columns[column_indexes["subject"]]
+                    predicate = columns[column_indexes["predicate"]]
+                    object = columns[column_indexes["object"]]
+                    temp_edges_file.write(f"{subject}\t{predicate}\t{object}\n")
                 temp_edges_file.flush()
 
                 # Load data from temporary file into DuckDB

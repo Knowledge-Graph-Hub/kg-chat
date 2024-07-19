@@ -50,7 +50,7 @@ class KnowledgeGraphChat:
                     response = self.db.chain.invoke({"query": structure_query(prompt), "memory": self.memory})
                     result = response["result"]
                 elif isinstance(self.db, DuckDBImplementation):
-                    response = self.db.agent.invoke(structure_query(prompt), "memory", self.memory)
+                    response = self.db.agent.invoke(structure_query(prompt), memory=self.memory)
                     result = response["output"]
 
                 # Store the query and response in memory
