@@ -113,8 +113,8 @@ class Neo4jImplementation(DatabaseInterface):
         tx.run(
             """
             CALL apoc.schema.assert(
-                {Node: [['id'], ['label']]},
-                {RELATIONSHIP: [['source_id'], ['target_id'], ['relationship']]}
+                {Node: [['id'], ['category'], ['label']]},
+                {RELATIONSHIP: [['subject'], ['predicate'], ['object']]}
             )
             """
         )
@@ -145,9 +145,9 @@ class Neo4jImplementation(DatabaseInterface):
         tx.run(
             """
             UNWIND $edges AS edge
-            MATCH (a:Node {id: edge.source_id})
-            MATCH (b:Node {id: edge.target_id})
-            CREATE (a)-[r:RELATIONSHIP {type: edge.relationship}]->(b)
+            MATCH (a:Node {id: edge.subject})
+            MATCH (b:Node {id: edge.object})
+            CREATE (a)-[r:RELATIONSHIP {type: edge.predicate}]->(b)
         """,
             edges=edges,
         )
@@ -166,7 +166,7 @@ class Neo4jImplementation(DatabaseInterface):
         tx.run(
             """
             UNWIND $nodes AS node
-            CREATE (n:Node {id: node.id, label: node.label})
+            CREATE (n:Node {id: node.id, category: node.category, label: node.label})
         """,
             nodes=nodes,
         )
@@ -195,7 +195,7 @@ class Neo4jImplementation(DatabaseInterface):
             print("Starting to import nodes...")
             start_time = time.time()
             nodes_batch = []
-            columns_of_interest = ["id", "name"]
+            columns_of_interest = ["id", "category", "name"]
 
             with open(NODES_FILE, "r") as nodes_file:
                 reader = csv.DictReader(nodes_file, delimiter="\t")
@@ -203,8 +203,9 @@ class Neo4jImplementation(DatabaseInterface):
 
                 for row in reader:
                     node_id = row[columns_of_interest[0]]
-                    node_label = row[columns_of_interest[1]]
-                    nodes_batch.append({"id": node_id, "label": node_label})
+                    node_category = row[columns_of_interest[1]]
+                    node_label = row[columns_of_interest[2]]
+                    nodes_batch.append({"id": node_id, "category": node_category, "label": node_label})
                     node_batch_loaded += 1
 
                     if len(nodes_batch) >= DATALOAD_BATCH_SIZE:
@@ -234,10 +235,10 @@ class Neo4jImplementation(DatabaseInterface):
                 edge_batch_loaded = 0
 
                 for row in reader:
-                    source_id = row[edge_column_of_interest[0]]
-                    relationship = row[edge_column_of_interest[1]]
-                    target_id = row[edge_column_of_interest[2]]
-                    edges_batch.append({"source_id": source_id, "target_id": target_id, "relationship": relationship})
+                    subject = row[edge_column_of_interest[0]]
+                    predicate = row[edge_column_of_interest[1]]
+                    object = row[edge_column_of_interest[2]]
+                    edges_batch.append({"subject": subject, "predicate": predicate, "object": object})
                     edge_batch_loaded += 1
 
                     if len(edges_batch) >= DATALOAD_BATCH_SIZE / 2:

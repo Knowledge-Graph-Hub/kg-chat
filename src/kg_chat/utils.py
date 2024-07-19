@@ -1,10 +1,13 @@
 """Utility functions for the KG chatbot."""
 
+import random
 import webbrowser
 
 from pyvis.network import Network
 
 from kg_chat.constants import GRAPH_OUTPUT_DIR
+
+PREFIX_COLOR_MAP = {}
 
 
 def extract_nodes_edges(structured_result):
@@ -24,15 +27,15 @@ def structure_query(query: str):
         Please provide the result in JSON format with ALL nodes and ALL edges. Return JSON ONLY.
         Example: {{
             "nodes": [
-                {{"label": "A", "id": "1"}},
-                {{"label": "B", "id": "2"}},
-                {{"label": "C", "id": "3"}},
+                {{"label": "A", "id": "1", category: "biolink:Gene"}},
+                {{"label": "B", "id": "2", category: "biolink:ChemicalSubstance"}},
+                {{"label": "C", "id": "3", category: "biolink:Disease"}},
                 ..and so on
             ],
             "edges": [
-                {{"source": {{"label": "A", "id": "1"}},
-                "target": {{"label": "B", "id": "2"}},
-                "relationship": "biolink:related_to"}},
+                {{"subject": {{"label": "A", "id": "1"}},
+                "object": {{"label": "B", "id": "2"}},
+                "predicate": "biolink:related_to"}},
                 ..and so on
             ]
         }}
@@ -42,10 +45,33 @@ def structure_query(query: str):
     return structured_query
 
 
+def generate_random_color():
+    """Generate a random color."""
+    while True:
+        color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        if color not in PREFIX_COLOR_MAP.values():
+            return color
+
+
+def assign_color_to_prefix(curie):
+    """Assign a color to a prefix."""
+    prefix = curie.split(":")[0]
+    if prefix not in PREFIX_COLOR_MAP:
+        PREFIX_COLOR_MAP[prefix] = generate_random_color()
+    print(f"PREFIX_COLOR_MAP={PREFIX_COLOR_MAP}")
+    return PREFIX_COLOR_MAP[prefix]
+
+
 def visualize_kg(nodes, edges, app: bool = False):
     """Visualize the knowledge graph using pyvis."""
     # Create a PyVis network
-    net = Network(notebook=False, cdn_resources="in_line")
+    net = Network(
+        notebook=False,
+        cdn_resources="in_line",
+        neighborhood_highlight=True,
+        select_menu=True,
+        filter_menu=True,
+    )
 
     if not nodes:
         print("No nodes to display.")
@@ -56,24 +82,44 @@ def visualize_kg(nodes, edges, app: bool = False):
 
     # Add nodes to the network
     for node in nodes:
-        net.add_node(node["id"], label=node["label"])
+        # based on prefix (node["id"].split(":")[0]) assign nodes to color
+
+        net.add_node(
+            node["id"],
+            label=node["label"],
+            category=node.get("category", ""),
+            title=node.get("id", ""),
+            color=assign_color_to_prefix(node["id"]),
+        )
         added_nodes.add(node["id"])
 
     # Add edges to the network
     for edge in edges:
-        source_id = edge["source"]["id"]
-        target_id = edge["target"]["id"]
+        subject = edge["subject"]["id"]
+        object = edge["object"]["id"]
 
-        # Ensure both source and target nodes are added
-        if source_id not in added_nodes:
-            net.add_node(source_id, label=edge["source"].get("label", ""))
-            added_nodes.add(source_id)
-        if target_id not in added_nodes:
-            net.add_node(target_id, label=edge["target"].get("label", ""))
-            added_nodes.add(target_id)
+        # Ensure both subject and object nodes are added
+        if subject not in added_nodes:
+            net.add_node(
+                subject,
+                label=edge["subject"].get("label", ""),
+                category=edge["subject"].get("category", ""),
+                title=subject,
+                color=assign_color_to_prefix(subject),
+            )
+            added_nodes.add(subject)
+        if object not in added_nodes:
+            net.add_node(
+                object,
+                label=edge["object"].get("label", ""),
+                category=edge["object"].get("category", ""),
+                title=object,
+                color=assign_color_to_prefix(object),
+            )
+            added_nodes.add(object)
 
-        # Add edge with title (relationship)
-        net.add_edge(source_id, target_id, title=edge.get("relationship"))
+        # Add edge with title (predicate)
+        net.add_edge(subject, object, title=edge.get("predicate"))
 
     # Generate and display the network
     html_file = str(GRAPH_OUTPUT_DIR / "knowledge_graph.html")

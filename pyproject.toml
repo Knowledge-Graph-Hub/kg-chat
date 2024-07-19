@@ -54,6 +54,7 @@ lint.extend-ignore = [
     "D203",  # `blank-line-before-docstring`
     "S105",  # Possible hardcoded password assigned to: "NEO4J_PASSWORD"
     "S106",  # Possible hardcoded password assigned to argument: "password"
+    "S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
     ]
 line-length = 120
 

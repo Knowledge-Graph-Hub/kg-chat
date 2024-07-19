@@ -101,7 +101,7 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
         [Input("submit-button", "n_clicks"), Input("reset-button", "n_clicks"), Input("user-input", "n_submit")],
         [State("user-input", "value"), State("conversation-history", "data")],
     )
-    def wrapped_update_output(submit_n_clicks, reset_n_clicks, n_submit, value, history):
+    def _wrapped_update_output(submit_n_clicks, reset_n_clicks, n_submit, value, history):
         return update_output(submit_n_clicks, reset_n_clicks, n_submit, value, history, kg_chatbot)
 
     return app
