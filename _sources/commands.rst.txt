@@ -142,69 +142,168 @@ Commands
     Visualization
     """""""""""""
 
-    If the prompt has the phrase ``show me`` in it, ``kg-chat`` would render an HTML output with KG representation of the response. For example:
+    If the prompt has the phrase ``show me`` in it, ``kg-chat`` would render an HTML output with KG representation of the response. 
+    
+    This example was run over local data that is not not in version control due to size restrictions:
 
     .. code-block:: shell
 
-        kg-chat $ kg chat --database neo4j
-        Ask me about your data! : show me 1 node with prefix NCBITaxon: that has at least 3 edges but less than 10 edges
+        kg-chat $ kg chat
+        Ask me about your data! : show me 20 edges with subject prefix = Uniprot  
 
-        > Entering new GraphCypherQAChain chain...
-        Generated Cypher:
-        cypher
-        MATCH (n:Node)
-        WHERE n.id STARTS WITH 'NCBITaxon:'
-        WITH n, size((n)-[:RELATIONSHIP]->()) AS outDegree, size((n)<-[:RELATIONSHIP]-()) AS inDegree
-        WHERE (outDegree + inDegree) >= 3 AND (outDegree + inDegree) < 10
-        WITH n LIMIT 1
-        MATCH (n)-[r:RELATIONSHIP]-(m:Node)
-        RETURN {
-            nodes: collect({label: n.label, id: n.id}) + collect({label: m.label, id: m.id}),
-            edges: collect({source: {label: n.label, id: n.id}, target: {label: m.label, id: m.id}, relationship: r.type})
-        } AS result
 
-        Full Context:
-        [{'result': {'nodes': [{'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, {'label': 'Hysterium vermiforme', 'id': 'NCBITaxon:714895'}, {'label': 'Hysterium barrianum', 'id': 'NCBITaxon:707625'}, {'label': 'Hysterium angustatum', 'id': 'NCBITaxon:574775'}, {'label': 'Hysterium hyalinum', 'id': 'NCBITaxon:574776'}, {'label': 'unclassified Hysterium', 'id': 'NCBITaxon:2649321'}, {'label': 'Hysterium rhizophorae', 'id': 'NCBITaxon:2066082'}, {'label': 'Hysterium pulicare', 'id': 'NCBITaxon:100027'}, {'label': 'Hysteriaceae', 'id': 'NCBITaxon:100025'}], 'edges': [{'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium vermiforme', 'id': 'NCBITaxon:714895'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium barrianum', 'id': 'NCBITaxon:707625'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium angustatum', 'id': 'NCBITaxon:574775'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium hyalinum', 'id': 'NCBITaxon:574776'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'unclassified Hysterium', 'id': 'NCBITaxon:2649321'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium rhizophorae', 'id': 'NCBITaxon:2066082'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysterium pulicare', 'id': 'NCBITaxon:100027'}}, {'source': {'label': 'Hysterium', 'id': 'NCBITaxon:100026'}, 'relationship': 'biolink:subclass_of', 'target': {'label': 'Hysteriaceae', 'id': 'NCBITaxon:100025'}}]}}]
+        > Entering new SQL Agent Executor chain...
+
+        Invoking: `sql_db_list_tables` with `{}`
+
+
+        edges, nodes
+        Invoking: `sql_db_schema` with `{'table_names': 'edges, nodes'}`
+
+
+
+        CREATE TABLE edges (
+                subject VARCHAR, 
+                predicate VARCHAR, 
+                object VARCHAR
+        )
+
+        /*
+        3 rows from edges table:
+        subject predicate       object
+        CHEBI:111503    biolink:binds   UniprotKB:H2K885
+        CHEBI:111503    biolink:binds   UniprotKB:Q15JG1
+        CHEBI:11851     biolink:binds   UniprotKB:A0A7C4JVU2
+        */
+
+
+        CREATE TABLE nodes (
+                id VARCHAR NOT NULL, 
+                category VARCHAR, 
+                label VARCHAR
+        )
+
+        /*
+        3 rows from nodes table:
+        id      category        label
+        UniprotKB:A0A5B8I2N0    biolink:Enzyme  Kynureninase 
+        Proteomes:UP000320717   biolink:Genome  Proteomes:UP000320717
+        UniprotKB:A0A5B8I3L9    biolink:Enzyme  Bifunctional protein GlmU (Includes: UDP-N-acetylglucosamine pyrophosphorylase 
+        */
+        Invoking: `sql_db_query_checker` with `{'query': "SELECT * FROM edges WHERE subject LIKE 'Uniprot%' LIMIT 20"}`
+
+
+        ```sql
+        SELECT * FROM edges WHERE subject LIKE 'Uniprot%' LIMIT 20
+        ```
+        Invoking: `sql_db_query` with `{'query': "SELECT * FROM edges WHERE subject LIKE 'Uniprot%' LIMIT 20"}`
+
+
+        [('UniprotKB:A0A009GYQ4', 'biolink:located_in', 'GO:0009279'), ('UniprotKB:A0A009GYQ4', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009GYV0', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009GYV0', 'biolink:participates_in', 'GO:0009381'), ('UniprotKB:A0A009GZA8', 'biolink:participates_in', 'GO:0016491'), ('UniprotKB:A0A009GZA8', 'biolink:participates_in', 'GO:0006081'), ('UniprotKB:A0A009GZA8', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H0Q1', 'biolink:participates_in', 'GO:0047569'), ('UniprotKB:A0A009H0Q1', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H0Z9', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2B9', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2B9', 'biolink:located_in', 'GO:0016020'), ('UniprotKB:A0A009H2F4', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2F4', 'biolink:participates_in', 'GO:0008168'), ('UniprotKB:A0A009H2F4', 'biolink:participates_in', 'GO:0032259'), ('UniprotKB:A0A009H2F4', 'biolink:participates_in', 'GO:0006744'), ('UniprotKB:A0A009H2L0', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2N6', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2W7', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H3M0', 'biolink:derives_from', 'Proteomes:UP000020595')]```json
+        {
+            "nodes": [
+                {"label": "Kynureninase", "id": "UniprotKB:A0A5B8I2N0", "category": "biolink:Enzyme"},
+                {"label": "Proteomes:UP000320717", "id": "Proteomes:UP000320717", "category": "biolink:Genome"},
+                {"label": "Bifunctional protein GlmU (Includes: UDP-N-acetylglucosamine pyrophosphorylase", "id": "UniprotKB:A0A5B8I3L9", "category": "biolink:Enzyme"}
+            ],
+            "edges": [
+                {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": "UniprotKB:A0A009GYQ4"}, "object": {"label": "GO:0009279", "id": "GO:0009279"}, "predicate": "biolink:located_in"},
+                {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": "UniprotKB:A0A009GYQ4"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009GYV0", "id": "UniprotKB:A0A009GYV0"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009GYV0", "id": "UniprotKB:A0A009GYV0"}, "object": {"label": "GO:0009381", "id": "GO:0009381"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009GZA8", "id": "UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0016491", "id": "GO:0016491"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009GZA8", "id": "UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0006081", "id": "GO:0006081"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009GZA8", "id": "UniprotKB:A0A009GZA8"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": "UniprotKB:A0A009H0Q1"}, "object": {"label": "GO:0047569", "id": "GO:0047569"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": "UniprotKB:A0A009H0Q1"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H0Z9", "id": "UniprotKB:A0A009H0Z9"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H2B9", "id": "UniprotKB:A0A009H2B9"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H2B9", "id": "UniprotKB:A0A009H2B9"}, "object": {"label": "GO:0016020", "id": "GO:0016020"}, "predicate": "biolink:located_in"},
+                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0008168", "id": "GO:0008168"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0032259", "id": "GO:0032259"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0006744", "id": "GO:0006744"}, "predicate": "biolink:participates_in"},
+                {"subject": {"label": "UniprotKB:A0A009H2L0", "id": "UniprotKB:A0A009H2L0"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H2N6", "id": "UniprotKB:A0A009H2N6"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H2W7", "id": "UniprotKB:A0A009H2W7"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
+                {"subject": {"label": "UniprotKB:A0A009H3M0", "id": "UniprotKB:A0A009H3M0"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"}
+            ]
+        }
+        ```
 
         > Finished chain.
         ('```json\n'
         '{\n'
         '    "nodes": [\n'
-        '        {"label": "Hysterium", "id": "NCBITaxon:100026"},\n'
-        '        {"label": "Hysterium vermiforme", "id": "NCBITaxon:714895"},\n'
-        '        {"label": "Hysterium barrianum", "id": "NCBITaxon:707625"},\n'
-        '        {"label": "Hysterium angustatum", "id": "NCBITaxon:574775"},\n'
-        '        {"label": "Hysterium hyalinum", "id": "NCBITaxon:574776"},\n'
-        '        {"label": "unclassified Hysterium", "id": "NCBITaxon:2649321"},\n'
-        '        {"label": "Hysterium rhizophorae", "id": "NCBITaxon:2066082"},\n'
-        '        {"label": "Hysterium pulicare", "id": "NCBITaxon:100027"},\n'
-        '        {"label": "Hysteriaceae", "id": "NCBITaxon:100025"}\n'
+        '        {"label": "Kynureninase", "id": "UniprotKB:A0A5B8I2N0", "category": '
+        '"biolink:Enzyme"},\n'
+        '        {"label": "Proteomes:UP000320717", "id": "Proteomes:UP000320717", '
+        '"category": "biolink:Genome"},\n'
+        '        {"label": "Bifunctional protein GlmU (Includes: '
+        'UDP-N-acetylglucosamine pyrophosphorylase", "id": "UniprotKB:A0A5B8I3L9", '
+        '"category": "biolink:Enzyme"}\n'
         '    ],\n'
         '    "edges": [\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysterium vermiforme", "id": "NCBITaxon:714895"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysterium barrianum", "id": "NCBITaxon:707625"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysterium angustatum", "id": "NCBITaxon:574775"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysterium hyalinum", "id": "NCBITaxon:574776"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "unclassified Hysterium", "id": "NCBITaxon:2649321"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysterium rhizophorae", "id": "NCBITaxon:2066082"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysterium pulicare", "id": "NCBITaxon:100027"}, '
-        '"relationship": "biolink:subclass_of"},\n'
-        '        {"source": {"label": "Hysterium", "id": "NCBITaxon:100026"}, '
-        '"target": {"label": "Hysteriaceae", "id": "NCBITaxon:100025"}, '
-        '"relationship": "biolink:subclass_of"}\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": '
+        '"UniprotKB:A0A009GYQ4"}, "object": {"label": "GO:0009279", "id": '
+        '"GO:0009279"}, "predicate": "biolink:located_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": '
+        '"UniprotKB:A0A009GYQ4"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GYV0", "id": '
+        '"UniprotKB:A0A009GYV0"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GYV0", "id": '
+        '"UniprotKB:A0A009GYV0"}, "object": {"label": "GO:0009381", "id": '
+        '"GO:0009381"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GZA8", "id": '
+        '"UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0016491", "id": '
+        '"GO:0016491"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GZA8", "id": '
+        '"UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0006081", "id": '
+        '"GO:0006081"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009GZA8", "id": '
+        '"UniprotKB:A0A009GZA8"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": '
+        '"UniprotKB:A0A009H0Q1"}, "object": {"label": "GO:0047569", "id": '
+        '"GO:0047569"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": '
+        '"UniprotKB:A0A009H0Q1"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H0Z9", "id": '
+        '"UniprotKB:A0A009H0Z9"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2B9", "id": '
+        '"UniprotKB:A0A009H2B9"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2B9", "id": '
+        '"UniprotKB:A0A009H2B9"}, "object": {"label": "GO:0016020", "id": '
+        '"GO:0016020"}, "predicate": "biolink:located_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
+        '"UniprotKB:A0A009H2F4"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
+        '"UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0008168", "id": '
+        '"GO:0008168"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
+        '"UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0032259", "id": '
+        '"GO:0032259"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
+        '"UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0006744", "id": '
+        '"GO:0006744"}, "predicate": "biolink:participates_in"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2L0", "id": '
+        '"UniprotKB:A0A009H2L0"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2N6", "id": '
+        '"UniprotKB:A0A009H2N6"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H2W7", "id": '
+        '"UniprotKB:A0A009H2W7"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
+        '        {"subject": {"label": "UniprotKB:A0A009H3M0", "id": '
+        '"UniprotKB:A0A009H3M0"}, "object": {"label": "Proteomes:UP000020595", "id": '
+        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"}\n'
         '    ]\n'
         '}\n'
         '```')
