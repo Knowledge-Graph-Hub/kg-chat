@@ -5,7 +5,7 @@ Here are some example prompts and their corresponding responses:
 
 .. code-block:: shell
 
-    kg-chat $ kg chat --database neo4j
+    kg-chat $ poetry run kg chat --database neo4j
     Ask me about your data! : How many nodes are there in the database?
 
     > Entering new GraphCypherQAChain chain...
@@ -44,7 +44,7 @@ Here are some example prompts and their corresponding responses:
 
 .. code-block:: shell
 
-    kg-chat $ kg chat --database neo4j
+    kg-chat $ poetry run kg chat --database neo4j
     Ask me about your data! : What is the most common relationship type?
 
     > Entering new GraphCypherQAChain chain...
