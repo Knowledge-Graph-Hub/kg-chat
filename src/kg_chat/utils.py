@@ -25,6 +25,7 @@ def structure_query(query: str):
         structured_query = f"""
         {query}
         Please provide the result in JSON format with ALL nodes and ALL edges. Return JSON ONLY.
+        IMPORTANT: I want nothing but pure JSON (verbose=False).
         Example: {{
             "nodes": [
                 {{"label": "A", "id": "1", category: "biolink:Gene"}},
@@ -58,7 +59,7 @@ def assign_color_to_prefix(curie):
     prefix = curie.split(":")[0]
     if prefix not in PREFIX_COLOR_MAP:
         PREFIX_COLOR_MAP[prefix] = generate_random_color()
-    print(f"PREFIX_COLOR_MAP={PREFIX_COLOR_MAP}")
+    # print(f"PREFIX_COLOR_MAP={PREFIX_COLOR_MAP}") # To debug
     return PREFIX_COLOR_MAP[prefix]
 
 
