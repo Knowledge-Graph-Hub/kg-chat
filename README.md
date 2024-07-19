@@ -41,7 +41,7 @@ Chatbot that looks up information from provided [`KGX`](https://github.com/bioli
 
 3. **QnA**: Ask questions about the data.
     ```shell
-    kg qna "your question here"
+    kg qna "how many nodes do we have here?"
     ```
 
 4. **Chat**: Start an interactive chat session.
