@@ -1,6 +1,6 @@
 # kg-chat
 
-LLM-based chatbot that looks up information from  [`KGX`](https://github.com/biolink/kgx) nodes and edges TSV files via [`langchain`](https://github.com/langchain-ai/langchain) and either [`DuckDB`](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j).
+LLM-based chatbot that looks up information from  [`KGX`](https://github.com/biolink/kgx) nodes and edges TSV files via [`langchain`](https://github.com/langchain-ai/langchain) and either [`DuckDB`](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) database backend.
 
 > **_NOTE:_**  
 > Ensure `OPENAI_API_KEY` is set as an environmental variable.
