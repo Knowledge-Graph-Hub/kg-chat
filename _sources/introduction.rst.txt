@@ -1,8 +1,6 @@
 Introduction
 ============
 
-kg-chat
--------
 LLM-based chatbot that queries and visualizes `KGX <https://github.com/biolink/kgx>`_  nodes and edges TSV files loaded into either DuckDB (default) or neo4j database backend.
 
 .. note::
