@@ -2,7 +2,9 @@
 
 import tempfile
 import time
+from pathlib import Path
 from pprint import pprint
+from typing import Union
 
 import duckdb
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
@@ -11,9 +13,8 @@ from langchain_openai import ChatOpenAI
 from sqlalchemy import create_engine
 
 from kg_chat.constants import (
+    DATA_DIR,
     DATABASE_DIR,
-    EDGES_FILE,
-    NODES_FILE,
     OPEN_AI_MODEL,
     OPENAI_KEY,
 )
@@ -111,7 +112,7 @@ class DuckDBImplementation(DatabaseInterface):
         result = self.agent.invoke(prompt)
         return result["output"]
 
-    def load_kg(self):
+    def load_kg(self, data_dir: Union[Path, str] = DATA_DIR):
         """Load the Knowledge Graph into the database."""
 
         def _load_kg():
@@ -187,9 +188,11 @@ class DuckDBImplementation(DatabaseInterface):
 
         return self.execute_unsafe_operation(_load_kg)
 
-    def _import_nodes(self):
+    def _import_nodes(self, data_dir: Union[Path, str] = DATA_DIR):
         columns_of_interest = ["id", "category", "name"]
-        with open(NODES_FILE, "r") as nodes_file:
+        nodes_filepath = Path(data_dir) / "nodes.tsv"
+
+        with open(nodes_filepath, "r") as nodes_file:
             header_line = nodes_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in columns_of_interest}
 
@@ -207,9 +210,10 @@ class DuckDBImplementation(DatabaseInterface):
                 # Load data from temporary file into DuckDB
                 self.conn.execute(f"COPY nodes FROM '{temp_nodes_file.name}' (DELIMITER '\t', HEADER)")
 
-    def _import_edges(self):
+    def _import_edges(self, data_dir: Union[Path, str] = DATA_DIR):
         edge_column_of_interest = ["subject", "predicate", "object"]
-        with open(EDGES_FILE, "r") as edges_file:
+        edges_filepath = Path(data_dir) / "edges.tsv"
+        with open(edges_filepath, "r") as edges_file:
             header_line = edges_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in edge_column_of_interest}
 

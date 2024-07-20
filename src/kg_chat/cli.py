@@ -7,6 +7,7 @@ import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
+from kg_chat.constants import PROJ_DIR
 from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
 from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.main import KnowledgeGraphChat
@@ -22,6 +23,12 @@ database_options = click.option(
     type=click.Choice(["neo4j", "duckdb"], case_sensitive=False),
     help="Database to use.",
     default="duckdb",
+)
+data_dir_option = click.option(
+    "--data-dir",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+    help="Directory containing the data.",
+    default=PROJ_DIR,
 )
 
 
@@ -48,14 +55,15 @@ def main(verbose: int, quiet: bool):
 
 @main.command("import")
 @database_options
-def import_kg(database: str = "duckdb"):
+@data_dir_option
+def import_kg(database: str = "duckdb", data_dir: str = PROJ_DIR):
     """Run the kg-chat's demo command."""
     if database == "neo4j":
         impl = Neo4jImplementation()
-        impl.load_kg()
+        impl.load_kg(data_dir=data_dir)
     elif database == "duckdb":
         impl = DuckDBImplementation()
-        impl.load_kg()
+        impl.load_kg(data_dir=data_dir)
     else:
         raise ValueError(f"Database {database} not supported.")
 
