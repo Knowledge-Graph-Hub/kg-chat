@@ -1,8 +1,8 @@
 """Implementation of the DatabaseInterface for DuckDB."""
 
-from pathlib import Path
 import tempfile
 import time
+from pathlib import Path
 from pprint import pprint
 from typing import Union
 
@@ -114,6 +114,7 @@ class DuckDBImplementation(DatabaseInterface):
 
     def load_kg(self, data_dir: Union[Path, str] = DATA_DIR):
         """Load the Knowledge Graph into the database."""
+
         def _load_kg():
             # Clear the existing database
             print("Clearing the existing database...")
@@ -190,7 +191,7 @@ class DuckDBImplementation(DatabaseInterface):
     def _import_nodes(self, data_dir: Union[Path, str] = DATA_DIR):
         columns_of_interest = ["id", "category", "name"]
         nodes_filepath = Path(data_dir) / "nodes.tsv"
-        
+
         with open(nodes_filepath, "r") as nodes_file:
             header_line = nodes_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in columns_of_interest}

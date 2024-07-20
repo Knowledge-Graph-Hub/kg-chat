@@ -1,8 +1,8 @@
 """Implementation of the DatabaseInterface for Neo4j."""
 
 import csv
-from pathlib import Path
 import time
+from pathlib import Path
 from pprint import pprint
 from typing import Union
 
@@ -182,6 +182,7 @@ class Neo4jImplementation(DatabaseInterface):
         """Load the Knowledge Graph into the Neo4j database."""
         nodes_filepath = data_dir / "nodes.tsv"
         edges_filepath = data_dir / "edges.tsv"
+
         def _load_kg():
             # Clear the existing database
             print("Clearing the existing database...")
