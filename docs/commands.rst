@@ -32,33 +32,95 @@ Commands
 
     .. code-block:: shell
 
-        poetry run kg qna --database neo4j "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
+        poetry run kg qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
 
     This should return
 
-    .. code-block:: text
+    .. code-block:: shell
 
-        > Entering new GraphCypherQAChain chain...
-        Generated Cypher:
-        MATCH (n:Node)-[r:RELATIONSHIP]->(m:Node)
-        RETURN n.label AS label, n.id AS id, COUNT(r) AS frequency
-        ORDER BY frequency DESC
-        Full Context:
-        [{'label': 'hydrocarbon', 'id': 'CHEBI:24632', 'frequency': 2381}, {'label': 'Marinobacterium coralli', 'id': 'NCBITaxon:693965', 'frequency': 55}, {'label': 'Marinobacterium coralli LMG 25435', 'id': 'NCBITaxon:693965', 'frequency': 55}, {'label': 'Ruegeria mobilis DSM 23403', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria mobilis S1942', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria pelagia', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'ruegeria_pelagia', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'ruegeria_mobilis', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria mobilis', 'id': 'NCBITaxon:379347', 'frequency': 47}, {'label': 'Ruegeria mobilis 45A6', 'id': 'NCBITaxon:379347', 'frequency': 47}]
+        > Entering new SQL Agent Executor chain...
+
+        Invoking: `sql_db_list_tables` with `{}`
+
+
+        edges, nodes
+        Invoking: `sql_db_schema` with `{'table_names': 'edges, nodes'}`
+
+
+
+        CREATE TABLE edges (
+                subject VARCHAR, 
+                predicate VARCHAR, 
+                object VARCHAR
+        )
+
+        /*
+        3 rows from edges table:
+        subject predicate       object
+        NCBITaxon:54261 biolink:capable_of      pathway:nitrate_reduction
+        NCBITaxon:2714  biolink:capable_of      pathway:nitrate_reduction
+        NCBITaxon:29466 biolink:capable_of      pathway:nitrate_reduction
+        */
+
+
+        CREATE TABLE nodes (
+                id VARCHAR NOT NULL, 
+                category VARCHAR, 
+                label VARCHAR
+        )
+
+        /*
+        3 rows from nodes table:
+        id      category        label
+        NCBITaxon:54261 biolink:OrganismTaxon   Ferroglobus placidus
+        pathway:nitrate_reduction       biolink:BiologicalProcess       nitrate_reduction
+        NCBITaxon:2714  biolink:OrganismTaxon   Aquifex pyrophilus
+        */
+        Invoking: `sql_db_query_checker` with `{'query': 'SELECT n.label, n.id, COUNT(e.subject) + COUNT(e.object) AS frequency_count FROM nodes n LEFT JOIN edges e ON n.id = e.subject OR n.id = e.object GROUP BY n.label, n.id ORDER BY frequency_count DESC LIMIT 10;'}`
+
+
+        ```sql
+        SELECT n.label, n.id, COUNT(e.subject) + COUNT(e.object) AS frequency_count 
+        FROM nodes n 
+        LEFT JOIN edges e ON n.id = e.subject OR n.id = e.object 
+        GROUP BY n.label, n.id 
+        ORDER BY frequency_count DESC 
+        LIMIT 10;
+        ```
+        Invoking: `sql_db_query` with `{'query': 'SELECT n.label, n.id, COUNT(e.subject) + COUNT(e.object) AS frequency_count FROM nodes n LEFT JOIN edges e ON n.id = e.subject OR n.id = e.object GROUP BY n.label, n.id ORDER BY frequency_count DESC LIMIT 10;'}`
+
+
+        [('sucrose', 'CHEBI:17992', 31296), ('fundamental metabolite', 'CHEBI:78675', 26354), ('maltose', 'CHEBI:17306', 25920), ('human metabolite', 'CHEBI:77746', 25126), ('Saccharomyces cerevisiae metabolite', 'CHEBI:75772', 21960), ('glycerol', 'CHEBI:17754', 20400), ('Escherichia coli metabolite', 'CHEBI:76971', 19928), ('mouse metabolite', 'CHEBI:75771', 16190), ('plant metabolite', 'CHEBI:76924', 15044), ('mannitol', 'CHEBI:29864', 14530)]Here is the table with the sorted (descending) frequency count of nodes with relationships, including their labels and IDs:
+
+        | Label                           | ID             | Frequency Count |
+        |---------------------------------|----------------|-----------------|
+        | sucrose                         | CHEBI:17992    | 31296           |
+        | fundamental metabolite          | CHEBI:78675    | 26354           |
+        | maltose                         | CHEBI:17306    | 25920           |
+        | human metabolite                | CHEBI:77746    | 25126           |
+        | Saccharomyces cerevisiae metabolite | CHEBI:75772    | 21960           |
+        | glycerol                        | CHEBI:17754    | 20400           |
+        | Escherichia coli metabolite     | CHEBI:76971    | 19928           |
+        | mouse metabolite                | CHEBI:75771    | 16190           |
+        | plant metabolite                | CHEBI:76924    | 15044           |
+        | mannitol                        | CHEBI:29864    | 14530           |
 
         > Finished chain.
-        ('| Label                        | ID              | Frequency |\n'
-        '|------------------------------|-----------------|-----------|\n'
-        '| hydrocarbon                  | CHEBI:24632     | 2381      |\n'
-        '| Marinobacterium coralli      | NCBITaxon:693965| 55        |\n'
-        '| Ruegeria mobilis             | NCBITaxon:379347| 47        |\n'
-        '| Ruegeria pelagia             | NCBITaxon:379347| 47        |\n'
-        '| Ruegeria mobilis DSM 23403   | NCBITaxon:379347| 47        |\n'
-        '| Ruegeria mobilis S1942       | NCBITaxon:379347| 47        |\n'
-        '| Ruegeria pelagia             | NCBITaxon:379347| 47        |\n'
-        '| ruegeria_pelagia             | NCBITaxon:379347| 47        |\n'
-        '| ruegeria_mobilis             | NCBITaxon:379347| 47        |\n'
-        '| Ruegeria mobilis 45A6        | NCBITaxon:379347| 47        |')
+        ('Here is the table with the sorted (descending) frequency count of nodes with '
+        'relationships, including their labels and IDs:\n'
+        '\n'
+        '| Label                           | ID             | Frequency Count |\n'
+        '|---------------------------------|----------------|-----------------|\n'
+        '| sucrose                         | CHEBI:17992    | 31296           |\n'
+        '| fundamental metabolite          | CHEBI:78675    | 26354           |\n'
+        '| maltose                         | CHEBI:17306    | 25920           |\n'
+        '| human metabolite                | CHEBI:77746    | 25126           |\n'
+        '| Saccharomyces cerevisiae metabolite | CHEBI:75772    | 21960           |\n'
+        '| glycerol                        | CHEBI:17754    | 20400           |\n'
+        '| Escherichia coli metabolite     | CHEBI:76971    | 19928           |\n'
+        '| mouse metabolite                | CHEBI:75771    | 16190           |\n'
+        '| plant metabolite                | CHEBI:76924    | 15044           |\n'
+        '| mannitol                        | CHEBI:29864    | 14530           |')
 
 4. ``chat``: This starts an interactive chat session where you can ask questions about your KG.
 
@@ -143,13 +205,11 @@ Commands
     """""""""""""
 
     If the prompt has the phrase ``show me`` in it, ``kg-chat`` would render an HTML output with KG representation of the response. 
-    
-    This example was run over local data that is not not in version control due to size restrictions:
 
     .. code-block:: shell
 
         kg-chat $ poetry run kg chat
-        Ask me about your data! : show me 20 edges with subject prefix = Uniprot  
+        Ask me about your data! : show me 20 edges with subject prefix = CHEBI  
 
 
         > Entering new SQL Agent Executor chain...
@@ -171,9 +231,9 @@ Commands
         /*
         3 rows from edges table:
         subject predicate       object
-        CHEBI:111503    biolink:binds   UniprotKB:H2K885
-        CHEBI:111503    biolink:binds   UniprotKB:Q15JG1
-        CHEBI:11851     biolink:binds   UniprotKB:A0A7C4JVU2
+        NCBITaxon:54261 biolink:capable_of      pathway:nitrate_reduction
+        NCBITaxon:2714  biolink:capable_of      pathway:nitrate_reduction
+        NCBITaxon:29466 biolink:capable_of      pathway:nitrate_reduction
         */
 
 
@@ -186,47 +246,63 @@ Commands
         /*
         3 rows from nodes table:
         id      category        label
-        UniprotKB:A0A5B8I2N0    biolink:Enzyme  Kynureninase 
-        Proteomes:UP000320717   biolink:Genome  Proteomes:UP000320717
-        UniprotKB:A0A5B8I3L9    biolink:Enzyme  Bifunctional protein GlmU (Includes: UDP-N-acetylglucosamine pyrophosphorylase 
+        NCBITaxon:54261 biolink:OrganismTaxon   Ferroglobus placidus
+        pathway:nitrate_reduction       biolink:BiologicalProcess       nitrate_reduction
+        NCBITaxon:2714  biolink:OrganismTaxon   Aquifex pyrophilus
         */
-        Invoking: `sql_db_query_checker` with `{'query': "SELECT * FROM edges WHERE subject LIKE 'Uniprot%' LIMIT 20"}`
+        Invoking: `sql_db_query_checker` with `{'query': "SELECT * FROM edges WHERE subject LIKE 'CHEBI%' LIMIT 20"}`
 
 
         ```sql
-        SELECT * FROM edges WHERE subject LIKE 'Uniprot%' LIMIT 20
+        SELECT * FROM edges WHERE subject LIKE 'CHEBI%' LIMIT 20
         ```
-        Invoking: `sql_db_query` with `{'query': "SELECT * FROM edges WHERE subject LIKE 'Uniprot%' LIMIT 20"}`
+        Invoking: `sql_db_query` with `{'query': "SELECT * FROM edges WHERE subject LIKE 'CHEBI%' LIMIT 20"}`
 
 
-        [('UniprotKB:A0A009GYQ4', 'biolink:located_in', 'GO:0009279'), ('UniprotKB:A0A009GYQ4', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009GYV0', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009GYV0', 'biolink:participates_in', 'GO:0009381'), ('UniprotKB:A0A009GZA8', 'biolink:participates_in', 'GO:0016491'), ('UniprotKB:A0A009GZA8', 'biolink:participates_in', 'GO:0006081'), ('UniprotKB:A0A009GZA8', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H0Q1', 'biolink:participates_in', 'GO:0047569'), ('UniprotKB:A0A009H0Q1', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H0Z9', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2B9', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2B9', 'biolink:located_in', 'GO:0016020'), ('UniprotKB:A0A009H2F4', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2F4', 'biolink:participates_in', 'GO:0008168'), ('UniprotKB:A0A009H2F4', 'biolink:participates_in', 'GO:0032259'), ('UniprotKB:A0A009H2F4', 'biolink:participates_in', 'GO:0006744'), ('UniprotKB:A0A009H2L0', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2N6', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H2W7', 'biolink:derives_from', 'Proteomes:UP000020595'), ('UniprotKB:A0A009H3M0', 'biolink:derives_from', 'Proteomes:UP000020595')]```json
+        [('CHEBI:16449', 'biolink:location_of', 'NCBITaxon:442870'), ('CHEBI:16449', 'biolink:has_chemical_role', 'CHEBI:78675'), ('CHEBI:16449', 'biolink:location_of', 'NCBITaxon:442870'), ('CHEBI:16449', 'biolink:has_chemical_role', 'CHEBI:78675'), ('CHEBI:17234', 'biolink:location_of', 'NCBITaxon:442870'), ('CHEBI:17234', 'biolink:has_chemical_role', 'CHEBI:78675'), ('CHEBI:17822', 'biolink:location_of', 'NCBITaxon:442870'), ('CHEBI:17822', 'biolink:has_chemical_role', 'CHEBI:78675'), ('CHEBI:26986', 'biolink:location_of', 'NCBITaxon:442870'), ('CHEBI:26986', 'biolink:has_chemical_role', 'CHEBI:83056'), ('CHEBI:28675', 'biolink:location_of', 'NCBITaxon:291968'), ('CHEBI:28757', 'biolink:location_of', 'NCBITaxon:291968'), ('CHEBI:28757', 'biolink:has_chemical_role', 'CHEBI:78675'), ('CHEBI:17234', 'biolink:location_of', 'NCBITaxon:291968'), ('CHEBI:17234', 'biolink:has_chemical_role', 'CHEBI:78675'), ('CHEBI:17306', 'biolink:location_of', 'NCBITaxon:291968'), ('CHEBI:17306', 'biolink:has_chemical_role', 'CHEBI:77746'), ('CHEBI:17306', 'biolink:has_chemical_role', 'CHEBI:50505'), ('CHEBI:17306', 'biolink:has_chemical_role', 'CHEBI:76971'), ('CHEBI:17306', 'biolink:has_chemical_role', 'CHEBI:75772')]
+        Invoking: `sql_db_query` with `{'query': "SELECT * FROM nodes WHERE id IN ('CHEBI:16449', 'NCBITaxon:442870', 'CHEBI:78675', 'CHEBI:17234', 'CHEBI:17822', 'CHEBI:26986', 'CHEBI:83056', 'CHEBI:28675', 'NCBITaxon:291968', 'CHEBI:28757', 'CHEBI:17306', 'CHEBI:77746', 'CHEBI:50505', 'CHEBI:76971', 'CHEBI:75772')"}`
+
+
+        [('NCBITaxon:442870', 'biolink:OrganismTaxon', 'Acanthopleuribacter pedis'), ('CHEBI:16449', 'biolink:ChemicalEntity', 'alanine'), ('CHEBI:78675', 'biolink:ChemicalRole', 'fundamental metabolite'), ('CHEBI:17234', 'biolink:ChemicalEntity', 'glucose'), ('CHEBI:17822', 'biolink:ChemicalEntity', 'serine'), ('CHEBI:26986', 'biolink:ChemicalEntity', 'threonine'), ('CHEBI:83056', 'biolink:ChemicalRole', 'Daphnia magna metabolite'), ('NCBITaxon:291968', 'biolink:OrganismTaxon', 'Acaricomes phytoseiuli'), ('CHEBI:28675', 'biolink:ChemicalEntity', 'dextrin'), ('CHEBI:28757', 'biolink:ChemicalEntity', 'fructose'), ('CHEBI:17306', 'biolink:ChemicalEntity', 'maltose'), ('CHEBI:77746', 'biolink:ChemicalRole', 'human metabolite'), ('CHEBI:50505', 'biolink:ChemicalRole', 'sweetening agent'), ('CHEBI:76971', 'biolink:ChemicalRole', 'Escherichia coli metabolite'), ('CHEBI:75772', 'biolink:ChemicalRole', 'Saccharomyces cerevisiae metabolite')]```json
         {
             "nodes": [
-                {"label": "Kynureninase", "id": "UniprotKB:A0A5B8I2N0", "category": "biolink:Enzyme"},
-                {"label": "Proteomes:UP000320717", "id": "Proteomes:UP000320717", "category": "biolink:Genome"},
-                {"label": "Bifunctional protein GlmU (Includes: UDP-N-acetylglucosamine pyrophosphorylase", "id": "UniprotKB:A0A5B8I3L9", "category": "biolink:Enzyme"}
+                {"label": "alanine", "id": "CHEBI:16449", "category": "biolink:ChemicalEntity"},
+                {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870", "category": "biolink:OrganismTaxon"},
+                {"label": "fundamental metabolite", "id": "CHEBI:78675", "category": "biolink:ChemicalRole"},
+                {"label": "glucose", "id": "CHEBI:17234", "category": "biolink:ChemicalEntity"},
+                {"label": "serine", "id": "CHEBI:17822", "category": "biolink:ChemicalEntity"},
+                {"label": "threonine", "id": "CHEBI:26986", "category": "biolink:ChemicalEntity"},
+                {"label": "Daphnia magna metabolite", "id": "CHEBI:83056", "category": "biolink:ChemicalRole"},
+                {"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968", "category": "biolink:OrganismTaxon"},
+                {"label": "dextrin", "id": "CHEBI:28675", "category": "biolink:ChemicalEntity"},
+                {"label": "fructose", "id": "CHEBI:28757", "category": "biolink:ChemicalEntity"},
+                {"label": "maltose", "id": "CHEBI:17306", "category": "biolink:ChemicalEntity"},
+                {"label": "human metabolite", "id": "CHEBI:77746", "category": "biolink:ChemicalRole"},
+                {"label": "sweetening agent", "id": "CHEBI:50505", "category": "biolink:ChemicalRole"},
+                {"label": "Escherichia coli metabolite", "id": "CHEBI:76971", "category": "biolink:ChemicalRole"},
+                {"label": "Saccharomyces cerevisiae metabolite", "id": "CHEBI:75772", "category": "biolink:ChemicalRole"}
             ],
             "edges": [
-                {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": "UniprotKB:A0A009GYQ4"}, "object": {"label": "GO:0009279", "id": "GO:0009279"}, "predicate": "biolink:located_in"},
-                {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": "UniprotKB:A0A009GYQ4"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009GYV0", "id": "UniprotKB:A0A009GYV0"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009GYV0", "id": "UniprotKB:A0A009GYV0"}, "object": {"label": "GO:0009381", "id": "GO:0009381"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009GZA8", "id": "UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0016491", "id": "GO:0016491"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009GZA8", "id": "UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0006081", "id": "GO:0006081"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009GZA8", "id": "UniprotKB:A0A009GZA8"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": "UniprotKB:A0A009H0Q1"}, "object": {"label": "GO:0047569", "id": "GO:0047569"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": "UniprotKB:A0A009H0Q1"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H0Z9", "id": "UniprotKB:A0A009H0Z9"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H2B9", "id": "UniprotKB:A0A009H2B9"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H2B9", "id": "UniprotKB:A0A009H2B9"}, "object": {"label": "GO:0016020", "id": "GO:0016020"}, "predicate": "biolink:located_in"},
-                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0008168", "id": "GO:0008168"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0032259", "id": "GO:0032259"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009H2F4", "id": "UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0006744", "id": "GO:0006744"}, "predicate": "biolink:participates_in"},
-                {"subject": {"label": "UniprotKB:A0A009H2L0", "id": "UniprotKB:A0A009H2L0"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H2N6", "id": "UniprotKB:A0A009H2N6"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H2W7", "id": "UniprotKB:A0A009H2W7"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},
-                {"subject": {"label": "UniprotKB:A0A009H3M0", "id": "UniprotKB:A0A009H3M0"}, "object": {"label": "Proteomes:UP000020595", "id": "Proteomes:UP000020595"}, "predicate": "biolink:derives_from"}
+                {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": {"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": {"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": {"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "serine", "id": "CHEBI:17822"}, "object": {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "serine", "id": "CHEBI:17822"}, "object": {"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "threonine", "id": "CHEBI:26986"}, "object": {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "threonine", "id": "CHEBI:26986"}, "object": {"label": "Daphnia magna metabolite", "id": "CHEBI:83056"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "dextrin", "id": "CHEBI:28675"}, "object": {"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "fructose", "id": "CHEBI:28757"}, "object": {"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "fructose", "id": "CHEBI:28757"}, "object": {"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": {"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": {"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": {"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": "biolink:location_of"},
+                {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": {"label": "human metabolite", "id": "CHEBI:77746"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": {"label": "sweetening agent", "id": "CHEBI:50505"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": {"label": "Escherichia coli metabolite", "id": "CHEBI:76971"}, "predicate": "biolink:has_chemical_role"},
+                {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": {"label": "Saccharomyces cerevisiae metabolite", "id": "CHEBI:75772"}, "predicate": "biolink:has_chemical_role"}
             ]
         }
         ```
@@ -235,78 +311,101 @@ Commands
         ('```json\n'
         '{\n'
         '    "nodes": [\n'
-        '        {"label": "Kynureninase", "id": "UniprotKB:A0A5B8I2N0", "category": '
-        '"biolink:Enzyme"},\n'
-        '        {"label": "Proteomes:UP000320717", "id": "Proteomes:UP000320717", '
-        '"category": "biolink:Genome"},\n'
-        '        {"label": "Bifunctional protein GlmU (Includes: '
-        'UDP-N-acetylglucosamine pyrophosphorylase", "id": "UniprotKB:A0A5B8I3L9", '
-        '"category": "biolink:Enzyme"}\n'
+        '        {"label": "alanine", "id": "CHEBI:16449", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870", '
+        '"category": "biolink:OrganismTaxon"},\n'
+        '        {"label": "fundamental metabolite", "id": "CHEBI:78675", "category": '
+        '"biolink:ChemicalRole"},\n'
+        '        {"label": "glucose", "id": "CHEBI:17234", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "serine", "id": "CHEBI:17822", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "threonine", "id": "CHEBI:26986", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "Daphnia magna metabolite", "id": "CHEBI:83056", '
+        '"category": "biolink:ChemicalRole"},\n'
+        '        {"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968", '
+        '"category": "biolink:OrganismTaxon"},\n'
+        '        {"label": "dextrin", "id": "CHEBI:28675", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "fructose", "id": "CHEBI:28757", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "maltose", "id": "CHEBI:17306", "category": '
+        '"biolink:ChemicalEntity"},\n'
+        '        {"label": "human metabolite", "id": "CHEBI:77746", "category": '
+        '"biolink:ChemicalRole"},\n'
+        '        {"label": "sweetening agent", "id": "CHEBI:50505", "category": '
+        '"biolink:ChemicalRole"},\n'
+        '        {"label": "Escherichia coli metabolite", "id": "CHEBI:76971", '
+        '"category": "biolink:ChemicalRole"},\n'
+        '        {"label": "Saccharomyces cerevisiae metabolite", "id": '
+        '"CHEBI:75772", "category": "biolink:ChemicalRole"}\n'
         '    ],\n'
         '    "edges": [\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": '
-        '"UniprotKB:A0A009GYQ4"}, "object": {"label": "GO:0009279", "id": '
-        '"GO:0009279"}, "predicate": "biolink:located_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GYQ4", "id": '
-        '"UniprotKB:A0A009GYQ4"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GYV0", "id": '
-        '"UniprotKB:A0A009GYV0"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GYV0", "id": '
-        '"UniprotKB:A0A009GYV0"}, "object": {"label": "GO:0009381", "id": '
-        '"GO:0009381"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GZA8", "id": '
-        '"UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0016491", "id": '
-        '"GO:0016491"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GZA8", "id": '
-        '"UniprotKB:A0A009GZA8"}, "object": {"label": "GO:0006081", "id": '
-        '"GO:0006081"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009GZA8", "id": '
-        '"UniprotKB:A0A009GZA8"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": '
-        '"UniprotKB:A0A009H0Q1"}, "object": {"label": "GO:0047569", "id": '
-        '"GO:0047569"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H0Q1", "id": '
-        '"UniprotKB:A0A009H0Q1"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H0Z9", "id": '
-        '"UniprotKB:A0A009H0Z9"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2B9", "id": '
-        '"UniprotKB:A0A009H2B9"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2B9", "id": '
-        '"UniprotKB:A0A009H2B9"}, "object": {"label": "GO:0016020", "id": '
-        '"GO:0016020"}, "predicate": "biolink:located_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
-        '"UniprotKB:A0A009H2F4"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
-        '"UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0008168", "id": '
-        '"GO:0008168"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
-        '"UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0032259", "id": '
-        '"GO:0032259"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2F4", "id": '
-        '"UniprotKB:A0A009H2F4"}, "object": {"label": "GO:0006744", "id": '
-        '"GO:0006744"}, "predicate": "biolink:participates_in"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2L0", "id": '
-        '"UniprotKB:A0A009H2L0"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2N6", "id": '
-        '"UniprotKB:A0A009H2N6"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H2W7", "id": '
-        '"UniprotKB:A0A009H2W7"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"},\n'
-        '        {"subject": {"label": "UniprotKB:A0A009H3M0", "id": '
-        '"UniprotKB:A0A009H3M0"}, "object": {"label": "Proteomes:UP000020595", "id": '
-        '"Proteomes:UP000020595"}, "predicate": "biolink:derives_from"}\n'
-        '    ]\n'
-        '}\n'
-        '```')
+        '        {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": '
+        '{"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, '
+        '"predicate": "biolink:location_of"},\n'
+        '        {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": '
+        '{"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": '
+        '{"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, '
+        '"predicate": "biolink:location_of"},\n'
+        '        {"subject": {"label": "alanine", "id": "CHEBI:16449"}, "object": '
+        '{"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": '
+        '{"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, '
+        '"predicate": "biolink:location_of"},\n'
+        '        {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": '
+        '{"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "serine", "id": "CHEBI:17822"}, "object": '
+        '{"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, '
+        '"predicate": "biolink:location_of"},\n'
+        '        {"subject": {"label": "serine", "id": "CHEBI:17822"}, "object": '
+        '{"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "threonine", "id": "CHEBI:26986"}, "object": '
+        '{"label": "Acanthopleuribacter pedis", "id": "NCBITaxon:442870"}, '
+        '"predicate": "biolink:location_of"},\n'
+        '        {"subject": {"label": "threonine", "id": "CHEBI:26986"}, "object": '
+        '{"label": "Daphnia magna metabolite", "id": "CHEBI:83056"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "dextrin", "id": "CHEBI:28675"}, "object": '
+        '{"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": '
+        '"biolink:location_of"},\n'
+        '        {"subject": {"label": "fructose", "id": "CHEBI:28757"}, "object": '
+        '{"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": '
+        '"biolink:location_of"},\n'
+        '        {"subject": {"label": "fructose", "id": "CHEBI:28757"}, "object": '
+        '{"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": '
+        '{"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": '
+        '"biolink:location_of"},\n'
+        '        {"subject": {"label": "glucose", "id": "CHEBI:17234"}, "object": '
+        '{"label": "fundamental metabolite", "id": "CHEBI:78675"}, "predicate": '
+        '"biolink:has_chemical_role"},\n'
+        '        {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": '
+        '{"label": "Acaricomes phytoseiuli", "id": "NCBITaxon:291968"}, "predicate": '
+ '"biolink:location_of"},\n'
+ '        {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": '
+ '{"label": "human metabolite", "id": "CHEBI:77746"}, "predicate": '
+ '"biolink:has_chemical_role"},\n'
+ '        {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": '
+ '{"label": "sweetening agent", "id": "CHEBI:50505"}, "predicate": '
+ '"biolink:has_chemical_role"},\n'
+ '        {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": '
+ '{"label": "Escherichia coli metabolite", "id": "CHEBI:76971"}, "predicate": '
+ '"biolink:has_chemical_role"},\n'
+ '        {"subject": {"label": "maltose", "id": "CHEBI:17306"}, "object": '
+ '{"label": "Saccharomyces cerevisiae metabolite", "id": "CHEBI:75772"}, '
+ '"predicate": "biolink:has_chemical_role"}\n'
+ '    ]\n'
+ '}\n'
+ '```')
         ../kg-chat/src/kg_chat/graph_output/knowledge_graph.html
         Ask me about your data! : 
 
