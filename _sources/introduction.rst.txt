@@ -3,8 +3,7 @@ Introduction
 
 kg-chat
 -------
-
-Chatbot that looks up information from provided `KGX <https://github.com/biolink/kgx>`_ files (nodes and edges TSV files). It uses `langchain <https://github.com/langchain-ai/langchain>`_ to generate responses.
+LLM-based chatbot that queries and visualizes `KGX <https://github.com/biolink/kgx>`_  nodes and edges TSV files loaded into either DuckDB (default) or neo4j database backend.
 
 .. note::
 
