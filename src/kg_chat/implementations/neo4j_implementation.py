@@ -1,8 +1,10 @@
 """Implementation of the DatabaseInterface for Neo4j."""
 
 import csv
+from pathlib import Path
 import time
 from pprint import pprint
+from typing import Union
 
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
@@ -10,12 +12,11 @@ from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
 
 from kg_chat.constants import (
+    DATA_DIR,
     DATALOAD_BATCH_SIZE,
-    EDGES_FILE,
     NEO4J_PASSWORD,
     NEO4J_URI,
     NEO4J_USERNAME,
-    NODES_FILE,
     OPEN_AI_MODEL,
     OPENAI_KEY,
 )
@@ -177,9 +178,10 @@ class Neo4jImplementation(DatabaseInterface):
             result = session.read_transaction(lambda tx: list(tx.run("CALL db.schema.visualization()")))
             pprint(result)
 
-    def load_kg(self):
+    def load_kg(self, data_dir: Union[str, Path] = DATA_DIR):
         """Load the Knowledge Graph into the Neo4j database."""
-
+        nodes_filepath = data_dir / "nodes.tsv"
+        edges_filepath = data_dir / "edges.tsv"
         def _load_kg():
             # Clear the existing database
             print("Clearing the existing database...")
@@ -197,7 +199,7 @@ class Neo4jImplementation(DatabaseInterface):
             nodes_batch = []
             columns_of_interest = ["id", "category", "name"]
 
-            with open(NODES_FILE, "r") as nodes_file:
+            with open(nodes_filepath, "r") as nodes_file:
                 reader = csv.DictReader(nodes_file, delimiter="\t")
                 node_batch_loaded = 0
 
@@ -230,7 +232,7 @@ class Neo4jImplementation(DatabaseInterface):
             edges_batch = []
             edge_column_of_interest = ["subject", "predicate", "object"]
 
-            with open(EDGES_FILE, "r") as edges_file:
+            with open(edges_filepath, "r") as edges_file:
                 reader = csv.DictReader(edges_file, delimiter="\t")
                 edge_batch_loaded = 0
 
