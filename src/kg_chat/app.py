@@ -23,7 +23,7 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
             html.Div(
                 id="main-content",
                 children=[
-                    html.H1("KG Viz", style={"textAlign": "center"}),  # Add title here
+                    html.H1("KG Chatbot", style={"textAlign": "center"}),  # Add title here
                     dcc.Loading(
                         id="loading",
                         type="default",
