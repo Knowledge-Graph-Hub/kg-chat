@@ -27,7 +27,7 @@ from kg_chat.utils import structure_query
 class Neo4jImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for Neo4j."""
 
-    def __init__(self, uri:str = NEO4J_URI, username:str = NEO4J_USERNAME, password:str = NEO4J_PASSWORD):
+    def __init__(self, uri: str = NEO4J_URI, username: str = NEO4J_USERNAME, password: str = NEO4J_PASSWORD):
         """Initialize the Neo4j database and the Langchain components."""
         self.driver = GraphDatabase.driver(uri, auth=(username, password))
         self.graph = Neo4jGraph(url=uri, username=username, password=password)

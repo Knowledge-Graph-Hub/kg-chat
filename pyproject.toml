@@ -56,6 +56,7 @@ lint.extend-ignore = [
     "S105",  # Possible hardcoded password assigned to: "NEO4J_PASSWORD"
     "S106",  # Possible hardcoded password assigned to argument: "password"
     "S311",  # Standard pseudo-random generators are not suitable for cryptographic purposes
+    "S101",  # Use of assert detected
     ]
 line-length = 120
 
