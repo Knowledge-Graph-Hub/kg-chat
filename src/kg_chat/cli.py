@@ -7,7 +7,7 @@ import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
-from kg_chat.constants import PROJ_DIR
+from kg_chat.constants import DATA_DIR
 from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
 from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.main import KnowledgeGraphChat
@@ -28,7 +28,7 @@ data_dir_option = click.option(
     "--data-dir",
     type=click.Path(exists=True, file_okay=False, dir_okay=True),
     help="Directory containing the data.",
-    default=PROJ_DIR,
+    default=DATA_DIR,
 )
 
 
@@ -56,7 +56,7 @@ def main(verbose: int, quiet: bool):
 @main.command("import")
 @database_options
 @data_dir_option
-def import_kg(database: str = "duckdb", data_dir: str = PROJ_DIR):
+def import_kg(database: str = "duckdb", data_dir: str = DATA_DIR):
     """Run the kg-chat's demo command."""
     if database == "neo4j":
         impl = Neo4jImplementation()

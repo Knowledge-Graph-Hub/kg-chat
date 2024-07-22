@@ -3,11 +3,14 @@
 from os import getenv
 from pathlib import Path
 
-PWD = Path(__file__).resolve().parent
+PWD = Path(__file__).parent.resolve()
 PROJ_DIR = PWD.parents[1]
 DATA_DIR = PROJ_DIR / "data"
 GRAPH_OUTPUT_DIR = PWD / "graph_output"
 ASSETS_DIR = PWD / "assets"
+TEST_DIR = PROJ_DIR / "tests"
+TESTS_INPUT_DIR = TEST_DIR / "input"
+TESTS_OUTPUT_DIR = TEST_DIR / "output"
 
 OPENAI_KEY = getenv("OPENAI_API_KEY")
 OPEN_AI_MODEL = "gpt-4o"

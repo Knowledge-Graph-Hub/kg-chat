@@ -27,10 +27,10 @@ from kg_chat.utils import structure_query
 class Neo4jImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for Neo4j."""
 
-    def __init__(self):
+    def __init__(self, uri:str = NEO4J_URI, username:str = NEO4J_USERNAME, password:str = NEO4J_PASSWORD):
         """Initialize the Neo4j database and the Langchain components."""
-        self.driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USERNAME, NEO4J_PASSWORD))
-        self.graph = Neo4jGraph(url=NEO4J_URI, username=NEO4J_USERNAME, password=NEO4J_PASSWORD)
+        self.driver = GraphDatabase.driver(uri, auth=(username, password))
+        self.graph = Neo4jGraph(url=uri, username=username, password=password)
         self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
 
         self.chain = GraphCypherQAChain.from_llm(
@@ -178,7 +178,7 @@ class Neo4jImplementation(DatabaseInterface):
             result = session.read_transaction(lambda tx: list(tx.run("CALL db.schema.visualization()")))
             pprint(result)
 
-    def load_kg(self, data_dir: Union[str, Path] = DATA_DIR):
+    def load_kg(self, data_dir: Union[str, Path] = DATA_DIR, block_size: int = DATALOAD_BATCH_SIZE):
         """Load the Knowledge Graph into the Neo4j database."""
         nodes_filepath = data_dir / "nodes.tsv"
         edges_filepath = data_dir / "edges.tsv"
@@ -211,7 +211,7 @@ class Neo4jImplementation(DatabaseInterface):
                     nodes_batch.append({"id": node_id, "category": node_category, "label": node_label})
                     node_batch_loaded += 1
 
-                    if len(nodes_batch) >= DATALOAD_BATCH_SIZE:
+                    if len(nodes_batch) >= block_size:
                         self.create_nodes(nodes_batch)
                         nodes_batch = []
 
@@ -244,7 +244,7 @@ class Neo4jImplementation(DatabaseInterface):
                     edges_batch.append({"subject": subject, "predicate": predicate, "object": object})
                     edge_batch_loaded += 1
 
-                    if len(edges_batch) >= DATALOAD_BATCH_SIZE / 2:
+                    if len(edges_batch) >= block_size / 2:
                         self.create_edges(edges_batch)
                         edges_batch = []
 
