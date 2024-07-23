@@ -7,25 +7,19 @@ from kg_chat.implementations import Neo4jImplementation
 
 
 @pytest.fixture
-def neo4j_impl(monkeypatch):
-    """Fixture to initialize Neo4jImplementation with mocks and mocked OpenAI key."""
-    # Mock the environment variable for OpenAI API key
-    monkeypatch.setenv("OPENAI_API_KEY", "test_key")
+@patch("neo4j.GraphDatabase.driver")
+@patch("langchain_community.graphs.Neo4jGraph")
+@patch("langchain_openai.ChatOpenAI")
+@patch("langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.from_llm")
+def neo4j_impl(mock_from_llm, mock_chat_openai, mock_neo4j_graph, mock_driver):
+    """Fixture to initialize Neo4jImplementation with mocks."""
+    # Mock the return values for the constructor dependencies
+    mock_driver.return_value = MagicMock()
+    mock_neo4j_graph.return_value = MagicMock()
+    mock_chat_openai.return_value = MagicMock()
+    mock_from_llm.return_value = MagicMock()
 
-    with (
-        patch("neo4j.GraphDatabase.driver") as mock_driver,
-        patch("langchain_community.graphs.Neo4jGraph") as mock_neo4j_graph,
-        patch("langchain_openai.ChatOpenAI") as mock_chat_openai,
-        patch("langchain_community.chains.graph_qa.cypher.GraphCypherQAChain.from_llm") as mock_from_llm,
-    ):
-
-        # Mock the return values for the constructor dependencies
-        mock_driver.return_value = MagicMock()
-        mock_neo4j_graph.return_value = MagicMock()
-        mock_chat_openai.return_value = MagicMock()
-        mock_from_llm.return_value = MagicMock()
-
-        yield Neo4jImplementation()
+    return Neo4jImplementation()
 
 
 def test_toggle_safe_mode(neo4j_impl):
