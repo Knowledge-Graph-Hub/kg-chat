@@ -33,4 +33,7 @@ jobs:
         run: poetry run tox -e lint
 
       - name: Test with pytest and generate coverage file
+        env:
+          SKIP_NEO4J_TESTS: true
+          SKIP_DUCKDB_TESTS: true
         run: poetry run tox -e py

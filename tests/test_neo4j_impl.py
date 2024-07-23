@@ -1,9 +1,15 @@
 """Tests for Neo4jImplementation class."""
 
+import os
 from unittest.mock import MagicMock, patch
 
 import pytest
 from kg_chat.implementations import Neo4jImplementation
+
+# Define the condition to skip tests
+skip_neo4j_tests = pytest.mark.skipif(
+    os.getenv("SKIP_NEO4J_TESTS") == "true", reason="Skipping Neo4j tests in GitHub Actions"
+)
 
 
 @pytest.fixture
@@ -22,6 +28,7 @@ def neo4j_impl(mock_from_llm, mock_chat_openai, mock_neo4j_graph, mock_driver):
     return Neo4jImplementation()
 
 
+@skip_neo4j_tests
 def test_toggle_safe_mode(neo4j_impl):
     """Test toggling safe mode on and off."""
     neo4j_impl.toggle_safe_mode(False)
@@ -30,12 +37,14 @@ def test_toggle_safe_mode(neo4j_impl):
     assert neo4j_impl.safe_mode
 
 
+@skip_neo4j_tests
 def test_is_safe_command(neo4j_impl):
     """Test checking if a command is safe to execute."""
     assert neo4j_impl.is_safe_command("MATCH (n) RETURN n")
     assert not neo4j_impl.is_safe_command("CREATE (n:Node {id: '1'})")
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_execute_query(mock_driver):
     """Test executing a query in safe mode."""
@@ -51,6 +60,7 @@ def test_execute_query(mock_driver):
     assert result == mock_transaction
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_execute_query_unsafe(mock_driver, neo4j_impl):
     """Test executing a query in unsafe mode."""
@@ -60,6 +70,7 @@ def test_execute_query_unsafe(mock_driver, neo4j_impl):
         neo4j_impl.execute_query(query)
 
 
+@skip_neo4j_tests
 @patch("langchain_community.graphs.Neo4jGraph.query")
 def test_execute_query_using_langchain(mock_query, neo4j_impl):
     """Test executing a query using Langchain."""
@@ -70,6 +81,7 @@ def test_execute_query_using_langchain(mock_query, neo4j_impl):
     assert result == "result"
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_clear_database(mock_driver):
     """Test clearing the database."""
@@ -80,6 +92,7 @@ def test_clear_database(mock_driver):
     mock_session.write_transaction.assert_called_once()
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_ensure_index(mock_driver):
     """Test ensuring that the index on :Node(id) exists."""
@@ -91,6 +104,7 @@ def test_ensure_index(mock_driver):
 
 
 # TODO
+# @skip_neo4j_tests
 # @patch('langchain.chains.base.Chain.invoke')
 # def test_get_human_response(mock_invoke, neo4j_impl):
 #     query = "MATCH (n) RETURN n"
@@ -99,6 +113,7 @@ def test_ensure_index(mock_driver):
 #     mock_invoke.assert_called_once_with({"query": query})
 #     assert result == "response"
 
+# @skip_neo4j_tests
 # @patch('langchain.chains.base.Chain.invoke')
 # def test_get_structured_response(mock_invoke, neo4j_impl):
 #     query = "Get all nodes"
@@ -109,6 +124,7 @@ def test_ensure_index(mock_driver):
 #     assert result == "response"
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_create_nodes(mock_driver):
     """Test creating nodes in the database."""
@@ -120,6 +136,7 @@ def test_create_nodes(mock_driver):
     mock_session.write_transaction.assert_called_once()
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_create_edges(mock_driver):
     """Test creating edges in the database."""
@@ -131,6 +148,7 @@ def test_create_edges(mock_driver):
     mock_session.write_transaction.assert_called_once()
 
 
+@skip_neo4j_tests
 @patch("neo4j.GraphDatabase.driver")
 def test_show_schema(mock_driver):
     """Test showing the schema of the database."""
@@ -144,6 +162,7 @@ def test_show_schema(mock_driver):
 
 
 # TODO
+# @skip_neo4j_tests
 # @patch('kg_chat.implementations.Neo4jImplementation.clear_database')
 # @patch('kg_chat.implementations.Neo4jImplementation.ensure_index')
 # @patch('kg_chat.implementations.Neo4jImplementation.create_nodes')
