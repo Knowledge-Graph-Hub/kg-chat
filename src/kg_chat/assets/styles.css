@@ -24,8 +24,8 @@ body {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    width: 300px;
-    min-width: 300px;
+    width: 350px;
+    min-width: 350px;
     max-width:max-content;
     height: 400px;
     border: 1px solid #ccc;
@@ -82,4 +82,19 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #f9f9f9;
+}
+
+#download-button{
+    background-color: #adaf4c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 10px;
 }
