@@ -32,9 +32,9 @@ jobs:
       - name: Check code quality
         run: poetry run tox -e lint
 
-      - name: Test with pytest and generate coverage file
+      - name: Test with pytest
         env:
           SKIP_NEO4J_TESTS: true
           SKIP_DUCKDB_TESTS: true
           OPENAI_API_KEY: "mock_key"
-        run: poetry run tox -e py
+        run: poetry run pytest
