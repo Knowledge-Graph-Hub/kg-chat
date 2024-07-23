@@ -5,7 +5,7 @@
   "context": {
     "cookiecutter": {
       "project_name": "kg-chat",
-      "github_org_name": "hrshdhgd",
+      "github_org_name": "Knowledge-Graph-Hub",
       "__project_slug": "kg_chat",
       "project_description": "Chatbot that looks up information from provided KGs",
       "min_python_version": "3.9",
