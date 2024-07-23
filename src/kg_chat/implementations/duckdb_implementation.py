@@ -76,8 +76,8 @@ class DuckDBImplementation(DatabaseInterface):
 
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
-        prompt_for_structured_query = structure_query(prompt)
-        response = self.agent.invoke(prompt_for_structured_query)
+        structured_query = structure_query(prompt)
+        response = self.agent.invoke(structured_query)
         return response["output"]
 
     def create_edges(self, edges):
