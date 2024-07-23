@@ -34,7 +34,7 @@ jobs:
 
       - name: Test with pytest
         env:
-          SKIP_NEO4J_TESTS: true
-          SKIP_DUCKDB_TESTS: true
+          # SKIP_NEO4J_TESTS: true
+          # SKIP_DUCKDB_TESTS: true
           OPENAI_API_KEY: "mock_key"
         run: poetry run pytest
