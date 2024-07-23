@@ -5,7 +5,7 @@ Setup
 
     Follow steps 1 through 5 **ONLY** if you want to work with Neo4j as the backend. If you intend to use just DuckDB feel free to skip these steps.
 
-1. Install Neo4j desktop from `here <https://neo4j.com/download/?utm_source=Google&utm_medium=PaidSearch&utm_campaign=Evergreen&utm_content=AMS-Search-SEMBrand-Evergreen-None-SEM-SEM-NonABM&utm_term=download%20neo4j&utm_adgroup=download&gad_source=1&gbraid=0AAAAADk9OYqwuLc9mMDBV2n4GXbXo8LzS&gclid=Cj0KCQjwv7O0BhDwARIsAC0sjWOzlSRw10D0r0jnxU2FtVs1MlC1lMVhl2GqH8pa4HAoaVS85DQO9nsaArSfEALw_wcB>`_
+1. Install Neo4j desktop from `here <https://neo4j.com/download/>`_
 
 2. Create a new project by giving it a name of your choice. Make sure to choose the latest version of Neo4j. At this time it is (v5.21.2).
 
