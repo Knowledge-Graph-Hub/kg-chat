@@ -1,15 +1,9 @@
 """Tests for DuckDBImplementation class."""
 
-import os
 from unittest.mock import call
 
 import pytest
 from kg_chat.implementations import DuckDBImplementation
-
-# Define the condition to skip tests
-skip_duckdb_tests = pytest.mark.skipif(
-    os.getenv("SKIP_DUCKDB_TESTS") == "true", reason="Skipping DuckDB tests in GitHub Actions"
-)
 
 
 @pytest.fixture
@@ -19,7 +13,6 @@ def db_impl():
 
 
 # TODO
-# @skip_duckdb_tests
 # def test_init(mocker):
 #     mock_connect = mocker.patch('duckdb.connect', return_value=MagicMock())
 #     db_impl = DuckDBImplementation()
@@ -32,7 +25,6 @@ def db_impl():
 #     assert db_impl.agent is not None
 
 
-@skip_duckdb_tests
 def test_toggle_safe_mode(db_impl):
     """Test toggling safe mode on and off."""
     db_impl.toggle_safe_mode(False)
@@ -41,7 +33,6 @@ def test_toggle_safe_mode(db_impl):
     assert db_impl.safe_mode is True
 
 
-@skip_duckdb_tests
 def test_is_safe_command(db_impl):
     """Test checking if a command is safe to execute."""
     safe_query = "SELECT * FROM nodes"
@@ -50,7 +41,6 @@ def test_is_safe_command(db_impl):
     assert db_impl.is_safe_command(unsafe_query) is False
 
 
-@skip_duckdb_tests
 def test_execute_query_safe_mode(mocker, db_impl):
     """Test executing a query in safe mode."""
     mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
@@ -61,7 +51,6 @@ def test_execute_query_safe_mode(mocker, db_impl):
     assert result == []
 
 
-@skip_duckdb_tests
 def test_execute_query_unsafe_mode(mocker, db_impl):
     """Test executing a query in unsafe mode."""
     db_impl.safe_mode = False
@@ -73,7 +62,6 @@ def test_execute_query_unsafe_mode(mocker, db_impl):
     assert result == []
 
 
-@skip_duckdb_tests
 def test_execute_query_unsafe_command_in_safe_mode(db_impl):
     """Test executing an unsafe command in safe mode."""
     query = "DROP TABLE nodes"
@@ -81,7 +69,6 @@ def test_execute_query_unsafe_command_in_safe_mode(db_impl):
         db_impl.execute_query(query)
 
 
-@skip_duckdb_tests
 def test_clear_database(mocker, db_impl):
     """Test clearing the database."""
     mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
@@ -90,7 +77,6 @@ def test_clear_database(mocker, db_impl):
     mock_execute.assert_has_calls(calls, any_order=True)
 
 
-@skip_duckdb_tests
 def test_get_human_response(mocker, db_impl):
     """Test getting a human response from the database."""
     mock_invoke = mocker.patch("langchain.chains.base.Chain.invoke", return_value={"output": "response"})
@@ -101,7 +87,6 @@ def test_get_human_response(mocker, db_impl):
     assert response == "response"
 
 
-@skip_duckdb_tests
 def test_get_structured_response(mocker, db_impl):
     """Test getting a structured response from the database."""
     mock_structure_query = mocker.patch("kg_chat.utils.structure_query")
@@ -115,7 +100,6 @@ def test_get_structured_response(mocker, db_impl):
     assert response == "response"
 
 
-@skip_duckdb_tests
 def test_create_edges(mocker, db_impl):
     """Test creating edges in the database."""
     mock_executemany = mocker.patch("duckdb.DuckDBPyConnection.executemany")
@@ -127,7 +111,6 @@ def test_create_edges(mocker, db_impl):
     )
 
 
-@skip_duckdb_tests
 def test_create_nodes(mocker, db_impl):
     """Test creating nodes in the database."""
     mock_executemany = mocker.patch("duckdb.DuckDBPyConnection.executemany")
@@ -139,7 +122,6 @@ def test_create_nodes(mocker, db_impl):
     )
 
 
-@skip_duckdb_tests
 def test_show_schema(mocker, db_impl):
     """Test showing the schema of the database."""
     mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
@@ -149,7 +131,6 @@ def test_show_schema(mocker, db_impl):
     assert result is None  # pprint returns None
 
 
-@skip_duckdb_tests
 def test_execute_query_using_langchain(mocker, db_impl):
     """Test executing a query using the langchain agent."""
     mock_invoke = mocker.patch("langchain.chains.base.Chain.invoke", return_value={"output": "response"})
