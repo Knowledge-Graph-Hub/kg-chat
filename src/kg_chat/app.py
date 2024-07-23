@@ -14,6 +14,7 @@ from kg_chat.utils import extract_nodes_edges, visualize_kg
 # Global variable to store the last structured result
 LAST_STRUCTURED_RESULT = None
 
+
 def create_app(kg_chatbot: KnowledgeGraphChat):
     """Create a Dash app for the KG Chatbot."""
     # Initialize the Dash app
@@ -97,7 +98,7 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
             return "", "", [], ""
 
         return "", "", history, ""
-    
+
     @app.callback(
         Output("download-results", "data"),
         [Input("download-button", "n_clicks")],
@@ -107,7 +108,7 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
     def download_results(n_clicks, history):
         if not history:
             return None
-        
+
         # Extract nodes and edges from the last structured response in the history
         try:
             last_response = LAST_STRUCTURED_RESULT
@@ -115,25 +116,28 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
                 return None
 
             nodes, edges = extract_nodes_edges(last_response)
-
             # Convert nodes and edges to TSV strings
-            nodes_tsv = "id\tcategory\tlabel\n" + "\n".join([f"{node['id']}\t{node['category']}\t{node['label']}" for node in nodes])
-            edges_tsv = "subject\tpredicate\tobject\n" + "\n".join([f"{edge['subject']}\t{edge['predicate']}\t{edge['object']}" for edge in edges])
+            nodes_tsv = "id\tcategory\tlabel\n" + "\n".join(
+                [f"{node['id']}\t{node['category']}\t{node['label']}" for node in nodes]
+            )
+            edges_tsv = "subject\tpredicate\tobject\n" + "\n".join(
+                [f"{edge['subject']['id']}\t{edge['predicate']}\t{edge['object']['id']}" for edge in edges]
+            )
 
             # Create a BytesIO buffer to hold the zip file
             buffer = io.BytesIO()
-            with zipfile.ZipFile(buffer, 'w') as zf:
+            with zipfile.ZipFile(buffer, "w") as zf:
                 # Write nodes.tsv
-                zf.writestr('nodes.tsv', nodes_tsv.encode('utf-8'))
+                zf.writestr("nodes.tsv", nodes_tsv.encode("utf-8"))
 
                 # Write edges.tsv
-                zf.writestr('edges.tsv', edges_tsv.encode('utf-8'))
+                zf.writestr("edges.tsv", edges_tsv.encode("utf-8"))
 
             buffer.seek(0)
-            return dcc.send_file(buffer.getvalue(), "results.zip")
+            return dcc.send_bytes(buffer.getvalue(), "kg-subset.zip")
 
         except Exception as e:
-            print(f"Error generating download: {e} -- {LAST_STRUCTURED_RESULT}")
+            print(f"Error generating download: {e}")
             return None
 
     # Wrapper function to pass the database instance to the callback
