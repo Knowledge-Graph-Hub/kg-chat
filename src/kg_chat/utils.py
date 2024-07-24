@@ -1,11 +1,10 @@
 """Utility functions for the KG chatbot."""
 
+from pathlib import Path
 import random
 import webbrowser
 
 from pyvis.network import Network
-
-from kg_chat.constants import GRAPH_OUTPUT_DIR
 
 PREFIX_COLOR_MAP = {}
 
@@ -63,7 +62,7 @@ def assign_color_to_prefix(curie):
     return PREFIX_COLOR_MAP[prefix]
 
 
-def visualize_kg(nodes, edges, app: bool = False):
+def visualize_kg(nodes, edges, app: bool = False, output_dir: str = None):
     """Visualize the knowledge graph using pyvis."""
     # Create a PyVis network
     net = Network(
@@ -123,7 +122,12 @@ def visualize_kg(nodes, edges, app: bool = False):
         net.add_edge(subject, object, title=edge.get("predicate"))
 
     # Generate and display the network
-    html_file = str(GRAPH_OUTPUT_DIR / "knowledge_graph.html")
+    if output_dir:
+        output_dir_path = Path(output_dir)
+        output_dir_path.mkdir(parents=True, exist_ok=True)
+    else:
+        output_dir_path = Path.cwd()
+    html_file = str(output_dir_path / "knowledge_graph.html")
     net.show(html_file, notebook=False)
 
     # Open the generated HTML file in the default web browser

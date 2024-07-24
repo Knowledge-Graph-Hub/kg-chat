@@ -5,7 +5,6 @@ from pathlib import Path
 
 PWD = Path(__file__).parent.resolve()
 PROJ_DIR = PWD.parents[1]
-GRAPH_OUTPUT_DIR = PWD / "graph_output"
 ASSETS_DIR = PWD / "assets"
 TEST_DIR = PROJ_DIR / "tests"
 TESTS_INPUT_DIR = TEST_DIR / "input"

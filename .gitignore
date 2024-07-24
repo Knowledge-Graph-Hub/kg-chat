@@ -127,6 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-src/kg_chat/graph_output/knowledge_graph.html
 data/database/*.db
 tests/input/database/*.db
+knowledge_graph.html
