@@ -83,14 +83,14 @@
 <ol class="arabic">
 <li><p><code class="docutils literal notranslate"><span class="pre">import</span></code>: This loads the nodes and edges file into a Neo4j instance. This will take a while depending on the size of the tsv files.</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>import
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>import<span class="w"> </span>--data-dir<span class="w"> </span>data
 </pre></div>
 </div>
 </div></blockquote>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">test-query</span></code>: To test that the above worked, run a built-in test query:</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>test-query<span class="w"> </span>--database<span class="w"> </span>neo4j
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>test-query<span class="w"> </span>--database<span class="w"> </span>neo4j<span class="w"> </span>--data-dir<span class="w"> </span>data
 </pre></div>
 </div>
 <p>This should return something like (as per KGX data in the repo):</p>
@@ -110,7 +110,7 @@
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">qna</span></code>: This command can be used for asking a question about the data and receiving a response.</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>qna<span class="w"> </span><span class="s2">&quot;give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table &quot;</span>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>qna<span class="w"> </span><span class="s2">&quot;give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table &quot;</span><span class="w"> </span>--data-dir<span class="w"> </span>data
 </pre></div>
 </div>
 <p>This should return</p>
@@ -203,7 +203,7 @@ Invoking:<span class="w"> </span><span class="sb">`</span>sql_db_query<span clas
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">chat</span></code>: This starts an interactive chat session where you can ask questions about your KG.</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>chat<span class="w"> </span>--database<span class="w"> </span>neo4j
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>chat<span class="w"> </span>--database<span class="w"> </span>neo4j<span class="w"> </span>--data-dir<span class="w"> </span>data
 </pre></div>
 </div>
 <p>Gives you the following:</p>
@@ -273,7 +273,7 @@ Full<span class="w"> </span>Context:
 </pre></div>
 </div>
 <p>If the prompt has the phrase <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">me</span></code> in it, <code class="docutils literal notranslate"><span class="pre">kg-chat</span></code> would render an HTML output with KG representation of the response.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kg-chat<span class="w"> </span>$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>chat
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kg-chat<span class="w"> </span>$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>chat<span class="w"> </span>--data-dir<span class="w"> </span>data
 Ask<span class="w"> </span>me<span class="w"> </span>about<span class="w"> </span>your<span class="w"> </span>data!<span class="w"> </span>:<span class="w"> </span>show<span class="w"> </span>me<span class="w"> </span><span class="m">20</span><span class="w"> </span>edges<span class="w"> </span>with<span class="w"> </span>subject<span class="w"> </span><span class="nv">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>CHEBI
 
 
@@ -489,7 +489,7 @@ Ask me about your data! :</p>
 <ol class="arabic" start="5">
 <li><p><code class="docutils literal notranslate"><span class="pre">app</span></code>: This command can be used to start the KG chat app.</p>
 <blockquote>
-<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>app
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>app<span class="w"> </span>--data-dir<span class="w"> </span>data
 </pre></div>
 </div>
 <p>This will start the app on <a class="reference external" href="http://localhost:8050/">http://localhost:8050/</a> which can be accessed in the browser.</p>

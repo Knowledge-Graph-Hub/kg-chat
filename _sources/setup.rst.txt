@@ -26,6 +26,8 @@ Setup
 
     Update the memory heaps as per your preference.
 
+For Developers
+---------------
 6. Clone this repository locally
 
 7. Create a virtual environment of your choice and ``pip install poetry`` in it.
@@ -38,3 +40,24 @@ Setup
         poetry install
 
 9. Replace the ``data/nodes.tsv`` and ``data/edges.tsv`` file in the project with corresponding files of choice that needs to be queried against.
+    
+
+
+For Users
+----------
+10. Install the package from PyPI
+
+    .. code-block:: shell
+
+        pip install kg-chat
+
+    or
+    .. code-block:: shell
+
+        pip install poetry
+        poetry add kg-chat@latest
+
+.. note::
+
+    * The KGX files should have the names `nodes.tsv` and `edges.tsv`.
+    * The data directory must be provided to run every command. The data directory contains the `nodes.tsv` and `edges.tsv` files.
