@@ -13,7 +13,9 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
 3. Install the APOC plugin in Neo4j Desktop.
 4. Update settings to match [`neo4j_db_settings.conf`](conf_files/neo4j_db_settings.conf).
 
-### General Setup
+### General Setup 
+
+#### For Developers 
 1. Clone this repository.
 2. Create a virtual environment and install dependencies:
     ```shell
@@ -23,6 +25,16 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
     ```
 3. Replace [`data/nodes.tsv`](data/nodes.tsv) and [`data/edges.tsv`](data/edges.tsv) with desired KGX files if needed.
 
+### For using kg-chat as a dependency
+
+```shell
+pip install kg-chat
+```
+OR
+```shell
+poetry add kg-chat@latest
+```
+
 ### Supported Backends
 - DuckDB [default]
 - Neo4j
@@ -31,27 +43,28 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
 
 1. **Import KG**: Load nodes and edges into a database (default: duckdb).
     ```shell
-    poetry run kg import
+    poetry run kg import --data-dir data
     ```
 
-2. **Test Query**: Run a test query.
+2. **Test Query**: Run a test query. 
+   > NOTE: `--data-dir` is a required parameter for all commands. This is the path for the directory which contains the nodes.tsv and edges.tsv file. The filenames are expected to be exactly that.
     ```shell
-    poetry run kg test-query
+    poetry run kg test-query --data-dir data
     ```
 
 3. **QnA**: Ask questions about the data.
     ```shell
-    poetry run kg qna "how many nodes do we have here?"
+    poetry run kg qna "how many nodes do we have here?" --data-dir data
     ```
 
 4. **Chat**: Start an interactive chat session.
     ```shell
-    poetry run kg chat
+    poetry run kg chat --data-dir data
     ```
 
 5. **App**: Deploy a local web application.
     ```shell
-    poetry run kg app
+    poetry run kg app --data-dir data
     ```
 
 ### Visualization

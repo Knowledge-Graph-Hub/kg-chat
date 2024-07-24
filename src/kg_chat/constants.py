@@ -5,7 +5,6 @@ from pathlib import Path
 
 PWD = Path(__file__).parent.resolve()
 PROJ_DIR = PWD.parents[1]
-DATA_DIR = PROJ_DIR / "data"
 GRAPH_OUTPUT_DIR = PWD / "graph_output"
 ASSETS_DIR = PWD / "assets"
 TEST_DIR = PROJ_DIR / "tests"
@@ -21,6 +20,3 @@ DATALOAD_BATCH_SIZE = 5000  # Adjust the batch size as needed
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USERNAME = "neo4j"
 NEO4J_PASSWORD = "password"
-
-
-DATABASE_DIR = DATA_DIR / "database"

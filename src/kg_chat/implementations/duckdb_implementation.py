@@ -13,8 +13,6 @@ from langchain_openai import ChatOpenAI
 from sqlalchemy import create_engine
 
 from kg_chat.constants import (
-    DATA_DIR,
-    DATABASE_DIR,
     OPEN_AI_MODEL,
     OPENAI_KEY,
 )
@@ -25,10 +23,15 @@ from kg_chat.utils import structure_query
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
 
-    def __init__(self):
+    def __init__(self, data_dir: Union[Path, str]):
         """Initialize the DuckDB database and the Langchain components."""
+        if not data_dir:
+            raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
         self.safe_mode = True
-        self.database_path = DATABASE_DIR / "kg_chat.db"
+        self.data_dir = Path(data_dir)
+        self.database_path = self.data_dir / "database/kg_chat.db"
+        if not self.database_path.exists():
+            self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = duckdb.connect(database=str(self.database_path))
         self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
         self.engine = create_engine(f"duckdb:///{self.database_path}")
@@ -113,7 +116,7 @@ class DuckDBImplementation(DatabaseInterface):
         result = self.agent.invoke(prompt)
         return result["output"]
 
-    def load_kg(self, data_dir: Union[Path, str] = DATA_DIR):
+    def load_kg(self):
         """Load the Knowledge Graph into the database."""
 
         def _load_kg():
@@ -189,9 +192,9 @@ class DuckDBImplementation(DatabaseInterface):
 
         return self.execute_unsafe_operation(_load_kg)
 
-    def _import_nodes(self, data_dir: Union[Path, str] = DATA_DIR):
+    def _import_nodes(self):
         columns_of_interest = ["id", "category", "name"]
-        nodes_filepath = Path(data_dir) / "nodes.tsv"
+        nodes_filepath = Path(self.data_dir) / "nodes.tsv"
 
         with open(nodes_filepath, "r") as nodes_file:
             header_line = nodes_file.readline().strip().split("\t")
@@ -211,9 +214,9 @@ class DuckDBImplementation(DatabaseInterface):
                 # Load data from temporary file into DuckDB
                 self.conn.execute(f"COPY nodes FROM '{temp_nodes_file.name}' (DELIMITER '\t', HEADER)")
 
-    def _import_edges(self, data_dir: Union[Path, str] = DATA_DIR):
+    def _import_edges(self):
         edge_column_of_interest = ["subject", "predicate", "object"]
-        edges_filepath = Path(data_dir) / "edges.tsv"
+        edges_filepath = Path(self.data_dir) / "edges.tsv"
         with open(edges_filepath, "r") as edges_file:
             header_line = edges_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in edge_column_of_interest}

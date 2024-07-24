@@ -3,6 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from kg_chat.constants import TESTS_INPUT_DIR
 from kg_chat.implementations import Neo4jImplementation
 
 
@@ -19,7 +20,7 @@ def neo4j_impl(mock_from_llm, mock_chat_openai, mock_neo4j_graph, mock_driver):
     mock_chat_openai.return_value = MagicMock()
     mock_from_llm.return_value = MagicMock()
 
-    return Neo4jImplementation()
+    return Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
 
 
 def test_toggle_safe_mode(neo4j_impl):
@@ -43,7 +44,7 @@ def test_execute_query(mock_driver):
     mock_transaction = MagicMock()
     mock_driver.return_value.session.return_value.__enter__.return_value = mock_session
     mock_session.read_transaction.return_value = mock_transaction
-    neo4j_impl = Neo4jImplementation()
+    neo4j_impl = Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
     query = "MATCH (n) RETURN n"
     result = neo4j_impl.execute_query(query)
 
@@ -75,7 +76,7 @@ def test_clear_database(mock_driver):
     """Test clearing the database."""
     mock_session = MagicMock()
     mock_driver.return_value.session.return_value.__enter__.return_value = mock_session
-    neo4j_impl = Neo4jImplementation()
+    neo4j_impl = Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
     neo4j_impl.clear_database()
     mock_session.write_transaction.assert_called_once()
 
@@ -85,7 +86,7 @@ def test_ensure_index(mock_driver):
     """Test ensuring that the index on :Node(id) exists."""
     mock_session = MagicMock()
     mock_driver.return_value.session.return_value.__enter__.return_value = mock_session
-    neo4j_impl = Neo4jImplementation()
+    neo4j_impl = Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
     neo4j_impl.ensure_index()
     mock_session.write_transaction.assert_called_once()
 
@@ -115,7 +116,7 @@ def test_create_nodes(mock_driver):
     mock_session = MagicMock()
     mock_driver.return_value.session.return_value.__enter__.return_value = mock_session
     nodes = [{"id": "1", "category": "Person", "label": "John"}]
-    neo4j_impl = Neo4jImplementation()
+    neo4j_impl = Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
     neo4j_impl.create_nodes(nodes)
     mock_session.write_transaction.assert_called_once()
 
@@ -126,7 +127,7 @@ def test_create_edges(mock_driver):
     mock_session = MagicMock()
     mock_driver.return_value.session.return_value.__enter__.return_value = mock_session
     edges = [{"subject": "1", "predicate": "KNOWS", "object": "2"}]
-    neo4j_impl = Neo4jImplementation()
+    neo4j_impl = Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
     neo4j_impl.create_edges(edges)
     mock_session.write_transaction.assert_called_once()
 
@@ -138,7 +139,7 @@ def test_show_schema(mock_driver):
     mock_driver.return_value.session.return_value.__enter__.return_value = mock_session
     mock_transaction = MagicMock()
     mock_session.read_transaction.return_value = mock_transaction
-    neo4j_impl = Neo4jImplementation()
+    neo4j_impl = Neo4jImplementation(data_dir=TESTS_INPUT_DIR)
     neo4j_impl.show_schema()
     mock_session.read_transaction.assert_called_once()
 

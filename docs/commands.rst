@@ -5,13 +5,13 @@ Commands
 
     .. code-block:: shell
 
-        poetry run kg import
+        poetry run kg import --data-dir data
 
 2. ``test-query``: To test that the above worked, run a built-in test query:
 
     .. code-block:: shell
 
-        poetry run kg test-query --database neo4j
+        poetry run kg test-query --database neo4j --data-dir data
 
     This should return something like (as per KGX data in the repo):
 
@@ -32,7 +32,7 @@ Commands
 
     .. code-block:: shell
 
-        poetry run kg qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table "
+        poetry run kg qna "give me the sorted (descending) frequency count nodes with relationships. Give me label and id. I want this as a table " --data-dir data
 
     This should return
 
@@ -126,7 +126,7 @@ Commands
 
     .. code-block:: shell
 
-        poetry run kg chat --database neo4j
+        poetry run kg chat --database neo4j --data-dir data
 
     Gives you the following:
 
@@ -208,7 +208,7 @@ Commands
 
     .. code-block:: shell
 
-        kg-chat $ poetry run kg chat
+        kg-chat $ poetry run kg chat --data-dir data
         Ask me about your data! : show me 20 edges with subject prefix = CHEBI  
 
 
@@ -421,7 +421,7 @@ Commands
 
     .. code-block:: shell
 
-        poetry run kg app
+        poetry run kg app --data-dir data
 
     This will start the app on http://localhost:8050/ which can be accessed in the browser.
 
