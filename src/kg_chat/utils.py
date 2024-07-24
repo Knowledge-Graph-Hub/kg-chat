@@ -1,8 +1,8 @@
 """Utility functions for the KG chatbot."""
 
-from pathlib import Path
 import random
 import webbrowser
+from pathlib import Path
 
 from pyvis.network import Network
 
