@@ -23,4 +23,4 @@ NEO4J_USERNAME = "neo4j"
 NEO4J_PASSWORD = "password"
 
 
-DATABASE_DIR = PWD / "database"
+DATABASE_DIR = DATA_DIR / "database"

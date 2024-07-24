@@ -128,4 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 src/kg_chat/graph_output/knowledge_graph.html
-src/kg_chat/database/*.db
+data/database/*.db
