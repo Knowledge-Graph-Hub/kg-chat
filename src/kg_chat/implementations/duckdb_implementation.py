@@ -28,7 +28,7 @@ class DuckDBImplementation(DatabaseInterface):
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
         self.safe_mode = True
-        self.data_dir = data_dir
+        self.data_dir = Path(data_dir)
         self.database_path = self.data_dir / "database/kg_chat.db"
         if not self.database_path.exists():
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
