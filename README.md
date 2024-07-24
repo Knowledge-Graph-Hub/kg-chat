@@ -43,10 +43,11 @@ poetry add kg-chat@latest
 
 1. **Import KG**: Load nodes and edges into a database (default: duckdb).
     ```shell
-    poetry run kg import
+    poetry run kg import --data-dir data
     ```
 
-2. **Test Query**: Run a test query. NOTE: `--data-dir` is a required parameter for all commands.
+2. **Test Query**: Run a test query. 
+   > NOTE: `--data-dir` is a required parameter for all commands. This is the path for the directory which contains the nodes.tsv and edges.tsv file. The filenames are expected to be exactly that.
     ```shell
     poetry run kg test-query --data-dir data
     ```
