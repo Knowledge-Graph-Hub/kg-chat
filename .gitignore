@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 src/kg_chat/graph_output/knowledge_graph.html
 data/database/*.db
+tests/input/database/*.db

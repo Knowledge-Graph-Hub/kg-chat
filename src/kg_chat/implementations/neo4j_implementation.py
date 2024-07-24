@@ -12,7 +12,6 @@ from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
 
 from kg_chat.constants import (
-    DATA_DIR,
     DATALOAD_BATCH_SIZE,
     NEO4J_PASSWORD,
     NEO4J_URI,
@@ -27,11 +26,20 @@ from kg_chat.utils import structure_query
 class Neo4jImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for Neo4j."""
 
-    def __init__(self, uri: str = NEO4J_URI, username: str = NEO4J_USERNAME, password: str = NEO4J_PASSWORD):
+    def __init__(
+        self,
+        data_dir: Union[str, Path],
+        uri: str = NEO4J_URI,
+        username: str = NEO4J_USERNAME,
+        password: str = NEO4J_PASSWORD,
+    ):
         """Initialize the Neo4j database and the Langchain components."""
+        if not data_dir:
+            raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
         self.driver = GraphDatabase.driver(uri, auth=(username, password))
         self.graph = Neo4jGraph(url=uri, username=username, password=password)
         self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
+        self.data_dir = Path(data_dir)
 
         self.chain = GraphCypherQAChain.from_llm(
             graph=self.graph,
@@ -178,10 +186,10 @@ class Neo4jImplementation(DatabaseInterface):
             result = session.read_transaction(lambda tx: list(tx.run("CALL db.schema.visualization()")))
             pprint(result)
 
-    def load_kg(self, data_dir: Union[str, Path] = DATA_DIR, block_size: int = DATALOAD_BATCH_SIZE):
+    def load_kg(self, block_size: int = DATALOAD_BATCH_SIZE):
         """Load the Knowledge Graph into the Neo4j database."""
-        nodes_filepath = data_dir / "nodes.tsv"
-        edges_filepath = data_dir / "edges.tsv"
+        nodes_filepath = self.data_dir / "nodes.tsv"
+        edges_filepath = self.data_dir / "edges.tsv"
 
         def _load_kg():
             # Clear the existing database

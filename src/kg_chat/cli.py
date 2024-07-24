@@ -7,7 +7,6 @@ import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
-from kg_chat.constants import DATA_DIR
 from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
 from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.main import KnowledgeGraphChat
@@ -28,7 +27,7 @@ data_dir_option = click.option(
     "--data-dir",
     type=click.Path(exists=True, file_okay=False, dir_okay=True),
     help="Directory containing the data.",
-    default=DATA_DIR,
+    required=True,
 )
 
 
@@ -56,14 +55,16 @@ def main(verbose: int, quiet: bool):
 @main.command("import")
 @database_options
 @data_dir_option
-def import_kg(database: str = "duckdb", data_dir: str = DATA_DIR):
+def import_kg(database: str = "duckdb", data_dir: str = None):
     """Run the kg-chat's demo command."""
+    if not data_dir:
+        raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
     if database == "neo4j":
-        impl = Neo4jImplementation()
-        impl.load_kg(data_dir=data_dir)
+        impl = Neo4jImplementation(data_dir=data_dir)
+        impl.load_kg()
     elif database == "duckdb":
-        impl = DuckDBImplementation()
-        impl.load_kg(data_dir=data_dir)
+        impl = DuckDBImplementation(data_dir=data_dir)
+        impl.load_kg()
     else:
         raise ValueError(f"Database {database} not supported.")
 
