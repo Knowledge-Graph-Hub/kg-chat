@@ -74,7 +74,7 @@ def import_kg(database: str = "duckdb", data_dir: str = None):
 @main.command()
 @data_dir_option
 @database_options
-def test_query(data_dir:Union[str, Path], database: str = "duckdb"):
+def test_query(data_dir: Union[str, Path], database: str = "duckdb"):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation(data_dir=data_dir)
@@ -111,7 +111,7 @@ def show_schema(data_dir: Union[str, Path], database: str = "duckdb"):
 @database_options
 @click.argument("query", type=str, required=True)
 @data_dir_option
-def qna(query: str, data_dir:Union[str, Path], database: str = "duckdb"):
+def qna(query: str, data_dir: Union[str, Path], database: str = "duckdb"):
     """Run the kg-chat's chat command."""
     if database == "neo4j":
         impl = Neo4jImplementation(data_dir=data_dir)
