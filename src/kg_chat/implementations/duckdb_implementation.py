@@ -9,21 +9,17 @@ from typing import Union
 import duckdb
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
-from langchain_openai import ChatOpenAI
 from sqlalchemy import create_engine
 
-from kg_chat.constants import (
-    OPEN_AI_MODEL,
-    OPENAI_KEY,
-)
+from kg_chat.config.llm_config import LLMConfig
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import structure_query
+from kg_chat.utils import llm_factory, structure_query
 
 
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
 
-    def __init__(self, data_dir: Union[Path, str]):
+    def __init__(self, data_dir: Union[Path, str], llm_config:LLMConfig):
         """Initialize the DuckDB database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
@@ -33,11 +29,11 @@ class DuckDBImplementation(DatabaseInterface):
         if not self.database_path.exists():
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = duckdb.connect(database=str(self.database_path))
-        self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
+        self.llm = llm_factory(llm_config)
         self.engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
-        self.agent = create_sql_agent(llm=self.llm, agent_type="openai-tools", verbose=True, toolkit=self.toolkit)
+        self.agent = create_sql_agent(llm=self.llm, agent_type="tool-calling", verbose=True, toolkit=self.toolkit)
 
     def toggle_safe_mode(self, enabled: bool):
         """Toggle safe mode on or off."""

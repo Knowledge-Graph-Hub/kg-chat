@@ -8,19 +8,17 @@ from typing import Union
 
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
-from langchain_openai import ChatOpenAI
 from neo4j import GraphDatabase
 
+from kg_chat.config.llm_config import LLMConfig
 from kg_chat.constants import (
     DATALOAD_BATCH_SIZE,
     NEO4J_PASSWORD,
     NEO4J_URI,
     NEO4J_USERNAME,
-    OPEN_AI_MODEL,
-    OPENAI_KEY,
 )
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import structure_query
+from kg_chat.utils import llm_factory, structure_query
 
 
 class Neo4jImplementation(DatabaseInterface):
@@ -32,13 +30,14 @@ class Neo4jImplementation(DatabaseInterface):
         uri: str = NEO4J_URI,
         username: str = NEO4J_USERNAME,
         password: str = NEO4J_PASSWORD,
+        llm_config: LLMConfig = None,
     ):
         """Initialize the Neo4j database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
         self.driver = GraphDatabase.driver(uri, auth=(username, password))
         self.graph = Neo4jGraph(url=uri, username=username, password=password)
-        self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
+        self.llm = llm_factory(llm_config)
         self.data_dir = Path(data_dir)
 
         self.chain = GraphCypherQAChain.from_llm(
