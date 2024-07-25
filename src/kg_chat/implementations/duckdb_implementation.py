@@ -19,7 +19,7 @@ from kg_chat.utils import llm_factory, structure_query
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
 
-    def __init__(self, data_dir: Union[Path, str], llm_config:LLMConfig):
+    def __init__(self, data_dir: Union[Path, str], llm_config: LLMConfig):
         """Initialize the DuckDB database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")

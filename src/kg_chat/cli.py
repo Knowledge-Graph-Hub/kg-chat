@@ -40,16 +40,20 @@ llm_option = click.option(
     required=False,
 )
 
+
 def get_llm_config(llm: str):
     """Get the LLM configuration based on the selected LLM."""
     if llm == "openai":
         from kg_chat.config.llm_config import OpenAIConfig
+
         return OpenAIConfig(model=OPEN_AI_MODEL, api_key=OPENAI_KEY)
     elif llm == "ollama":
         from kg_chat.config.llm_config import OllamaConfig
+
         return OllamaConfig(model=OLLAMA_MODEL)
     else:
         raise ValueError(f"LLM {llm} not supported.")
+
 
 def get_database_impl(database: str, data_dir: str, llm_config):
     """Get the database implementation based on the selected database."""
@@ -59,6 +63,7 @@ def get_database_impl(database: str, data_dir: str, llm_config):
         return DuckDBImplementation(data_dir=data_dir, llm_config=llm_config)
     else:
         raise ValueError(f"Database {database} not supported.")
+
 
 @click.group()
 @click.option("-v", "--verbose", count=True)
@@ -80,6 +85,7 @@ def main(verbose: int, quiet: bool):
     if quiet:
         logger.setLevel(level=logging.ERROR)
 
+
 @main.command("import")
 @database_options
 @data_dir_option
@@ -92,19 +98,21 @@ def import_kg(database: str = "duckdb", data_dir: str = None, llm: str = "openai
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     impl.load_kg()
 
+
 @main.command()
 @data_dir_option
 @database_options
 @llm_option
-def test_query(data_dir: Union[str, Path], database: str = "duckdb", llm: str ="openai"):
+def test_query(data_dir: Union[str, Path], database: str = "duckdb", llm: str = "openai"):
     """Run the kg-chat's chat command."""
     config = get_llm_config(llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
-    
+
     query = "MATCH (n) RETURN n LIMIT 10" if database == "neo4j" else "SELECT * FROM nodes LIMIT 10"
     result = impl.execute_query(query)
     for record in result:
         print(record)
+
 
 @main.command()
 @data_dir_option
@@ -115,6 +123,7 @@ def show_schema(data_dir: Union[str, Path], database: str = "duckdb", llm: str =
     config = get_llm_config(llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     impl.show_schema()
+
 
 @main.command()
 @database_options
@@ -128,6 +137,7 @@ def qna(query: str, data_dir: Union[str, Path], database: str = "duckdb", llm: s
     response = impl.get_human_response(query)
     pprint(response)
 
+
 @main.command("chat")
 @data_dir_option
 @database_options
@@ -138,6 +148,7 @@ def run_chat(data_dir: Union[str, Path], database: str = "duckdb", llm: str = "o
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     kgc = KnowledgeGraphChat(impl)
     kgc.chat()
+
 
 @main.command("app")
 @click.option("--debug", is_flag=True, help="Run the app in debug mode.")
@@ -157,6 +168,7 @@ def run_app(
     app = create_app(kgc)
     # use_reloader=False to avoid running the app twice in debug mode
     app.run(debug=debug, use_reloader=False)
+
 
 if __name__ == "__main__":
     main()

@@ -46,15 +46,20 @@ def structure_query(query: str):
         structured_query = query
     return structured_query
 
-def llm_factory(config:LLMConfig):
+
+def llm_factory(config: LLMConfig):
+    """Create an LLM instance based on the configuration."""
     if isinstance(config, OpenAIConfig):
         from langchain_openai import ChatOpenAI
+
         return ChatOpenAI(model=config.model, temperature=config.temperature, api_key=config.api_key)
     elif isinstance(config, OllamaConfig):
         from langchain_ollama import ChatOllama
+
         return ChatOllama(model=config.model, temperature=config.temperature, api_key=config.api_key)
     elif isinstance(config, AnthropicConfig):
         from langchain_anthropic import ChatAnthropic
+
         return ChatAnthropic(model=config.model, temperature=config.temperature, api_key=config.api_key)
     else:
         raise ValueError("Unsupported LLM configuration")
