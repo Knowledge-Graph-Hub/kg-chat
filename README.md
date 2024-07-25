@@ -3,7 +3,7 @@
 LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink/kgx) nodes and edges TSV files loaded into either [`DuckDB`](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) database backend.
 
 > **_NOTE:_**  
-> Ensure `OPENAI_API_KEY` is set as an environmental variable.
+> Ensure `OPENAI_API_KEY` is set as an environment variable.
 
 ## Setup
 
