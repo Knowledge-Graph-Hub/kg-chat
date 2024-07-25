@@ -20,6 +20,7 @@ def extract_nodes_edges(structured_result):
     return nodes, edges
 
 
+# * LLM related utilities.**************************************************************************
 def structure_query(query: str):
     """Structure the query to request structured results."""
     if "show me" in query.lower():
@@ -94,6 +95,7 @@ def llm_factory(config: LLMConfig):
         raise ValueError("Unsupported LLM configuration")
 
 
+# * App related utilities. **************************************************************************
 def generate_random_color():
     """Generate a random color."""
     while True:
