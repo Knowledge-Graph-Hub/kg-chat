@@ -35,4 +35,4 @@ jobs:
       - name: Test with pytest
         env:
           OPENAI_API_KEY: "mock_key"
-        run: poetry run pytest
+        run: poetry run tox -e py
