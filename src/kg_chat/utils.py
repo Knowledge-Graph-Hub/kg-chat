@@ -7,6 +7,7 @@ from pathlib import Path
 from pyvis.network import Network
 
 from kg_chat.config.llm_config import AnthropicConfig, LLMConfig, OllamaConfig, OpenAIConfig
+from kg_chat.constants import OLLAMA_MODEL, OPEN_AI_MODEL, OPENAI_KEY
 
 PREFIX_COLOR_MAP = {}
 
@@ -45,6 +46,34 @@ def structure_query(query: str):
     else:
         structured_query = query
     return structured_query
+
+
+def get_llm_config(llm: str):
+    """Get the LLM configuration based on the selected LLM."""
+    if llm == "openai":
+        from kg_chat.config.llm_config import OpenAIConfig
+
+        return OpenAIConfig(model=OPEN_AI_MODEL, api_key=OPENAI_KEY)
+    elif llm == "ollama":
+        from kg_chat.config.llm_config import OllamaConfig
+
+        return OllamaConfig(model=OLLAMA_MODEL)
+    else:
+        raise ValueError(f"LLM {llm} not supported.")
+
+
+def get_database_impl(database: str, data_dir: str, llm_config):
+    """Get the database implementation based on the selected database."""
+    if database == "neo4j":
+        from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
+
+        return Neo4jImplementation(data_dir=data_dir, llm_config=llm_config)
+    elif database == "duckdb":
+        from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
+
+        return DuckDBImplementation(data_dir=data_dir, llm_config=llm_config)
+    else:
+        raise ValueError(f"Database {database} not supported.")
 
 
 def llm_factory(config: LLMConfig):

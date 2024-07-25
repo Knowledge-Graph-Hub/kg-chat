@@ -5,18 +5,21 @@ from unittest.mock import call
 import pytest
 from kg_chat.constants import TESTS_INPUT_DIR
 from kg_chat.implementations import DuckDBImplementation
+from kg_chat.utils import get_llm_config
+
+LLM_CONFIG = get_llm_config("openai")
 
 
 @pytest.fixture
 def db_impl():
     """Fixture to initialize DuckDBImplementation."""
-    return DuckDBImplementation(data_dir=TESTS_INPUT_DIR)
+    return DuckDBImplementation(data_dir=TESTS_INPUT_DIR, llm_config=LLM_CONFIG)
 
 
 # TODO
 # def test_init(mocker):
 #     mock_connect = mocker.patch('duckdb.connect', return_value=MagicMock())
-#     db_impl = DuckDBImplementation(data_dir=TESTS_INPUT_DIR)
+#     db_impl = DuckDBImplementation(data_dir=TESTS_INPUT_DIR, llm_config=LLM_CONFIG)
 #     assert db_impl.safe_mode is True
 #     assert db_impl.conn is not None
 #     assert db_impl.llm is not None

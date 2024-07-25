@@ -106,6 +106,7 @@ def create_app(kg_chatbot: KnowledgeGraphChat):
         prevent_initial_call=True,
     )
     def download_results(n_clicks, history):
+        """Download the nodes and edges as a zip file."""
         if not history:
             return None
 

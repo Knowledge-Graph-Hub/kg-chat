@@ -9,10 +9,8 @@ import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
-from kg_chat.constants import OLLAMA_MODEL, OPEN_AI_MODEL, OPENAI_KEY
-from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
-from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.main import KnowledgeGraphChat
+from kg_chat.utils import get_database_impl, get_llm_config
 
 __all__ = [
     "main",
@@ -39,30 +37,6 @@ llm_option = click.option(
     help="Language model to use.",
     required=False,
 )
-
-
-def get_llm_config(llm: str):
-    """Get the LLM configuration based on the selected LLM."""
-    if llm == "openai":
-        from kg_chat.config.llm_config import OpenAIConfig
-
-        return OpenAIConfig(model=OPEN_AI_MODEL, api_key=OPENAI_KEY)
-    elif llm == "ollama":
-        from kg_chat.config.llm_config import OllamaConfig
-
-        return OllamaConfig(model=OLLAMA_MODEL)
-    else:
-        raise ValueError(f"LLM {llm} not supported.")
-
-
-def get_database_impl(database: str, data_dir: str, llm_config):
-    """Get the database implementation based on the selected database."""
-    if database == "neo4j":
-        return Neo4jImplementation(data_dir=data_dir, llm_config=llm_config)
-    elif database == "duckdb":
-        return DuckDBImplementation(data_dir=data_dir, llm_config=llm_config)
-    else:
-        raise ValueError(f"Database {database} not supported.")
 
 
 @click.group()

@@ -10,7 +10,7 @@ TEST_DIR = PROJ_DIR / "tests"
 TESTS_INPUT_DIR = TEST_DIR / "input"
 TESTS_OUTPUT_DIR = TEST_DIR / "output"
 
-OPENAI_KEY = getenv("OPENAI_API_KEY")
+OPENAI_KEY = str(getenv("OPENAI_API_KEY"))
 OPEN_AI_MODEL = "gpt-4o"
 
 # OLLAMA_MODEL = "llama3.1" #!  not all models support tools (tool calling)
