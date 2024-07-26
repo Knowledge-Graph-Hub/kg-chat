@@ -2,10 +2,19 @@ Supported LLMs
 ==============
 
 * OpenAI [default]
+    .. note::
+        The API key should be locally saved as an environment variable (`OPENAI_API_KEY`).
+    * `kg-chat` is using `gpt-4o`
+
 * Ollama: 
     * For this you will have to download the [Ollama application](https://ollama.com/download) and run it on your machine.
     * Then get the model of your choice by running the following command in the terminal:
         ```bash
-        ollama run model_name
+        ollama pull llama3.1
         ```
     * `kg-chat` is using `llama3.1`
+
+* Anthropic:
+.. note::
+        The API key should be locally saved as an environment variable (`ANTHROPIC_API_KEY`).
+    * `kg-chat` is using `claude-3-5-sonnet-20240620`

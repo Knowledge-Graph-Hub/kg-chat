@@ -2,8 +2,24 @@
 
 LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink/kgx) nodes and edges TSV files loaded into either [`DuckDB`](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) database backend.
 
-> **_NOTE:_**  
-> Ensure `OPENAI_API_KEY` is set as an environment variable.
+Certainly! Here's a more concise version:
+
+## LLMs Supported
+
+- **OpenAI**
+  > **_NOTE:_** Ensure `OPENAI_API_KEY` is set as an environment variable.
+
+- **Anthropic**
+  > **_NOTE:_** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
+
+- **Ollama**
+  - No API key required.
+  - Download the application from [here](https://ollama.com/download).
+  - Get the model by running:
+    ```shell
+        ollama pull llama3.1
+    ```
+
 
 ## Setup
 
