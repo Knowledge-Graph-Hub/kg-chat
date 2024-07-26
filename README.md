@@ -12,7 +12,15 @@ Certainly! Here's a more concise version:
 - **Anthropic**
   > **_NOTE:_** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
-    #### How to set the API key as an environment variable?
+- **Ollama**
+  - No API key required.
+  - Download the application from [here](https://ollama.com/download).
+  - Get the model by running:
+    ```shell
+        ollama pull llama3.1
+    ```
+
+#### How to set the API key as an environment variable?
     One quick way is 
     ```shell
         export OPENAI_API_KEY=XXXXXX
@@ -36,15 +44,6 @@ Certainly! Here's a more concise version:
     ```
         source ~/.bashrc
     ```
-
-- **Ollama**
-  - No API key required.
-  - Download the application from [here](https://ollama.com/download).
-  - Get the model by running:
-    ```shell
-        ollama pull llama3.1
-    ```
-
 
 ## Setup
 
