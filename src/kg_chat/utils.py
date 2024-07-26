@@ -28,7 +28,8 @@ def structure_query(query: str):
         structured_query = f"""
         {query}
         Please provide the result in JSON format with ALL nodes and ALL edges. Return JSON ONLY.
-        IMPORTANT: I want nothing but pure JSON (verbose=False).
+        Property name MUST be enclosed in double quotes.
+        IMPORTANT: I want nothing but pure JSON (verbose=False). Remove all unnecessary quotes and newlines.
         Example: {{
             "nodes": [
                 {{"label": "A", "id": "1", category: "biolink:Gene"}},
