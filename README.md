@@ -12,6 +12,31 @@ Certainly! Here's a more concise version:
 - **Anthropic**
   > **_NOTE:_** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
+    #### How to set the API key as an environment variable?
+    One quick way is 
+    ```shell
+        export OPENAI_API_KEY=XXXXXX
+        export ANTHROPIC_API_KEY=XXXXX
+    ```
+    But if you want these to persist permanently
+    ```shell
+        vi ~/.bash_profile
+    ```
+
+    OR
+
+    ```
+        vi ~/.bashrc
+    ```
+    Add the 2 lines exporting the variables above and then
+    ```shell
+        source ~/.bash_profile
+    ```
+    OR
+    ```
+        source ~/.bashrc
+    ```
+
 - **Ollama**
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
