@@ -32,7 +32,7 @@ data_dir_option = click.option(
 )
 llm_option = click.option(
     "--llm",
-    type=click.Choice(["openai", "ollama"], case_sensitive=False),
+    type=click.Choice(["openai", "ollama", "anthropic"], case_sensitive=False),
     default="openai",
     help="Language model to use.",
     required=False,

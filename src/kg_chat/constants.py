@@ -11,10 +11,12 @@ TESTS_INPUT_DIR = TEST_DIR / "input"
 TESTS_OUTPUT_DIR = TEST_DIR / "output"
 
 OPENAI_KEY = str(getenv("OPENAI_API_KEY"))
-OPEN_AI_MODEL = "gpt-4o"
+ANTHROPIC_KEY = str(getenv("ANTHROPIC_API_KEY"))
 
-# OLLAMA_MODEL = "llama3.1" #!  not all models support tools (tool calling)
-OLLAMA_MODEL = "mistral-large"  #!  not all models support tools (tool calling)
+OPEN_AI_MODEL = "gpt-4o"
+ANTHROPIC_MODEL = "claude-3-opus-20240229"
+# OLLAMA_MODEL = "llama3.1"  #!  not all models support tools (tool calling)
+OLLAMA_MODEL = "mistral-large"
 
 DATALOAD_BATCH_SIZE = 5000  # Adjust the batch size as needed
 

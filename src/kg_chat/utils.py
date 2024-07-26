@@ -7,7 +7,7 @@ from pathlib import Path
 from pyvis.network import Network
 
 from kg_chat.config.llm_config import AnthropicConfig, LLMConfig, OllamaConfig, OpenAIConfig
-from kg_chat.constants import OLLAMA_MODEL, OPEN_AI_MODEL, OPENAI_KEY
+from kg_chat.constants import ANTHROPIC_KEY, ANTHROPIC_MODEL, OLLAMA_MODEL, OPEN_AI_MODEL, OPENAI_KEY
 
 PREFIX_COLOR_MAP = {}
 
@@ -59,6 +59,10 @@ def get_llm_config(llm: str):
         from kg_chat.config.llm_config import OllamaConfig
 
         return OllamaConfig(model=OLLAMA_MODEL)
+    elif llm == "anthropic":
+        from kg_chat.config.llm_config import AnthropicConfig
+
+        return AnthropicConfig(model=ANTHROPIC_MODEL, api_key=ANTHROPIC_KEY)
     else:
         raise ValueError(f"LLM {llm} not supported.")
 

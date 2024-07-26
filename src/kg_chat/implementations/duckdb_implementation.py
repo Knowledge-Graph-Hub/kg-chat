@@ -33,7 +33,7 @@ class DuckDBImplementation(DatabaseInterface):
         self.engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
-        self.agent = create_sql_agent(llm=self.llm, agent_type="tool-calling", verbose=True, toolkit=self.toolkit)
+        self.agent = create_sql_agent(llm=self.llm, verbose=True, toolkit=self.toolkit)
 
     def toggle_safe_mode(self, enabled: bool):
         """Toggle safe mode on or off."""
