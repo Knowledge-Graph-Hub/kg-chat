@@ -205,16 +205,19 @@ class Neo4jImplementation(DatabaseInterface):
             print("Starting to import nodes...")
             start_time = time.time()
             nodes_batch = []
-            columns_of_interest = ["id", "category", "name"]
+            columns_of_interest = ["id", "category", "name", "description"]
 
             with open(nodes_filepath, "r") as nodes_file:
                 reader = csv.DictReader(nodes_file, delimiter="\t")
                 node_batch_loaded = 0
 
+                # Determine which label column to use
+                label_column = "name" if "name" in reader.fieldnames else "description"
+
                 for row in reader:
                     node_id = row[columns_of_interest[0]]
                     node_category = row[columns_of_interest[1]]
-                    node_label = row[columns_of_interest[2]]
+                    node_label = row[label_column]
                     nodes_batch.append({"id": node_id, "category": node_category, "label": node_label})
                     node_batch_loaded += 1
 

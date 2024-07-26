@@ -189,21 +189,25 @@ class DuckDBImplementation(DatabaseInterface):
         return self.execute_unsafe_operation(_load_kg)
 
     def _import_nodes(self):
-        columns_of_interest = ["id", "category", "name"]
+        columns_of_interest = ["id", "category", "name", "description"]
         nodes_filepath = Path(self.data_dir) / "nodes.tsv"
 
         with open(nodes_filepath, "r") as nodes_file:
             header_line = nodes_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in columns_of_interest}
 
+            # Determine which label column to use
+            label_column = "name" if "name" in column_indexes else "description"
+
             with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_nodes_file:
-                temp_nodes_file.write("\t".join(columns_of_interest) + "\n")
+                # Write the header line with the correct label column
+                temp_nodes_file.write("\t".join(["id", "category", label_column]) + "\n")
                 for line in nodes_file:
                     columns = line.strip().split("\t")
                     if len(columns) > max(column_indexes.values()):
                         node_id = columns[column_indexes["id"]]
                         node_category = columns[column_indexes["category"]]
-                        node_label = columns[column_indexes["name"]]
+                        node_label = columns[column_indexes[label_column]]
                         temp_nodes_file.write(f"{node_id}\t{node_category}\t{node_label}\n")
                 temp_nodes_file.flush()
 
