@@ -41,7 +41,6 @@ class DuckDBImplementation(DatabaseInterface):
                 return_intermediate_steps=True,
                 handle_parsing_errors=True,
             ),
-            # config={"callbacks":[ConsoleCallbackHandler()]}
         )
 
     def toggle_safe_mode(self, enabled: bool):
