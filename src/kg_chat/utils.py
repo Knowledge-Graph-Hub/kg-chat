@@ -4,6 +4,7 @@ import random
 import webbrowser
 from pathlib import Path
 
+from openai import OpenAI
 from pyvis.network import Network
 
 from kg_chat.config.llm_config import AnthropicConfig, LLMConfig, OllamaConfig, OpenAIConfig
@@ -50,22 +51,53 @@ def structure_query(query: str):
     return structured_query
 
 
-def get_llm_config(llm: str):
+def get_llm_config(llm_provider: str, llm_model: str = None):
     """Get the LLM configuration based on the selected LLM."""
-    if llm == "openai":
+
+    def validate_and_get_model(provider, default_model, get_models_func):
+        """Validate the model and get the model."""
+        if llm_model is None:
+            return default_model
+        list_of_models = get_models_func()
+        if llm_model not in list_of_models:
+            raise ValueError(f"Model {llm_model} not supported. Please choose from {list_of_models}")
+        return llm_model
+
+    if llm_provider == "openai":
         from kg_chat.config.llm_config import OpenAIConfig
 
-        return OpenAIConfig(model=OPEN_AI_MODEL, api_key=OPENAI_KEY)
-    elif llm == "ollama":
+        llm_model = validate_and_get_model("openai", OPEN_AI_MODEL, get_openai_models)
+        return OpenAIConfig(model=llm_model, api_key=OPENAI_KEY)
+
+    elif llm_provider == "ollama":
         from kg_chat.config.llm_config import OllamaConfig
 
-        return OllamaConfig(model=OLLAMA_MODEL)
-    elif llm == "anthropic":
+        llm_model = validate_and_get_model("ollama", OLLAMA_MODEL, get_ollama_models)
+        return OllamaConfig(model=llm_model)
+
+    elif llm_provider == "anthropic":
         from kg_chat.config.llm_config import AnthropicConfig
 
-        return AnthropicConfig(model=ANTHROPIC_MODEL, api_key=ANTHROPIC_KEY)
+        llm_model = validate_and_get_model("anthropic", ANTHROPIC_MODEL, get_anthropic_models)
+        return AnthropicConfig(model=llm_model, api_key=ANTHROPIC_KEY)
+
     else:
-        raise ValueError(f"LLM {llm} not supported.")
+        all_models = {
+            "openai": get_openai_models(),
+            "ollama": get_ollama_models(),
+            "anthropic": get_anthropic_models(),
+        }
+        if llm_model is None:
+            llm_model = OPEN_AI_MODEL
+            from kg_chat.config.llm_config import OpenAIConfig
+
+            return OpenAIConfig(model=llm_model, api_key=OPENAI_KEY)
+
+        for provider, models in all_models.items():
+            if llm_model in models:
+                return get_llm_config(provider, llm_model)
+
+        raise ValueError(f"Model {llm_model} not supported.")
 
 
 def get_database_impl(database: str, data_dir: str, llm_config):
@@ -98,6 +130,28 @@ def llm_factory(config: LLMConfig):
         return ChatAnthropic(model=config.model, temperature=config.temperature, api_key=config.api_key)
     else:
         raise ValueError("Unsupported LLM configuration")
+
+
+def get_openai_models():
+    """Get the list of OpenAI models."""
+    openai = OpenAI()
+    models_list = [model.id for model in openai.models.list() if model.id.startswith("gpt-4")]
+    return models_list
+
+
+def get_anthropic_models():
+    """Get the list of Anthropic models."""
+    return [
+        "claude-3-5-sonnet-20240620",
+        "claude-3-opus-20240229",
+        "claude-3-sonnet-20240229",
+        "claude-3-haiku-20240307",
+    ]
+
+
+def get_ollama_models():
+    """Get the list of Ollama models."""
+    return ["llama3.1"]
 
 
 # * App related utilities. **************************************************************************

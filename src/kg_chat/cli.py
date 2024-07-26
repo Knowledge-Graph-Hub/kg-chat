@@ -9,12 +9,15 @@ import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
+from kg_chat.constants import OPEN_AI_MODEL
 from kg_chat.main import KnowledgeGraphChat
-from kg_chat.utils import get_database_impl, get_llm_config
+from kg_chat.utils import get_anthropic_models, get_database_impl, get_llm_config, get_ollama_models, get_openai_models
 
 __all__ = [
     "main",
 ]
+
+ALL_AVAILABLE_MODELS = get_openai_models() + get_ollama_models() + get_anthropic_models()
 
 logger = logging.getLogger(__name__)
 database_options = click.option(
@@ -30,10 +33,15 @@ data_dir_option = click.option(
     help="Directory containing the data.",
     required=True,
 )
+llm_provider_option = click.option(
+    "--llm-provider",
+    type=click.Choice(["openai", "ollama", "anthropic"], case_sensitive=False),
+    help="Language model to use.",
+    required=False,
+)
 llm_option = click.option(
     "--llm",
-    type=click.Choice(["openai", "ollama", "anthropic"], case_sensitive=False),
-    default="openai",
+    type=click.Choice(ALL_AVAILABLE_MODELS, case_sensitive=False),
     help="Language model to use.",
     required=False,
 )
@@ -60,15 +68,23 @@ def main(verbose: int, quiet: bool):
         logger.setLevel(level=logging.ERROR)
 
 
+@main.command()
+def list_models():
+    """List the available language models."""
+    click.echo(f"OpenAI models: {get_openai_models()}")
+    click.echo(f"Anthropic models: {get_anthropic_models()}")
+    click.echo(f"Ollama models: {get_ollama_models()}")
+
+
 @main.command("import")
 @database_options
 @data_dir_option
-@llm_option
-def import_kg(database: str = "duckdb", data_dir: str = None, llm: str = "openai"):
+@llm_provider_option
+def import_kg(database: str = "duckdb", data_dir: str = None, llm_provider: str = "openai"):
     """Run the kg-chat's demo command."""
     if not data_dir:
         raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
-    config = get_llm_config(llm)
+    config = get_llm_config(llm_provider)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     impl.load_kg()
 
@@ -76,10 +92,13 @@ def import_kg(database: str = "duckdb", data_dir: str = None, llm: str = "openai
 @main.command()
 @data_dir_option
 @database_options
+@llm_provider_option
 @llm_option
-def test_query(data_dir: Union[str, Path], database: str = "duckdb", llm: str = "openai"):
+def test_query(data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
     """Run the kg-chat's chat command."""
-    config = get_llm_config(llm)
+    if llm_provider is None and llm is None:
+        llm = OPEN_AI_MODEL
+    config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
 
     query = "MATCH (n) RETURN n LIMIT 10" if database == "neo4j" else "SELECT * FROM nodes LIMIT 10"
@@ -91,10 +110,11 @@ def test_query(data_dir: Union[str, Path], database: str = "duckdb", llm: str = 
 @main.command()
 @data_dir_option
 @database_options
+@llm_provider_option
 @llm_option
-def show_schema(data_dir: Union[str, Path], database: str = "duckdb", llm: str = "openai"):
+def show_schema(data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
     """Run the kg-chat's chat command."""
-    config = get_llm_config(llm)
+    config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     impl.show_schema()
 
@@ -103,10 +123,11 @@ def show_schema(data_dir: Union[str, Path], database: str = "duckdb", llm: str =
 @database_options
 @click.argument("query", type=str, required=True)
 @data_dir_option
+@llm_provider_option
 @llm_option
-def qna(query: str, data_dir: Union[str, Path], database: str = "duckdb", llm: str = "openai"):
+def qna(query: str, data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
     """Run the kg-chat's chat command."""
-    config = get_llm_config(llm)
+    config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     response = impl.get_human_response(query)
     pprint(response)
@@ -115,10 +136,11 @@ def qna(query: str, data_dir: Union[str, Path], database: str = "duckdb", llm: s
 @main.command("chat")
 @data_dir_option
 @database_options
+@llm_provider_option
 @llm_option
-def run_chat(data_dir: Union[str, Path], database: str = "duckdb", llm: str = "openai"):
+def run_chat(data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
     """Run the kg-chat's chat command."""
-    config = get_llm_config(llm)
+    config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     kgc = KnowledgeGraphChat(impl)
     kgc.chat()
@@ -128,15 +150,17 @@ def run_chat(data_dir: Union[str, Path], database: str = "duckdb", llm: str = "o
 @click.option("--debug", is_flag=True, help="Run the app in debug mode.")
 @data_dir_option
 @database_options
+@llm_provider_option
 @llm_option
 def run_app(
     data_dir: Union[str, Path],
-    debug: bool = False,
+    llm_provider: str,
+    llm: str,
     database: str = "duckdb",
-    llm: str = "openai",
+    debug: bool = False,
 ):
     """Run the kg-chat's chat command."""
-    config = get_llm_config(llm)
+    config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     kgc = KnowledgeGraphChat(impl)
     app = create_app(kgc)
