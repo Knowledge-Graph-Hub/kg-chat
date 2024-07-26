@@ -15,8 +15,6 @@ from kg_chat.config.llm_config import LLMConfig
 from kg_chat.interface.database_interface import DatabaseInterface
 from kg_chat.utils import llm_factory, structure_query
 
-from langchain.callbacks.tracers import ConsoleCallbackHandler
-
 
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
@@ -36,12 +34,13 @@ class DuckDBImplementation(DatabaseInterface):
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
         self.agent = create_sql_agent(
-            llm=self.llm, verbose=True,
+            llm=self.llm,
+            verbose=True,
             toolkit=self.toolkit,
             agent_executor_kwargs=dict(
-                    return_intermediate_steps=True,
-                    handle_parsing_errors=True,
-                ),
+                return_intermediate_steps=True,
+                handle_parsing_errors=True,
+            ),
             # config={"callbacks":[ConsoleCallbackHandler()]}
         )
 
