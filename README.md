@@ -21,17 +21,17 @@ Certainly! Here's a more concise version:
     ```
 
 #### How to set the API key as an environment variable?
-    One quick way is 
+One quick way is 
     ```shell
         export OPENAI_API_KEY=XXXXXX
         export ANTHROPIC_API_KEY=XXXXX
     ```
-    But if you want these to persist permanently
+But if you want these to persist permanently
     ```shell
         vi ~/.bash_profile
     ```
 
-    OR
+OR
 
     ```
         vi ~/.bashrc
@@ -40,7 +40,7 @@ Certainly! Here's a more concise version:
     ```shell
         source ~/.bash_profile
     ```
-    OR
+OR
     ```
         source ~/.bashrc
     ```
