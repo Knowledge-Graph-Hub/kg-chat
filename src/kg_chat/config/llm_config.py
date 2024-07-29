@@ -19,6 +19,7 @@ class OpenAIConfig(LLMConfig):
 
 class OllamaConfig(LLMConfig):
     """Configuration for Ollama LLM model."""
+
     format: str = None
     pass
 
