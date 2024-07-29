@@ -22,8 +22,8 @@ langchain-ollama = "^0.1.0"
 langchain-anthropic = "^0.1.20"
 
 [tool.poetry.group.dev.dependencies]
-pytest = {version = ">=7.1.2"}
-tox = {version = ">=3.25.1"}
+pytest = {version = ">=8.3.1"}
+tox = {version = ">=4.16.0"}
 pre-commit = {version = ">=3.3.3"}
 langsmith = "^0.1.86"
 pytest-mock = "^3.14.0"
