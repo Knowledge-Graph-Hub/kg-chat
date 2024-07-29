@@ -13,6 +13,7 @@ Certainly! Here's a more concise version:
   > **_NOTE:_** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
 - **Ollama**
+  > **_NOTE:_** Currently throws error: `Invalid Format: Missing 'Action:' after 'Thought'` as of now. Work in progress...
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
