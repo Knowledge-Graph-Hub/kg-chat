@@ -9,6 +9,7 @@ from typing import Union
 import duckdb
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
+from langchain_ollama import ChatOllama
 from sqlalchemy import create_engine
 
 from kg_chat.config.llm_config import LLMConfig
@@ -85,7 +86,8 @@ class DuckDBImplementation(DatabaseInterface):
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
         structured_query = structure_query(prompt)
-        self.llm.format = "json"
+        if isinstance(self.llm, ChatOllama):
+            self.llm.format = "json"
         response = self.agent.invoke(structured_query)
         return response["output"]
 

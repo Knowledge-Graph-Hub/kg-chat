@@ -8,6 +8,7 @@ from typing import Union
 
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
+from langchain_ollama import ChatOllama
 from neo4j import GraphDatabase
 
 from kg_chat.config.llm_config import LLMConfig
@@ -136,7 +137,8 @@ class Neo4jImplementation(DatabaseInterface):
 
     def get_structured_response(self, query: str):
         """Get a structured response from the Neo4j database."""
-        self.llm.format = "json"
+        if isinstance(self.llm, ChatOllama):
+            self.llm.format = "json"
         response = self.chain.invoke({"query": structure_query(query)})
         return response["result"]
 
