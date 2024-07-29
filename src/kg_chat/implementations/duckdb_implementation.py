@@ -85,6 +85,7 @@ class DuckDBImplementation(DatabaseInterface):
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
         structured_query = structure_query(prompt)
+        self.llm.format = "json"
         response = self.agent.invoke(structured_query)
         return response["output"]
 

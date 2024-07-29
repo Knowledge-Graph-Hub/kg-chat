@@ -136,6 +136,7 @@ class Neo4jImplementation(DatabaseInterface):
 
     def get_structured_response(self, query: str):
         """Get a structured response from the Neo4j database."""
+        self.llm.format = "json"
         response = self.chain.invoke({"query": structure_query(query)})
         return response["result"]
 
