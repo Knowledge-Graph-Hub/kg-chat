@@ -4,6 +4,7 @@ import random
 import webbrowser
 from pathlib import Path
 
+from langchain_core.prompts.prompt import PromptTemplate
 from openai import OpenAI
 from pyvis.network import Network
 
@@ -49,6 +50,47 @@ def structure_query(query: str):
     else:
         structured_query = query
     return structured_query
+
+
+def get_agent_prompt_template():
+    """Get the agent prompt."""
+    template = """
+                You are an amazing Data Scientist that queries DuckDB databases using SQL queries and
+                 has access to additional tools like SQLDatabaseToolkit in order to answer the
+                 following questions as best you can.
+                Always answer in the same language as the user question.
+                You have access to the following tools:
+
+                {tools}
+
+                To use a tool, please use the following format:
+
+                '''
+                Thought: Do I need to use a tool? Yes
+                Action: the action to take, should be one of [{tool_names}]
+                Action Input: the input to the action
+                Observation: the result of the action
+                ... (this Thought/Action/Action Input/Observation can repeat 3 times)
+                '''
+
+                When you have a response and the {input} has the phrase "show me" (case insensitive) you MUST
+                 return the JSON object ONLY which would be the "Observation" with the nodes and edges as keys.
+                No verbosity whatsoever.
+
+                else if the {input} does not have the phrase "show me" (case insensitive), use the format:
+                '''
+                Thought: Do I need to use a tool? No
+                Final Answer: [your response here]
+                '''
+                Begin!
+
+                Question: {input}
+                Thought:{agent_scratchpad}
+                Action: the action to take, should be one of [{tool_names}]
+                Action Input: the input to the action
+                Observation: the result of the action
+    """
+    return PromptTemplate.from_template(template)
 
 
 def get_llm_config(llm_provider: str, llm_model: str = None):

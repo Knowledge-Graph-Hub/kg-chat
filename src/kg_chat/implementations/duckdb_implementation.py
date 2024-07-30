@@ -7,14 +7,17 @@ from pprint import pprint
 from typing import Union
 
 import duckdb
+from langchain.agents.agent import AgentExecutor, AgentType
+from langchain_anthropic import ChatAnthropic
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_ollama import ChatOllama
-from sqlalchemy import create_engine
+from langchain_openai import ChatOpenAI
+from sqlalchemy import Engine, create_engine
 
 from kg_chat.config.llm_config import LLMConfig
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import llm_factory, structure_query
+from kg_chat.utils import get_agent_prompt_template, llm_factory, structure_query
 
 
 class DuckDBImplementation(DatabaseInterface):
@@ -29,19 +32,26 @@ class DuckDBImplementation(DatabaseInterface):
         self.database_path = self.data_dir / "database/kg_chat.db"
         if not self.database_path.exists():
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn = duckdb.connect(database=str(self.database_path))
-        self.llm = llm_factory(llm_config)
-        self.engine = create_engine(f"duckdb:///{self.database_path}")
+        self.conn: duckdb.DuckDBPyConnection = duckdb.connect(database=str(self.database_path))
+        self.llm: ChatOpenAI | ChatOllama | ChatAnthropic = llm_factory(llm_config)
+        if isinstance(self.llm, ChatOpenAI):
+            agent_type = "openai-tools"
+        else:
+            agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
+        self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
-        self.agent = create_sql_agent(
+        self.agent: AgentExecutor = create_sql_agent(
             llm=self.llm,
             verbose=True,
             toolkit=self.toolkit,
+            agent_type=agent_type,
+            handle_parsing_errors=True,
             agent_executor_kwargs=dict(
                 return_intermediate_steps=True,
                 handle_parsing_errors=True,
             ),
+            prompt=get_agent_prompt_template(),
         )
 
     def toggle_safe_mode(self, enabled: bool):
@@ -85,9 +95,11 @@ class DuckDBImplementation(DatabaseInterface):
 
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
-        structured_query = structure_query(prompt)
         if isinstance(self.llm, ChatOllama):
             self.llm.format = "json"
+            structured_query = {"input": structure_query(prompt)}
+        else:
+            structured_query = structure_query(prompt)
         response = self.agent.invoke(structured_query)
         return response["output"]
 
