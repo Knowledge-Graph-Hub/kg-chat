@@ -100,7 +100,7 @@ def test_get_structured_response(mocker, db_impl):
     prompt = "Get all nodes"
     response = db_impl.get_structured_response(prompt)
     # TODO mock_structure_query.assert_called_once_with(prompt)
-    mock_invoke.assert_called_once_with(prompt)
+    mock_invoke.assert_called_once_with({"input": prompt})
     assert response == "response"
 
 
