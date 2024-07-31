@@ -11,13 +11,20 @@ from kg_chat import __version__
 from kg_chat.app import create_app
 from kg_chat.constants import OPEN_AI_MODEL
 from kg_chat.main import KnowledgeGraphChat
-from kg_chat.utils import get_anthropic_models, get_database_impl, get_llm_config, get_ollama_models, get_openai_models
+from kg_chat.utils import (
+    get_anthropic_models,
+    get_database_impl,
+    get_lbl_cborg_models,
+    get_llm_config,
+    get_ollama_models,
+    get_openai_models,
+)
 
 __all__ = [
     "main",
 ]
 
-ALL_AVAILABLE_MODELS = get_openai_models() + get_ollama_models() + get_anthropic_models()
+ALL_AVAILABLE_MODELS = get_openai_models() + get_ollama_models() + get_anthropic_models() + get_lbl_cborg_models()
 
 logger = logging.getLogger(__name__)
 database_options = click.option(

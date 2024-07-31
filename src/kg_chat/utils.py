@@ -199,6 +199,14 @@ def get_ollama_models():
     return ["llama3.1"]
 
 
+def get_lbl_cborg_models():
+    """Get the list of LBNL-hosted models via CBORG."""
+    return [
+        "lbl/llama-3",  # LBNL-hosted model (free to use)
+        "lbl/command-r-plus",  # LBNL-hosted model (free to use)
+    ]
+
+
 # * App related utilities. **************************************************************************
 def generate_random_color():
     """Generate a random color."""

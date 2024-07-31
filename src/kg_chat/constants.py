@@ -12,6 +12,7 @@ TESTS_OUTPUT_DIR = TEST_DIR / "output"
 
 OPENAI_KEY = str(getenv("OPENAI_API_KEY"))
 ANTHROPIC_KEY = str(getenv("ANTHROPIC_API_KEY"))
+CBORG_API_KEY = str(getenv("CBORG_API_KEY"))
 
 OPEN_AI_MODEL = "gpt-4o"
 ANTHROPIC_MODEL = "claude-3-5-sonnet-20240620"
