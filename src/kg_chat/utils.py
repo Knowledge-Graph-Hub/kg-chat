@@ -67,30 +67,25 @@ def get_agent_prompt_template():
                 To use a tool, please use the following format:
 
                 '''
-                Thought: Do I need to use a tool? Yes
-                Action: the action to take, should be one of [{tool_names}]
-                Action Input: the input to the action
-                Observation: the result of the action
+                "Thought": Do I need to use a tool? Yes.
+                "Action 1": the action to take, should be one of [{tool_names}].
+                "Action Input 1": the input to the action.
+                "Observation": the result of the action.
                 ... (this Thought/Action/Action Input/Observation can repeat 5 times)
                 '''
 
-                When the query returns the result:
-                IF {input} contains the phrase "show me" (case insensitive),
-                 you must return the JSON object with the nodes and edges as keys.
-                Property names MUST be enclosed in double quotes.
-                IMPORTANT: I want nothing but pure JSON (verbose=False). Remove all unnecessary quotes and newlines.
+                When the query returns the result use the format:
+                '''
+                "Thought": Do I need to use a tool? No
+                "Final Answer": [your response here]
+                '''
 
-                ELSE the {input} does NOT have the phrase "show me" (case insensitive), use the format:
-                '''
-                Thought: Do I need to use a tool? No
-                Final Answer: [your response here]
-                '''
                 Begin!
 
                 Question: {input}
                 Thought:{agent_scratchpad}
     """
-    # return PromptTemplate.from_template(template)
+
     return PromptTemplate(
         input_variables=["input", "agent_scratchpad", "tools", "tool_names", "intermediate_steps"], template=template
     )
