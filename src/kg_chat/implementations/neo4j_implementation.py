@@ -129,17 +129,18 @@ class Neo4jImplementation(DatabaseInterface):
         )
         print("Indexes ensured using APOC.")
 
-    def get_human_response(self, query: str):
+    def get_human_response(self, prompt: str):
         """Get a human response from the Neo4j database."""
-        human_response = self.chain.invoke({"query": query})
+        human_response = self.chain.invoke({"query": prompt})
         pprint(human_response["result"])
         return human_response["result"]
 
-    def get_structured_response(self, query: str):
+    def get_structured_response(self, prompt: str):
         """Get a structured response from the Neo4j database."""
         if isinstance(self.llm, ChatOllama):
-            self.llm.format = "json"
-        response = self.chain.invoke({"query": structure_query(query)})
+            if "show me" in prompt.lower():
+                self.llm.format = "json"
+        response = self.chain.invoke({"query": structure_query(prompt)})
         return response["result"]
 
     def create_edges(self, edges):
