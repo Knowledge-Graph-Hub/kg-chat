@@ -4,6 +4,7 @@ import json
 from pprint import pprint
 
 from langchain.memory import ConversationBufferMemory
+
 from kg_chat.interface.database_interface import DatabaseInterface
 from kg_chat.utils import extract_nodes_edges, visualize_kg
 

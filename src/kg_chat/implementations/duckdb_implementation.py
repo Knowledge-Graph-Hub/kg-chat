@@ -99,11 +99,11 @@ class DuckDBImplementation(DatabaseInterface):
                 self.llm.format = "json"
 
             structured_query = get_agent_prompt_template().format(
-                    input = prompt,
-                    tools = self.toolkit.get_tools(),
-                    tool_names = [tool.name for tool in  self.toolkit.get_tools()],
-                    agent_scratchpad = None,
-                )
+                input=prompt,
+                tools=self.toolkit.get_tools(),
+                tool_names=[tool.name for tool in self.toolkit.get_tools()],
+                agent_scratchpad=None,
+            )
         else:
             structured_query = {"input": structure_query(prompt)}
 
