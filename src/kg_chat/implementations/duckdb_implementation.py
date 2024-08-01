@@ -10,7 +10,6 @@ import duckdb
 from langchain.agents.agent import AgentExecutor, AgentType
 from langchain_anthropic import ChatAnthropic
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
-from langchain_community.tools.sql_database.tool import QuerySQLDataBaseTool
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
@@ -44,7 +43,6 @@ class DuckDBImplementation(DatabaseInterface):
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
-        self.tools = QuerySQLDataBaseTool(db=self.db, handle_tool_error=True, handle_validation_error=True)
         self.agent: AgentExecutor = create_sql_agent(
             llm=self.llm,
             verbose=True,
@@ -55,7 +53,7 @@ class DuckDBImplementation(DatabaseInterface):
                 handle_parsing_errors=True,
             ),
             prompt=prompt,
-            extra_tools=[self.tools],
+            extra_tools=self.toolkit.get_tools(),
         )
 
     def toggle_safe_mode(self, enabled: bool):
