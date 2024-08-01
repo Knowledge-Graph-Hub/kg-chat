@@ -36,10 +36,8 @@ class DuckDBImplementation(DatabaseInterface):
         self.llm: ChatOpenAI | ChatOllama | ChatAnthropic = llm_factory(llm_config)
         if isinstance(self.llm, ChatOpenAI):
             agent_type = "openai-tools"
-            prompt = None
         else:
             agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
-            prompt = get_agent_prompt_template()
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
@@ -52,7 +50,6 @@ class DuckDBImplementation(DatabaseInterface):
                 return_intermediate_steps=True,
                 handle_parsing_errors=True,
             ),
-            prompt=prompt,
             extra_tools=self.toolkit.get_tools(),
         )
 
@@ -98,8 +95,15 @@ class DuckDBImplementation(DatabaseInterface):
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
         if isinstance(self.llm, ChatOllama):
-            self.llm.format = "json"
-            structured_query = {"input": prompt}
+            if "show me" in prompt.lower():
+                self.llm.format = "json"
+
+            structured_query = get_agent_prompt_template().format(
+                    input = prompt,
+                    tools = self.toolkit.get_tools(),
+                    tool_names = [tool.name for tool in  self.toolkit.get_tools()],
+                    agent_scratchpad = None,
+                )
         else:
             structured_query = {"input": structure_query(prompt)}
 
