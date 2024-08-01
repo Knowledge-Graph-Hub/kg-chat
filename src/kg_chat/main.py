@@ -43,7 +43,6 @@ class KnowledgeGraphChat:
                     break
 
                 response = self.get_structured_response(prompt)
-                import pdb; pdb.set_trace()
                 result = response["output"] if "output" in response else response
 
                 # Store the query and response in memory
