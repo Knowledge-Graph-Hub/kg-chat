@@ -91,7 +91,7 @@ def get_agent_prompt_template():
     )
 
 
-def get_llm_config(llm_provider: str, llm_model: str = None):
+def get_llm_config(llm_provider: str, llm_model: str):
     """Get the LLM configuration based on the selected LLM."""
 
     def validate_and_get_model(provider, default_model, get_models_func):
