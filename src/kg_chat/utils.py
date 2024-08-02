@@ -167,7 +167,7 @@ def llm_factory(config: LLMConfig):
     elif isinstance(config, AnthropicConfig):
         from langchain_anthropic import ChatAnthropic
 
-        return ChatAnthropic(model=config.model, temperature=config.temperature, api_key=config.api_key)
+        return ChatAnthropic(model=config.model, temperature=config.temperature, api_key=config.api_key, max_tokens_to_sample=4096)
     else:
         raise ValueError("Unsupported LLM configuration")
 
