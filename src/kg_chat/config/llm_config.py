@@ -28,3 +28,10 @@ class AnthropicConfig(LLMConfig):
     """Configuration for Anthropic LLM model."""
 
     pass
+
+
+class CBORGConfig(LLMConfig):
+    """Configuration for CBORG LLM model."""
+
+    base_url: str = "https://api.cborg.lbl.gov"  # Local clients can also use https://api-local.cborg.lbl.gov
+    pass

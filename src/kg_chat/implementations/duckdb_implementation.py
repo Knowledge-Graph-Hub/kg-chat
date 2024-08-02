@@ -8,7 +8,6 @@ from typing import Union
 
 import duckdb
 from langchain.agents.agent import AgentExecutor, AgentType
-from langchain_anthropic import ChatAnthropic
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_ollama import ChatOllama
@@ -33,7 +32,7 @@ class DuckDBImplementation(DatabaseInterface):
         if not self.database_path.exists():
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn: duckdb.DuckDBPyConnection = duckdb.connect(database=str(self.database_path))
-        self.llm: ChatOpenAI | ChatOllama | ChatAnthropic = llm_factory(llm_config)
+        self.llm = llm_factory(llm_config)
         if isinstance(self.llm, ChatOpenAI):
             agent_type = "openai-tools"
         else:

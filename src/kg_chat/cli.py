@@ -24,13 +24,15 @@ __all__ = [
     "main",
 ]
 
+ALL_AVAILABLE_PROVIDERS = ["openai", "ollama", "anthropic"]
 ALL_AVAILABLE_MODELS = get_openai_models() + get_ollama_models() + get_anthropic_models() + get_lbl_cborg_models()
+ALL_AVAILABLE_DB = ["neo4j", "duckdb"]
 
 logger = logging.getLogger(__name__)
 database_options = click.option(
     "--database",
     "-d",
-    type=click.Choice(["neo4j", "duckdb"], case_sensitive=False),
+    type=click.Choice(ALL_AVAILABLE_DB, case_sensitive=False),
     help="Database to use.",
     default="duckdb",
 )
@@ -42,7 +44,7 @@ data_dir_option = click.option(
 )
 llm_provider_option = click.option(
     "--llm-provider",
-    type=click.Choice(["openai", "ollama", "anthropic"], case_sensitive=False),
+    type=click.Choice(ALL_AVAILABLE_PROVIDERS, case_sensitive=False),
     help="Language model to use.",
     required=False,
 )
@@ -81,6 +83,7 @@ def list_models():
     click.echo(f"OpenAI models: {get_openai_models()}")
     click.echo(f"Anthropic models: {get_anthropic_models()}")
     click.echo(f"Ollama models: {get_ollama_models()}")
+    click.echo(f"LBL-CBorg models: {get_lbl_cborg_models()}")
 
 
 @main.command("import")

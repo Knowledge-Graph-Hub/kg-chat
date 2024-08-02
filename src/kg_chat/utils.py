@@ -8,8 +8,16 @@ from langchain_core.prompts.prompt import PromptTemplate
 from openai import OpenAI
 from pyvis.network import Network
 
-from kg_chat.config.llm_config import AnthropicConfig, LLMConfig, OllamaConfig, OpenAIConfig
-from kg_chat.constants import ANTHROPIC_KEY, ANTHROPIC_MODEL, OLLAMA_MODEL, OPEN_AI_MODEL, OPENAI_KEY
+from kg_chat.config.llm_config import AnthropicConfig, CBORGConfig, LLMConfig, OllamaConfig, OpenAIConfig
+from kg_chat.constants import (
+    ANTHROPIC_KEY,
+    ANTHROPIC_MODEL,
+    CBORG_API_KEY,
+    CBORG_MODEL,
+    OLLAMA_MODEL,
+    OPEN_AI_MODEL,
+    OPENAI_KEY,
+)
 
 PREFIX_COLOR_MAP = {}
 
@@ -121,11 +129,18 @@ def get_llm_config(llm_provider: str, llm_model: str = None):
         llm_model = validate_and_get_model("anthropic", ANTHROPIC_MODEL, get_anthropic_models)
         return AnthropicConfig(model=llm_model, api_key=ANTHROPIC_KEY)
 
+    elif llm_provider == "cborg":
+        from kg_chat.config.llm_config import CBORGConfig
+
+        llm_model = validate_and_get_model("cborg", CBORG_MODEL, get_lbl_cborg_models)
+        return CBORGConfig(model=llm_model, api_key=CBORG_API_KEY)
+
     else:
         all_models = {
             "openai": get_openai_models(),
             "ollama": get_ollama_models(),
             "anthropic": get_anthropic_models(),
+            "cborg": get_lbl_cborg_models(),
         }
         if llm_model is None:
             llm_model = OPEN_AI_MODEL
@@ -170,6 +185,13 @@ def llm_factory(config: LLMConfig):
         return ChatAnthropic(
             model=config.model, temperature=config.temperature, api_key=config.api_key, max_tokens_to_sample=4096
         )
+    elif isinstance(config, CBORGConfig):
+        from langchain_openai import ChatOpenAI
+
+        return ChatOpenAI(
+            model=config.model, temperature=config.temperature, api_key=config.api_key, base_url=config.base_url
+        )
+
     else:
         raise ValueError("Unsupported LLM configuration")
 
