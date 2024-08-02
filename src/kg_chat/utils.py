@@ -174,8 +174,10 @@ def llm_factory(config: LLMConfig):
 
 def get_openai_models():
     """Get the list of OpenAI models."""
-    openai = OpenAI()
-    models_list = [model.id for model in openai.models.list() if model.id.startswith("gpt-4")]
+    models_list = []
+    if OPENAI_KEY != "None":
+        openai = OpenAI()
+        models_list = [model.id for model in openai.models.list() if model.id.startswith("gpt-4")]
     return models_list
 
 
