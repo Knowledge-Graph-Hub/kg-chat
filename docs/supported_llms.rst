@@ -24,4 +24,4 @@ Supported LLMs
 * CBORG by LBNL:
 .. note::
         The API key should be locally saved as environment variable (`CBORG_API_KEY`).
-    * `kg-chat` is using `lbl/llama-3`.
+    * `kg-chat` is using `lbl/llama-3` which actually is llama3.1(405B).

@@ -24,7 +24,7 @@ Certainly! Here's a more concise version:
   > **_NOTE:_** Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
   - The only LLMs that work for now:
-    - `lbl/llama-3`
+    - `lbl/llama-3` (actually llama3.1(405B))
     - `openai/gpt-4o-mini`
 
 
