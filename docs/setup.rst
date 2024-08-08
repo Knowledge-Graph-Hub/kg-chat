@@ -52,6 +52,7 @@ For Users
         pip install kg-chat
 
     or
+
     .. code-block:: shell
 
         pip install poetry
