@@ -91,7 +91,7 @@ def list_models():
 @data_dir_option
 @llm_provider_option
 def import_kg(database: str = "duckdb", data_dir: str = None, llm_provider: str = "openai"):
-    """Run the kg-chat's demo command."""
+    """Run the kg-chat's import command."""
     if not data_dir:
         raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
     config = get_llm_config(llm_provider)
@@ -105,7 +105,7 @@ def import_kg(database: str = "duckdb", data_dir: str = None, llm_provider: str 
 @llm_provider_option
 @llm_option
 def test_query(data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
-    """Run the kg-chat's chat command."""
+    """Run the kg-chat's test-query command."""
     if llm_provider is None and llm is None:
         llm = OPEN_AI_MODEL
     config = get_llm_config(llm_provider, llm)
@@ -123,7 +123,7 @@ def test_query(data_dir: Union[str, Path], llm_provider: str, llm: str, database
 @llm_provider_option
 @llm_option
 def show_schema(data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
-    """Run the kg-chat's chat command."""
+    """Run the kg-chat's show-schema command."""
     config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     impl.show_schema()
@@ -136,7 +136,7 @@ def show_schema(data_dir: Union[str, Path], llm_provider: str, llm: str, databas
 @llm_provider_option
 @llm_option
 def qna(query: str, data_dir: Union[str, Path], llm_provider: str, llm: str, database: str = "duckdb"):
-    """Run the kg-chat's chat command."""
+    """Run the kg-chat's qna command."""
     config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     response = impl.get_human_response(query)
@@ -169,7 +169,7 @@ def run_app(
     database: str = "duckdb",
     debug: bool = False,
 ):
-    """Run the kg-chat's chat command."""
+    """Run the kg-chat's app command."""
     config = get_llm_config(llm_provider, llm)
     impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
     kgc = KnowledgeGraphChat(impl)

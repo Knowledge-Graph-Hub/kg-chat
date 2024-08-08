@@ -43,7 +43,7 @@ myst-parser = {version = ">=0.18.1"}
 kg = "kg_chat.cli:main"
 
 [tool.poetry-dynamic-versioning]
-enable = false
+enable = true
 vcs = "git"
 style = "pep440"
 
