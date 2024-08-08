@@ -26,6 +26,9 @@ Certainly! Here's a more concise version:
   - The only LLMs that work for now:
     - `lbl/llama-3` (actually llama3.1(405B))
     - `openai/gpt-4o-mini`
+    - `anthropic/claude-haiku`
+    - `anthropic/claude-sonnet`
+    - `anthropic/claude-opus`
 
 
 #### How to set the API key as an environment variable?
