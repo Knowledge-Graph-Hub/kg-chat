@@ -93,8 +93,8 @@
 </dl>
 </li>
 <li><dl>
-<dt>Ollama (<em>Unreliable at the moment</em>):</dt><dd><ul class="simple">
-<li><p>For this you will have to download the [Ollama application](<a class="reference external" href="https://ollama.com/download">https://ollama.com/download</a>) and run it on your machine.</p></li>
+<dt>Ollama:</dt><dd><ul class="simple">
+<li><p>For this you will have to download the <a class="reference external" href="https://ollama.com/download">Ollama application</a> and run it on your machine.</p></li>
 <li><dl class="simple">
 <dt>Then get the model of your choice by running the following command in the terminal:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`bash</span>
 <span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">llama3.1</span>
@@ -125,14 +125,11 @@
 </dl>
 </li>
 <li><dl>
-<dt>CBORG by LBNL:</dt><dd><div class="admonition note">
-<p class="admonition-title">Note</p>
-<blockquote>
-<div><p>The API key should be locally saved as environment variable (<cite>CBORG_API_KEY</cite>).</p>
-</div></blockquote>
-<ul class="simple">
-<li><p><cite>kg-chat</cite> is using <cite>lbl/llama-3</cite> which actually is llama3.1(405B).</p></li>
-</ul>
+<dt>CBORG by LBNL:</dt><dd><p><cite>kg-chat</cite> also supports <cite>models offered Lawrence Berkeley National Laboratory (via CBORG)&lt;https://cborg.lbl.gov/models/&gt;</cite>.
+.. note:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    The API key should be locally saved as environment variable (`CBORG_API_KEY`).
+* `kg-chat` is using `lbl/llama-3` which actually is llama3.1(405B).
+</pre></div>
 </div>
 </dd>
 </dl>
