@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kg_chat package &mdash; kg-chat 0.0.0 documentation</title>
+  <title>kg_chat package &mdash; kg-chat 0.1.2.post26.dev0+57e395f documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=7026087e"></script>
+        <script src="_static/documentation_options.js?v=fedef32e"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -73,6 +73,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.assign_color_to_prefix"><code class="docutils literal notranslate"><span class="pre">assign_color_to_prefix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.extract_nodes_edges"><code class="docutils literal notranslate"><span class="pre">extract_nodes_edges()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.generate_random_color"><code class="docutils literal notranslate"><span class="pre">generate_random_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_agent_prompt_template"><code class="docutils literal notranslate"><span class="pre">get_agent_prompt_template()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_anthropic_models"><code class="docutils literal notranslate"><span class="pre">get_anthropic_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_database_impl"><code class="docutils literal notranslate"><span class="pre">get_database_impl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_lbl_cborg_models"><code class="docutils literal notranslate"><span class="pre">get_lbl_cborg_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_llm_config"><code class="docutils literal notranslate"><span class="pre">get_llm_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_ollama_models"><code class="docutils literal notranslate"><span class="pre">get_ollama_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_openai_models"><code class="docutils literal notranslate"><span class="pre">get_openai_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.llm_factory"><code class="docutils literal notranslate"><span class="pre">llm_factory()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.structure_query"><code class="docutils literal notranslate"><span class="pre">structure_query()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.visualize_kg"><code class="docutils literal notranslate"><span class="pre">visualize_kg()</span></code></a></li>
 </ul>
@@ -314,6 +322,54 @@
 <dt class="sig sig-object py" id="kg_chat.utils.generate_random_color">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">generate_random_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.generate_random_color" title="Link to this definition"></a></dt>
 <dd><p>Generate a random color.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_agent_prompt_template">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_agent_prompt_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_agent_prompt_template" title="Link to this definition"></a></dt>
+<dd><p>Get the agent prompt.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_anthropic_models">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_anthropic_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_anthropic_models" title="Link to this definition"></a></dt>
+<dd><p>Get the list of Anthropic models.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_database_impl">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_database_impl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_database_impl" title="Link to this definition"></a></dt>
+<dd><p>Get the database implementation based on the selected database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_lbl_cborg_models">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_lbl_cborg_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_lbl_cborg_models" title="Link to this definition"></a></dt>
+<dd><p>Get the list of LBNL-hosted models via CBORG.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_llm_config">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_llm_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_llm_config" title="Link to this definition"></a></dt>
+<dd><p>Get the LLM configuration based on the selected LLM.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_ollama_models">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_ollama_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_ollama_models" title="Link to this definition"></a></dt>
+<dd><p>Get the list of Ollama models.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_openai_models">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_openai_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_openai_models" title="Link to this definition"></a></dt>
+<dd><p>Get the list of OpenAI models.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.llm_factory">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">llm_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.llm_factory" title="Link to this definition"></a></dt>
+<dd><p>Create an LLM instance based on the configuration.</p>
 </dd></dl>
 
 <dl class="py function">

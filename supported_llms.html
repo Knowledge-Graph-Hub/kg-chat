@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supported LLMs &mdash; kg-chat 0.0.0 documentation</title>
+  <title>Supported LLMs &mdash; kg-chat 0.1.2.post26.dev0+57e395f documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=7026087e"></script>
+        <script src="_static/documentation_options.js?v=fedef32e"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -80,9 +80,48 @@
              
   <section id="supported-llms">
 <h1>Supported LLMs<a class="headerlink" href="#supported-llms" title="Link to this heading"></a></h1>
+<ul>
+<li><dl>
+<dt>OpenAI [default]</dt><dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The API key should be locally saved as an environment variable (<cite>OPENAI_API_KEY</cite>).</p>
+</div>
 <ul class="simple">
-<li><p>OpenAI</p></li>
+<li><p><cite>kg-chat</cite> is using <cite>gpt-4o</cite></p></li>
 </ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Ollama (<em>Unreliable at the moment</em>):</dt><dd><ul class="simple">
+<li><p>For this you will have to download the [Ollama application](<a class="reference external" href="https://ollama.com/download">https://ollama.com/download</a>) and run it on your machine.</p></li>
+<li><dl class="simple">
+<dt>Then get the model of your choice by running the following command in the terminal:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`bash</span>
+<span class="pre">ollama</span> <span class="pre">pull</span> <span class="pre">llama3.1</span>
+<span class="pre">`</span></code></p>
+</dd>
+</dl>
+</li>
+<li><p><cite>kg-chat</cite> is using <cite>llama3.1</cite></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As of now just the <cite>qna</cite> command works somewhat reliably. The <cite>chat</cite> or <cite>app</cite> commands don’t work as expected.</p>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Anthropic:</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<blockquote>
+<div><p>The API key should be locally saved as an environment variable (<cite>ANTHROPIC_API_KEY</cite>).</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>kg-chat</cite> is using <cite>claude-3-5-sonnet-20240620</cite></p></li>
+</ul>
+</div>
 </section>
 
 
