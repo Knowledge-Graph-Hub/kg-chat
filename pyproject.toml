@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kg-chat"
-version = "0.1.2.post26.dev0+57e395f"
+version = "0.0.0"
 description = "kg-chat"
 authors = ["Harshad Hegde <hhegde@lbl.gov>"]
 license = "MIT"
