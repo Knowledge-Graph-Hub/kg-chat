@@ -23,7 +23,7 @@ Certainly! Here's a more concise version:
 - **Models hosted by Lawrence Berkeley National Laboratory vi CBORG**
   > **_NOTE:_** Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
-  - The only LLMS that work for now:
+  - The only LLMs that work for now:
     - `lbl/llama-3`
     - `openai/gpt-4o-mini`
 
