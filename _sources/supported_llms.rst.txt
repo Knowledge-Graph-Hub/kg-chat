@@ -13,6 +13,7 @@ Supported LLMs
         ollama pull llama3.1
         ```
     * `kg-chat` is using `llama3.1`
+
     .. note::
         We highly recommend using the 405B model for decent results.
 
