@@ -24,7 +24,7 @@ __all__ = [
     "main",
 ]
 
-ALL_AVAILABLE_PROVIDERS = ["openai", "ollama", "anthropic"]
+ALL_AVAILABLE_PROVIDERS = ["openai", "ollama", "anthropic", "cborg"]
 ALL_AVAILABLE_MODELS = get_openai_models() + get_ollama_models() + get_anthropic_models() + get_lbl_cborg_models()
 ALL_AVAILABLE_DB = ["neo4j", "duckdb"]
 

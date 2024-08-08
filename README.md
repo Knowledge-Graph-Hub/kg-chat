@@ -18,8 +18,15 @@ Certainly! Here's a more concise version:
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
     ```shell
-        ollama pull llama3.1
+        ollama pull llama3.1 
     ```
+- **Models hosted by Lawrence Berkeley National Laboratory vi CBORG**
+  > **_NOTE:_** Ensure `CBORG_API_KEY` is set as an environment variable.
+  - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
+  - The only LLMs that work for now:
+    - `lbl/llama-3` (actually llama3.1(405B))
+    - `openai/gpt-4o-mini`
+
 
 #### How to set the API key as an environment variable?
 One quick way is 

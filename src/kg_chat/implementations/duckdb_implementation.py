@@ -11,7 +11,6 @@ from langchain.agents.agent import AgentExecutor, AgentType
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
 from sqlalchemy import Engine, create_engine
 
 from kg_chat.config.llm_config import LLMConfig
@@ -33,10 +32,7 @@ class DuckDBImplementation(DatabaseInterface):
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn: duckdb.DuckDBPyConnection = duckdb.connect(database=str(self.database_path))
         self.llm = llm_factory(llm_config)
-        if isinstance(self.llm, ChatOpenAI):
-            agent_type = "openai-tools"
-        else:
-            agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
+        agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)

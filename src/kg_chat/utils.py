@@ -186,10 +186,15 @@ def llm_factory(config: LLMConfig):
             model=config.model, temperature=config.temperature, api_key=config.api_key, max_tokens_to_sample=4096
         )
     elif isinstance(config, CBORGConfig):
+        pass
+        # TODO Implement CBORG model
         from langchain_openai import ChatOpenAI
 
         return ChatOpenAI(
-            model=config.model, temperature=config.temperature, api_key=config.api_key, base_url=config.base_url
+            model=config.model,
+            temperature=config.temperature,
+            openai_api_key=config.api_key,
+            openai_api_base=config.base_url,
         )
 
     else:
@@ -224,7 +229,12 @@ def get_lbl_cborg_models():
     """Get the list of LBNL-hosted models via CBORG."""
     return [
         "lbl/llama-3",  # LBNL-hosted model (free to use)
-        "lbl/command-r-plus",  # LBNL-hosted model (free to use)
+        "openai/gpt-4o-mini",  # OpenAI-hosted model
+        # "google/gemini-1.5-flash-latest",  # Google-hosted model
+        # "google/gemini-1.5-pro-latest",  # Google-hosted model
+        # "anthropic/claude-haiku-latest",  # Anthropic-hosted model
+        # "anthropic/claude-sonnet-latest",  # Anthropic-hosted model
+        # "anthropic/claude-opus-latest",  # Anthropic-hosted model
     ]
 
 
