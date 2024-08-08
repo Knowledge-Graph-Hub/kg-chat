@@ -7,23 +7,22 @@ from pprint import pprint
 from typing import Union
 
 import duckdb
+from langchain.agents.agent import AgentExecutor, AgentType
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
+from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
-from sqlalchemy import create_engine
+from sqlalchemy import Engine, create_engine
 
-from kg_chat.constants import (
-    OPEN_AI_MODEL,
-    OPENAI_KEY,
-)
+from kg_chat.config.llm_config import LLMConfig
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import structure_query
+from kg_chat.utils import get_agent_prompt_template, llm_factory, structure_query
 
 
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
 
-    def __init__(self, data_dir: Union[Path, str]):
+    def __init__(self, data_dir: Union[Path, str], llm_config: LLMConfig):
         """Initialize the DuckDB database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
@@ -32,12 +31,26 @@ class DuckDBImplementation(DatabaseInterface):
         self.database_path = self.data_dir / "database/kg_chat.db"
         if not self.database_path.exists():
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn = duckdb.connect(database=str(self.database_path))
-        self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
-        self.engine = create_engine(f"duckdb:///{self.database_path}")
+        self.conn: duckdb.DuckDBPyConnection = duckdb.connect(database=str(self.database_path))
+        self.llm = llm_factory(llm_config)
+        if isinstance(self.llm, ChatOpenAI):
+            agent_type = "openai-tools"
+        else:
+            agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
+        self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
-        self.agent = create_sql_agent(llm=self.llm, agent_type="openai-tools", verbose=True, toolkit=self.toolkit)
+        self.agent: AgentExecutor = create_sql_agent(
+            llm=self.llm,
+            verbose=True,
+            toolkit=self.toolkit,
+            agent_type=agent_type,
+            agent_executor_kwargs=dict(
+                return_intermediate_steps=True,
+                handle_parsing_errors=True,
+            ),
+            extra_tools=self.toolkit.get_tools(),
+        )
 
     def toggle_safe_mode(self, enabled: bool):
         """Toggle safe mode on or off."""
@@ -80,7 +93,19 @@ class DuckDBImplementation(DatabaseInterface):
 
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
-        structured_query = structure_query(prompt)
+        if isinstance(self.llm, ChatOllama):
+            if "show me" in prompt.lower():
+                self.llm.format = "json"
+
+            structured_query = get_agent_prompt_template().format(
+                input=prompt,
+                tools=self.toolkit.get_tools(),
+                tool_names=[tool.name for tool in self.toolkit.get_tools()],
+                agent_scratchpad=None,
+            )
+        else:
+            structured_query = {"input": structure_query(prompt)}
+
         response = self.agent.invoke(structured_query)
         return response["output"]
 
@@ -193,21 +218,25 @@ class DuckDBImplementation(DatabaseInterface):
         return self.execute_unsafe_operation(_load_kg)
 
     def _import_nodes(self):
-        columns_of_interest = ["id", "category", "name"]
+        columns_of_interest = ["id", "category", "name", "description"]
         nodes_filepath = Path(self.data_dir) / "nodes.tsv"
 
         with open(nodes_filepath, "r") as nodes_file:
             header_line = nodes_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in columns_of_interest}
 
+            # Determine which label column to use
+            label_column = "name" if "name" in column_indexes else "description"
+
             with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_nodes_file:
-                temp_nodes_file.write("\t".join(columns_of_interest) + "\n")
+                # Write the header line with the correct label column
+                temp_nodes_file.write("\t".join(["id", "category", label_column]) + "\n")
                 for line in nodes_file:
                     columns = line.strip().split("\t")
                     if len(columns) > max(column_indexes.values()):
                         node_id = columns[column_indexes["id"]]
                         node_category = columns[column_indexes["category"]]
-                        node_label = columns[column_indexes["name"]]
+                        node_label = columns[column_indexes[label_column]]
                         temp_nodes_file.write(f"{node_id}\t{node_category}\t{node_label}\n")
                 temp_nodes_file.flush()
 

@@ -8,19 +8,18 @@ from typing import Union
 
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from neo4j import GraphDatabase
 
+from kg_chat.config.llm_config import LLMConfig
 from kg_chat.constants import (
     DATALOAD_BATCH_SIZE,
     NEO4J_PASSWORD,
     NEO4J_URI,
     NEO4J_USERNAME,
-    OPEN_AI_MODEL,
-    OPENAI_KEY,
 )
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import structure_query
+from kg_chat.utils import llm_factory, structure_query
 
 
 class Neo4jImplementation(DatabaseInterface):
@@ -32,13 +31,14 @@ class Neo4jImplementation(DatabaseInterface):
         uri: str = NEO4J_URI,
         username: str = NEO4J_USERNAME,
         password: str = NEO4J_PASSWORD,
+        llm_config: LLMConfig = None,
     ):
         """Initialize the Neo4j database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
         self.driver = GraphDatabase.driver(uri, auth=(username, password))
         self.graph = Neo4jGraph(url=uri, username=username, password=password)
-        self.llm = ChatOpenAI(model=OPEN_AI_MODEL, temperature=0, api_key=OPENAI_KEY)
+        self.llm = llm_factory(llm_config)
         self.data_dir = Path(data_dir)
 
         self.chain = GraphCypherQAChain.from_llm(
@@ -129,15 +129,18 @@ class Neo4jImplementation(DatabaseInterface):
         )
         print("Indexes ensured using APOC.")
 
-    def get_human_response(self, query: str):
+    def get_human_response(self, prompt: str):
         """Get a human response from the Neo4j database."""
-        human_response = self.chain.invoke({"query": query})
+        human_response = self.chain.invoke({"query": prompt})
         pprint(human_response["result"])
         return human_response["result"]
 
-    def get_structured_response(self, query: str):
+    def get_structured_response(self, prompt: str):
         """Get a structured response from the Neo4j database."""
-        response = self.chain.invoke({"query": structure_query(query)})
+        if isinstance(self.llm, ChatOllama):
+            if "show me" in prompt.lower():
+                self.llm.format = "json"
+        response = self.chain.invoke({"query": structure_query(prompt)})
         return response["result"]
 
     def create_edges(self, edges):
@@ -206,16 +209,19 @@ class Neo4jImplementation(DatabaseInterface):
             print("Starting to import nodes...")
             start_time = time.time()
             nodes_batch = []
-            columns_of_interest = ["id", "category", "name"]
+            columns_of_interest = ["id", "category", "name", "description"]
 
             with open(nodes_filepath, "r") as nodes_file:
                 reader = csv.DictReader(nodes_file, delimiter="\t")
                 node_batch_loaded = 0
 
+                # Determine which label column to use
+                label_column = "name" if "name" in reader.fieldnames else "description"
+
                 for row in reader:
                     node_id = row[columns_of_interest[0]]
                     node_category = row[columns_of_interest[1]]
-                    node_label = row[columns_of_interest[2]]
+                    node_label = row[label_column]
                     nodes_batch.append({"id": node_id, "category": node_category, "label": node_label})
                     node_batch_loaded += 1
 

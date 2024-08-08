@@ -5,10 +5,8 @@ from pprint import pprint
 
 from langchain.memory import ConversationBufferMemory
 
-from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
-from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import extract_nodes_edges, structure_query, visualize_kg
+from kg_chat.utils import extract_nodes_edges, visualize_kg
 
 
 class KnowledgeGraphChat:
@@ -45,13 +43,8 @@ class KnowledgeGraphChat:
                     print("Exiting the interactive session.")
                     break
 
-                # Invoke the chain with the modified query
-                if isinstance(self.db, Neo4jImplementation):
-                    response = self.db.chain.invoke({"query": structure_query(prompt), "memory": self.memory})
-                    result = response["result"]
-                elif isinstance(self.db, DuckDBImplementation):
-                    response = self.db.agent.invoke(structure_query(prompt), memory=self.memory)
-                    result = response["output"]
+                response = self.get_structured_response(prompt)
+                result = response["output"] if "output" in response else response
 
                 # Store the query and response in memory
                 self.memory.chat_memory.add_user_message(prompt)
