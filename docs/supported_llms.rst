@@ -17,14 +17,16 @@ Supported LLMs
         We highly recommend using the 405B model for decent results.
 
 * Anthropic:
+    * `kg-chat` is using `claude-3-5-sonnet-20240620`
+
     .. note::
             The API key should be locally saved as an environment variable (`ANTHROPIC_API_KEY`).
         
-        * `kg-chat` is using `claude-3-5-sonnet-20240620`
 
 * CBORG by LBNL:
-    `kg-chat` also supports `models offered Lawrence Berkeley National Laboratory (via CBORG)<https://cborg.lbl.gov/models/>`.
+    * `kg-chat` also supports `models offered Lawrence Berkeley National Laboratory (via CBORG)<https://cborg.lbl.gov/models/>`.
+    * `kg-chat` is using `lbl/llama-3` which actually is llama3.1(405B).
+
     .. note::
             The API key should be locally saved as environment variable (`CBORG_API_KEY`).
         
-        * `kg-chat` is using `lbl/llama-3` which actually is llama3.1(405B).
