@@ -121,6 +121,8 @@ poetry add kg-chat@latest
 ### Visualization
 Use `show me` in prompts for KG visualization.
 
+![kg-app](src/kg_chat/assets/kg_app.png)
+
 ---
 ### Acknowledgements
 
