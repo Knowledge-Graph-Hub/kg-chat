@@ -80,10 +80,15 @@ def main(verbose: int, quiet: bool):
 @main.command()
 def list_models():
     """List the available language models."""
-    click.echo(f"OpenAI models: {get_openai_models()}")
-    click.echo(f"Anthropic models: {get_anthropic_models()}")
-    click.echo(f"Ollama models: {get_ollama_models()}")
-    click.echo(f"LBL-CBorg models: {get_lbl_cborg_models()}")
+    openai_models = "\n  ".join(get_openai_models())
+    anthropic_models = "\n  ".join(get_anthropic_models())
+    ollama_models = "\n  ".join(get_ollama_models())
+    lbl_cborg_models = "\n  ".join(get_lbl_cborg_models())
+
+    click.echo(f"OpenAI models:\n  {openai_models}")
+    click.echo(f"Anthropic models:\n  {anthropic_models}")
+    click.echo(f"Ollama models:\n  {ollama_models}")
+    click.echo(f"LBL-CBorg models:\n  {lbl_cborg_models}")
 
 
 @main.command("import")
