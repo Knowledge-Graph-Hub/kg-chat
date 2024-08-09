@@ -2,7 +2,13 @@
 
 LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink/kgx) nodes and edges TSV files loaded into either [`DuckDB`](https://github.com/duckdb/duckdb) (default) or [`neo4j`](https://github.com/neo4j/neo4j) database backend.
 
-Certainly! Here's a more concise version:
+## Quick overview
+| **LLM Provider**            | **Models**                                                                                   |
+|-----------------------------|----------------------------------------------------------------------------------------------|
+| OpenAI                      | - `gpt-4-1106-preview`<br>- `gpt-4-0125-preview`<br>- `gpt-4-turbo-preview`<br>- `gpt-4o-mini`<br>- `gpt-4o-mini-2024-07-18`<br>- `gpt-4-turbo-2024-04-09`<br>- `gpt-4-turbo`<br>- `gpt-4o-2024-08-06`<br>- `gpt-4o-2024-05-13`<br>- `gpt-4o`<br>- `gpt-4-0613`<br>- `gpt-4` |
+| Anthropic                   | - `claude-3-5-sonnet-20240620`<br>- `claude-3-opus-20240229`<br>- `claude-3-sonnet-20240229`<br>- `claude-3-haiku-20240307` |
+| Ollama                      | - `llama3.1:405b (recommended)`                                                                                 |
+| LBNL-hosted via CBORG       | - `lbl/llama-3`<br>- `openai/gpt-4o-mini`<br>- `anthropic/claude-haiku`<br>- `anthropic/claude-sonnet`<br>- `anthropic/claude-opus` |
 
 ## LLMs Supported
 
@@ -23,20 +29,6 @@ Certainly! Here's a more concise version:
 - **Models hosted by Lawrence Berkeley National Laboratory via CBORG**
   > **:warning:** Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
-  - The only LLMs that work for now:
-    - `lbl/llama-3` (actually llama3.1(405B))
-    - `openai/gpt-4o-mini`
-    - `anthropic/claude-haiku`
-    - `anthropic/claude-sonnet`
-    - `anthropic/claude-opus`
-
-## Quick overview
-| **LLM Provider**            | **Models**                                                                                   |
-|-----------------------------|----------------------------------------------------------------------------------------------|
-| OpenAI                      | - `gpt-4-1106-preview`<br>- `gpt-4-0125-preview`<br>- `gpt-4-turbo-preview`<br>- `gpt-4o-mini`<br>- `gpt-4o-mini-2024-07-18`<br>- `gpt-4-turbo-2024-04-09`<br>- `gpt-4-turbo`<br>- `gpt-4o-2024-08-06`<br>- `gpt-4o-2024-05-13`<br>- `gpt-4o`<br>- `gpt-4-0613`<br>- `gpt-4` |
-| Anthropic                   | - `claude-3-5-sonnet-20240620`<br>- `claude-3-opus-20240229`<br>- `claude-3-sonnet-20240229`<br>- `claude-3-haiku-20240307` |
-| Ollama                      | - `llama3.1:405b (recommended)`                                                                                 |
-| LBNL-hosted via CBORG       | - `lbl/llama-3`<br>- `openai/gpt-4o-mini`<br>- `anthropic/claude-haiku`<br>- `anthropic/claude-sonnet`<br>- `anthropic/claude-opus` |
 
 
 #### How to set the API key as an environment variable?
