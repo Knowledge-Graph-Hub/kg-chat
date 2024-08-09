@@ -13,14 +13,14 @@ Certainly! Here's a more concise version:
   > **:warning:** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
 - **Ollama**
-  > **:warning:** Currently throws error: `Invalid Format: Missing 'Action:' after 'Thought'` as of now. Work in progress...
+  > **:warning:** Better results if the 405b model is used. Needs GPU.
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
     ```shell
         ollama pull llama3.1 
     ```
-- **Models hosted by Lawrence Berkeley National Laboratory vi CBORG**
+- **Models hosted by Lawrence Berkeley National Laboratory via CBORG**
   > **:warning:** Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
   - The only LLMs that work for now:
