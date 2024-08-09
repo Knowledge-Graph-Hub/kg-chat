@@ -6,3 +6,8 @@ LLM-based chatbot that queries and visualizes `KGX <https://github.com/biolink/k
 .. note::
 
     This project assumes that you have ``OPENAI_API_KEY`` already set as an environment variable.
+
+
+.. image:: ../src/kg_chat/assets/kg_app.png
+    :alt: chat interface
+    :align: center
