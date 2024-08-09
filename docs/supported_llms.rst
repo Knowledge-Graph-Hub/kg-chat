@@ -27,7 +27,7 @@ Supported LLMs
         
 
 * CBORG by LBNL:
-    * `kg-chat` also supports `models offered Lawrence Berkeley National Laboratory (via CBORG)<https://cborg.lbl.gov/models/>`.
+    * `kg-chat` also supports `models offered Lawrence Berkeley National Laboratory (via CBORG) <https://cborg.lbl.gov/models/>`_.
     * `kg-chat` is using `lbl/llama-3` which actually is llama3.1(405B).
 
     .. note::
