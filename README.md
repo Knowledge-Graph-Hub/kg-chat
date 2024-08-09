@@ -18,7 +18,7 @@ Certainly! Here's a more concise version:
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
     ```shell
-        ollama pull llama3.1 
+        ollama run llama3.1:405b
     ```
 - **Models hosted by Lawrence Berkeley National Laboratory via CBORG**
   > **:warning:** Ensure `CBORG_API_KEY` is set as an environment variable.

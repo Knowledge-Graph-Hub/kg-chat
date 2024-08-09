@@ -12,14 +12,12 @@ Supported LLMs
 
         .. code-block:: bash
 
-            ollama pull llama3.1
-        
-    * ```kg-chat``` uses ```llama3.1``` by default.
+            ollama run llama3.1:405b
 
     .. note::
-        The default is the 7b model. The results are not very good with the 7b model.
-        We highly recommend using the 405B model for decent results.
-        Unless you have a powerful GPU, we do not recommend using this model.
+        The results are not very good with the 8b model.
+        We recommend using the 405b model for decent results.
+        GPU is recommended for faster results.
 
 * Anthropic:
     * ```kg-chat``` uses ```claude-3-5-sonnet-20240620``` by default.
