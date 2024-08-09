@@ -203,7 +203,7 @@ def llm_factory(config: LLMConfig):
 
 def get_openai_models():
     """Get the list of OpenAI models."""
-    models_list = []
+    sorted_model_ids = []
     if OPENAI_KEY != "None":
         openai = OpenAI()
         models_list = sorted(
