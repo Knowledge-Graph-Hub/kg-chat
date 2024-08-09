@@ -9,9 +9,9 @@ Supported LLMs
 * Ollama: 
     * For this you will have to download the `Ollama application <https://ollama.com/download>`_ and run it on your machine.
     * Then get the model of your choice by running the following command in the terminal:
-        ```
-        ollama pull llama3.1
-        ```
+        .. code:: bash
+            ollama pull llama3.1
+        
     * `kg-chat` is using `llama3.1`
 
     .. note::
