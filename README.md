@@ -19,7 +19,8 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
 - **Ollama**: Better results if the `llama 3.1 405b` model is used. Needs GPU.
   - No API key required.
   - Download the application from [here](https://ollama.com/download) and install it locally.
-  - Get any model of your choice. Here's an example:
+  - Get any model of your choice but make sure the model has the `Tools` badge for it to work.
+    Here's an example:
     ```shell
         ollama run llama3.1:405b
     ```
