@@ -13,7 +13,7 @@ Certainly! Here's a more concise version:
   > **:warning:** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
 - **Ollama**
-  > **:warning:** Better results if the 405b model is used. Needs GPU.
+  > **:warning:** Better results if the `llama 3.1 405b` model is used. Needs GPU.
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
