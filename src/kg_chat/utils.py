@@ -211,8 +211,8 @@ def get_openai_models():
             key=lambda x: x.created,
             reverse=True,
         )
-        sorted_model_ids = [model.id for model in models_list]
-    return sorted_model_ids
+        models_list = [model.id for model in models_list]
+    return models_list
 
 
 def get_anthropic_models():
