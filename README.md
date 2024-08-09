@@ -12,22 +12,18 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
 
 ## **:warning:**
 
-- **OpenAI**
-  > **:warning:** Ensure `OPENAI_API_KEY` is set as an environment variable.
+- **OpenAI**:  Ensure `OPENAI_API_KEY` is set as an environment variable.
 
-- **Anthropic**
-  > **:warning:** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
+- **Anthropic**:  Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
-- **Ollama**
-  > **:warning:** Better results if the `llama 3.1 405b` model is used. Needs GPU.
+- **Ollama**: Better results if the `llama 3.1 405b` model is used. Needs GPU.
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
   - Get any model of your choice. Here's an example:
     ```shell
         ollama run llama3.1:405b
     ```
-- **Models hosted by Lawrence Berkeley National Laboratory via CBORG**
-  > **:warning:** Ensure `CBORG_API_KEY` is set as an environment variable.
+- **Models hosted by Lawrence Berkeley National Laboratory via CBORG**: Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
 
 
