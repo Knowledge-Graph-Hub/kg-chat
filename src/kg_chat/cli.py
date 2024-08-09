@@ -88,7 +88,7 @@ def list_models():
     click.echo(f"OpenAI models:\n  {openai_models}")
     click.echo(f"Anthropic models:\n  {anthropic_models}")
     click.echo(f"Ollama models:\n  {ollama_models}")
-    click.echo(f"LBL-CBorg models:\n  {lbl_cborg_models}")
+    click.echo(f"LBL-CBORG models:\n  {lbl_cborg_models}")
 
 
 @main.command("import")
