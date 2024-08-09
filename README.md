@@ -33,6 +33,7 @@ One quick way is
 ```shell
     export OPENAI_API_KEY=XXXXXX
     export ANTHROPIC_API_KEY=XXXXX
+    export CBORG_API_KEY=XXXX
 ```
 But if you want these to persist permanently
 ```shell
