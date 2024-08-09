@@ -206,8 +206,13 @@ def get_openai_models():
     models_list = []
     if OPENAI_KEY != "None":
         openai = OpenAI()
-        models_list = [model.id for model in openai.models.list() if model.id.startswith("gpt-4")]
-    return models_list
+        models_list = sorted(
+            [model for model in openai.models.list() if model.id.startswith("gpt-4") and model.created >= 1706037777],
+            key=lambda x: x.created,
+            reverse=True,
+        )
+        sorted_model_ids = [model.id for model in models_list]
+    return sorted_model_ids
 
 
 def get_anthropic_models():
