@@ -7,13 +7,13 @@ Certainly! Here's a more concise version:
 ## LLMs Supported
 
 - **OpenAI**
-  > **:warning: NOTE:** Ensure `OPENAI_API_KEY` is set as an environment variable.
+  > **:warning: ** Ensure `OPENAI_API_KEY` is set as an environment variable.
 
 - **Anthropic**
-  > **:warning: NOTE:** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
+  > **:warning: ** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
 - **Ollama**
-  > **:warning: NOTE:** Currently throws error: `Invalid Format: Missing 'Action:' after 'Thought'` as of now. Work in progress...
+  > **:warning: ** Currently throws error: `Invalid Format: Missing 'Action:' after 'Thought'` as of now. Work in progress...
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
@@ -21,7 +21,7 @@ Certainly! Here's a more concise version:
         ollama pull llama3.1 
     ```
 - **Models hosted by Lawrence Berkeley National Laboratory vi CBORG**
-  > **:warning: NOTE:** Ensure `CBORG_API_KEY` is set as an environment variable.
+  > **:warning: ** Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
   - The only LLMs that work for now:
     - `lbl/llama-3` (actually llama3.1(405B))
@@ -98,7 +98,7 @@ poetry add kg-chat@latest
     ```
 
 2. **Test Query**: Run a test query. 
-   > **:warning: NOTE:** `--data-dir` is a required parameter for all commands. This is the path for the directory which contains the nodes.tsv and edges.tsv file. The filenames are expected to be exactly that.
+   > **:warning: ** `--data-dir` is a required parameter for all commands. This is the path for the directory which contains the nodes.tsv and edges.tsv file. The filenames are expected to be exactly that.
     ```shell
     poetry run kg test-query --data-dir data
     ```
