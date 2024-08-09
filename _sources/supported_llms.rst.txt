@@ -11,6 +11,7 @@ Supported LLMs
     * Then get the model of your choice by running the following command in the terminal:
 
         .. code-block:: bash
+            
             ollama pull llama3.1
         
     * `kg-chat` uses `llama3.1` by default.
