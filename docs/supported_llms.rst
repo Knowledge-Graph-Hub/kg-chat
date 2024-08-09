@@ -9,6 +9,7 @@ Supported LLMs
 * Ollama: 
     * For this you will have to download the `Ollama application <https://ollama.com/download>`_ and run it on your machine.
     * Then get the model of your choice by running the following command in the terminal:
+
         .. code-block:: bash
             ollama pull llama3.1
         
