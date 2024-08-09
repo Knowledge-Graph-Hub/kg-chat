@@ -25,7 +25,7 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
         ollama run llama3.1:405b
     ```
 - **Models hosted by Lawrence Berkeley National Laboratory via CBORG**: Ensure `CBORG_API_KEY` is set as an environment variable.
-  - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
+  - The list of modes can be found [here](https://cborg.lbl.gov/models/) listed under "LBNL_Hosted Models".
 
 
 #### How to set the API key as an environment variable?
