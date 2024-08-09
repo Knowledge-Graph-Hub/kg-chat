@@ -15,7 +15,9 @@ Supported LLMs
     * `kg-chat` is using `llama3.1`
 
     .. note::
-        We highly recommend using the 405B model for decent results. Unless you have a powerful GPU, we do not recommend using this model.
+        The default is the 7b model. The results are not very good with the 7b model.
+        We highly recommend using the 405B model for decent results.
+        Unless you have a powerful GPU, we do not recommend using this model.
 
 * Anthropic:
     * `kg-chat` is using `claude-3-5-sonnet-20240620`
