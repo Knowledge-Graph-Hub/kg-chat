@@ -230,8 +230,6 @@ def get_lbl_cborg_models():
     return [
         "lbl/llama-3",  # LBNL-hosted model (free to use)
         "openai/gpt-4o-mini",  # OpenAI-hosted model
-        # "google/gemini-1.5-flash",  # Google-hosted model
-        # "google/gemini-1.5-pro",  # Google-hosted model
         "anthropic/claude-haiku",  # Anthropic-hosted model
         "anthropic/claude-sonnet",  # Anthropic-hosted model
         "anthropic/claude-opus",  # Anthropic-hosted model
