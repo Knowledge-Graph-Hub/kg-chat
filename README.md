@@ -7,13 +7,13 @@ Certainly! Here's a more concise version:
 ## LLMs Supported
 
 - **OpenAI**
-  > **_NOTE:_** Ensure `OPENAI_API_KEY` is set as an environment variable.
+  > **:warning: NOTE:** Ensure `OPENAI_API_KEY` is set as an environment variable.
 
 - **Anthropic**
-  > **_NOTE:_** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
+  > **:warning: NOTE:** Ensure `ANTHROPIC_API_KEY` is set as an environment variable.
 
 - **Ollama**
-  > **_NOTE:_** Currently throws error: `Invalid Format: Missing 'Action:' after 'Thought'` as of now. Work in progress...
+  > **:warning: NOTE:** Currently throws error: `Invalid Format: Missing 'Action:' after 'Thought'` as of now. Work in progress...
   - No API key required.
   - Download the application from [here](https://ollama.com/download).
   - Get the model by running:
@@ -21,7 +21,7 @@ Certainly! Here's a more concise version:
         ollama pull llama3.1 
     ```
 - **Models hosted by Lawrence Berkeley National Laboratory vi CBORG**
-  > **_NOTE:_** Ensure `CBORG_API_KEY` is set as an environment variable.
+  > **:warning: NOTE:** Ensure `CBORG_API_KEY` is set as an environment variable.
   - The list of modes can be found (here)[https://cborg.lbl.gov/models/] listed under "LBNL_Hosted Models".
   - The only LLMs that work for now:
     - `lbl/llama-3` (actually llama3.1(405B))
