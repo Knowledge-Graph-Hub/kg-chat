@@ -9,7 +9,7 @@ LLM-based chatbot that queries and visualizes [`KGX`](https://github.com/biolink
 | OpenAI                      | - `gpt-4o-2024-08-06`<br>- `gpt-4o-mini`<br>- `gpt-4o-mini-2024-07-18`<br>- `gpt-4o-2024-05-13`<br>- `gpt-4o`<br>- `gpt-4-turbo-2024-04-09`<br>- `gpt-4-turbo`<br>- `gpt-4-turbo-preview` |
 | Anthropic                   | - `claude-3-5-sonnet-20240620`<br>- `claude-3-opus-20240229`<br>- `claude-3-sonnet-20240229`<br>- `claude-3-haiku-20240307` |
 | Ollama                      | - `llama3.1`                                                                                 |
-| [LBNL-hosted via CBORG](https://cborg.lbl.gov)      | - `lbl/llama-3`<br>- `openai/gpt-4o-mini`<br>- `anthropic/claude-haiku`<br>- `anthropic/claude-sonnet`<br>- `anthropic/claude-opus` |
+| [LBNL-hosted models via CBORG](https://cborg.lbl.gov)      | - `lbl/llama-3`<br>- `openai/gpt-4o-mini`<br>- `anthropic/claude-haiku`<br>- `anthropic/claude-sonnet`<br>- `anthropic/claude-opus` |
 
 
 ## **:warning:**
