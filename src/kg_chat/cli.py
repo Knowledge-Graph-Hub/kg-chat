@@ -45,7 +45,7 @@ data_dir_option = click.option(
 llm_provider_option = click.option(
     "--llm-provider",
     type=click.Choice(ALL_AVAILABLE_PROVIDERS, case_sensitive=False),
-    help="Language model to use.",
+    help="Language model provider to use.",
     required=False,
 )
 llm_option = click.option(
