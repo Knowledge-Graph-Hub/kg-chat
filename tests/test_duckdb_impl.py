@@ -3,6 +3,7 @@
 from unittest.mock import call
 
 import pytest
+
 from kg_chat.constants import TESTS_INPUT_DIR
 from kg_chat.implementations import DuckDBImplementation
 from kg_chat.utils import get_llm_config
