@@ -186,8 +186,6 @@ def llm_factory(config: LLMConfig):
             model=config.model, temperature=config.temperature, api_key=config.api_key, max_tokens_to_sample=4096
         )
     elif isinstance(config, CBORGConfig):
-        pass
-        # TODO Implement CBORG model
         from langchain_openai import ChatOpenAI
 
         return ChatOpenAI(
