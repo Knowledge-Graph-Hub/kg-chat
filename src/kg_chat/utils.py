@@ -232,10 +232,9 @@ def get_lbl_cborg_models():
     """Get the list of LBNL-hosted models via CBORG."""
     return [
         "lbl/llama-3",  # LBNL-hosted model (free to use)
-        "openai/gpt-4o-mini",  # OpenAI-hosted model
-        "anthropic/claude-haiku",  # Anthropic-hosted model
-        "anthropic/claude-sonnet",  # Anthropic-hosted model
-        "anthropic/claude-opus",  # Anthropic-hosted model
+        "openai/chatgpt:latest",  # OpenAI-hosted model
+        "anthropic/claude:latest",  # Anthropic-hosted model
+        "google/gemini:latest",  # Google-hosted model
     ]
 
 
