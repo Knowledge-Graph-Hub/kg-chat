@@ -12,12 +12,7 @@ from langchain_ollama import ChatOllama
 from neo4j import GraphDatabase
 
 from kg_chat.config.llm_config import LLMConfig
-from kg_chat.constants import (
-    DATALOAD_BATCH_SIZE,
-    NEO4J_PASSWORD,
-    NEO4J_URI,
-    NEO4J_USERNAME,
-)
+from kg_chat.constants import DATALOAD_BATCH_SIZE, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USERNAME
 from kg_chat.interface.database_interface import DatabaseInterface
 from kg_chat.utils import llm_factory, structure_query
 
