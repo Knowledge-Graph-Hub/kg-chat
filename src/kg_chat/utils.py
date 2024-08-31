@@ -231,10 +231,16 @@ def get_ollama_models():
 def get_lbl_cborg_models():
     """Get the list of LBNL-hosted models via CBORG."""
     return [
-        "lbl/llama-3",  # LBNL-hosted model (free to use)
-        "openai/chatgpt:latest",  # OpenAI-hosted model
-        "anthropic/claude:latest",  # Anthropic-hosted model
-        "google/gemini:latest",  # Google-hosted model
+        "lbl/cborg-chat:latest",  # LBL-hosted model
+        "lbl/cborg-chat-nano:latest",  # LBL-hosted model
+        "openai/gpt-3.5-turbo",
+        "openai/gpt-4o",
+        "openai/gpt-4o-mini",
+        "anthropic/claude-haiku",
+        "anthropic/claude-sonnet",
+        "anthropic/claude-opus",
+        "google/gemini-pro",
+        "google/gemini-flash",
     ]
 
 
