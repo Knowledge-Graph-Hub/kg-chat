@@ -8,6 +8,7 @@ from typing import Union
 
 import duckdb
 from langchain.agents.agent import AgentExecutor, AgentType
+from langchain.tools.retriever import create_retriever_tool
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_ollama import ChatOllama
@@ -15,13 +16,13 @@ from sqlalchemy import Engine, create_engine
 
 from kg_chat.config.llm_config import LLMConfig
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import get_agent_prompt_template, llm_factory, structure_query
+from kg_chat.utils import create_vectorstore, get_agent_prompt_template, llm_factory, structure_query
 
 
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
 
-    def __init__(self, data_dir: Union[Path, str], llm_config: LLMConfig):
+    def __init__(self, data_dir: Union[Path, str], llm_config: LLMConfig, doc_dir: Union[Path, str] = None):
         """Initialize the DuckDB database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
@@ -36,6 +37,13 @@ class DuckDBImplementation(DatabaseInterface):
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
+        self.tools = self.toolkit.get_tools()
+        if doc_dir:
+            vectorstore = create_vectorstore(doc_dir=doc_dir)
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
+            self.tools.append(rag_tool)
+
         self.agent: AgentExecutor = create_sql_agent(
             llm=self.llm,
             verbose=True,
@@ -45,7 +53,7 @@ class DuckDBImplementation(DatabaseInterface):
                 return_intermediate_steps=True,
                 handle_parsing_errors=True,
             ),
-            extra_tools=self.toolkit.get_tools(),
+            extra_tools=self.tools,
         )
 
     def toggle_safe_mode(self, enabled: bool):
@@ -93,10 +101,12 @@ class DuckDBImplementation(DatabaseInterface):
             if "show me" in prompt.lower():
                 self.llm.format = "json"
 
+            tool_names = [tool.name for tool in self.toolkit.get_tools()] + ["kg_retriever"]
+
             structured_query = get_agent_prompt_template().format(
                 input=prompt,
-                tools=self.toolkit.get_tools(),
-                tool_names=[tool.name for tool in self.toolkit.get_tools()],
+                tools=self.tools,
+                tool_names=tool_names,
                 agent_scratchpad=None,
             )
         else:

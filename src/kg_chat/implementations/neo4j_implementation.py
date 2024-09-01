@@ -6,6 +6,7 @@ from pathlib import Path
 from pprint import pprint
 from typing import Union
 
+from langchain.tools.retriever import create_retriever_tool
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
 from langchain_ollama import ChatOllama
@@ -14,7 +15,7 @@ from neo4j import GraphDatabase
 from kg_chat.config.llm_config import LLMConfig
 from kg_chat.constants import DATALOAD_BATCH_SIZE, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USERNAME
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import llm_factory, structure_query
+from kg_chat.utils import create_vectorstore, llm_factory, structure_query
 
 
 class Neo4jImplementation(DatabaseInterface):
@@ -23,6 +24,7 @@ class Neo4jImplementation(DatabaseInterface):
     def __init__(
         self,
         data_dir: Union[str, Path],
+        doc_dir: Union[str, Path] = None,
         uri: str = NEO4J_URI,
         username: str = NEO4J_USERNAME,
         password: str = NEO4J_PASSWORD,
@@ -35,6 +37,11 @@ class Neo4jImplementation(DatabaseInterface):
         self.graph = Neo4jGraph(url=uri, username=username, password=password)
         self.llm = llm_factory(llm_config)
         self.data_dir = Path(data_dir)
+        if doc_dir:
+            vectorstore = create_vectorstore(doc_dir=doc_dir)
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+            rag_tool = create_retriever_tool(retriever, "change_agent_retriever", "Change Agent Retriever")
+            self.tools.append(rag_tool)
 
         self.chain = GraphCypherQAChain.from_llm(
             graph=self.graph,

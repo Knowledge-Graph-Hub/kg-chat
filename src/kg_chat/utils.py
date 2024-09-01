@@ -1,10 +1,16 @@
 """Utility functions for the KG chatbot."""
 
+import logging
 import random
 import webbrowser
 from pathlib import Path
+from typing import Union
 
+from langchain_chroma import Chroma
+from langchain_core.documents import Document
 from langchain_core.prompts.prompt import PromptTemplate
+from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from openai import OpenAI
 from pyvis.network import Network
 
@@ -17,9 +23,12 @@ from kg_chat.constants import (
     OLLAMA_MODEL,
     OPEN_AI_MODEL,
     OPENAI_KEY,
+    VECTOR_DB_PATH,
+    VECTOR_STORE,
 )
 
 PREFIX_COLOR_MAP = {}
+logger = logging.getLogger(__name__)
 
 
 def extract_nodes_edges(structured_result):
@@ -155,16 +164,16 @@ def get_llm_config(llm_provider: str, llm_model: str = None):
         raise ValueError(f"Model {llm_model} not supported.")
 
 
-def get_database_impl(database: str, data_dir: str, llm_config):
+def get_database_impl(database: str, data_dir: str, doc_dir: str, llm_config):
     """Get the database implementation based on the selected database."""
     if database == "neo4j":
         from kg_chat.implementations.neo4j_implementation import Neo4jImplementation
 
-        return Neo4jImplementation(data_dir=data_dir, llm_config=llm_config)
+        return Neo4jImplementation(data_dir=data_dir, doc_dir=doc_dir, llm_config=llm_config)
     elif database == "duckdb":
         from kg_chat.implementations.duckdb_implementation import DuckDBImplementation
 
-        return DuckDBImplementation(data_dir=data_dir, llm_config=llm_config)
+        return DuckDBImplementation(data_dir=data_dir, doc_dir=doc_dir, llm_config=llm_config)
     else:
         raise ValueError(f"Database {database} not supported.")
 
@@ -335,3 +344,42 @@ def visualize_kg(nodes, edges, app: bool = False, output_dir: str = None):
     if app:
         # Generate the HTML representation
         return net.generate_html()
+
+
+def split_documents(path):
+    """Get the local documents."""
+    if Path(path).is_file():
+        with open(path, "r") as doc_file:
+            print(f"Reading from file: {path}")
+            doc_object = (Document(page_content=doc_file.read()),)
+            splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(chunk_size=300, chunk_overlap=50)
+            splits = splitter.split_documents(doc_object)
+            return splits
+
+
+def create_vectorstore(doc_dir: Union[Path, str]) -> Chroma:
+    """Create a vectorstore from the documents in the doc_dir."""
+    if VECTOR_DB_PATH.exists():
+        logger.info("Vector database path exists. Loading vectorstore from Chroma.")
+        vectorstore = Chroma(
+            embedding_function=OpenAIEmbeddings(show_progress_bar=True), persist_directory=str(VECTOR_STORE)
+        )
+    else:
+        logger.info("Vector database path does not exist. Loading ontology documents.")
+        doc_dir_path = Path(doc_dir)
+        list_of_documents = []
+
+        if not doc_dir_path.is_dir():
+            raise ValueError(f"The provided path {doc_dir} is not a directory.")
+
+        for doc_path in doc_dir_path.rglob("*"):
+            if doc_path.is_file():
+                # Process each file here
+                list_of_documents += split_documents(doc_path) if split_documents(doc_path) else []
+        vectorstore = Chroma.from_documents(
+            documents=list_of_documents,
+            embedding=OpenAIEmbeddings(show_progress_bar=True),
+            persist_directory=str(VECTOR_STORE),
+        )
+        logger.info("Vectorstore created from documents.")
+    return vectorstore

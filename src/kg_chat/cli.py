@@ -42,6 +42,13 @@ data_dir_option = click.option(
     help="Directory containing the data.",
     required=True,
 )
+doc_dir_option = click.option(
+    "--doc-dir",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+    help="Directory containing the documents.",
+    required=False,
+    default=None,
+)
 llm_provider_option = click.option(
     "--llm-provider",
     type=click.Choice(ALL_AVAILABLE_PROVIDERS, case_sensitive=False),
@@ -94,13 +101,14 @@ def list_models():
 @main.command("import")
 @database_options
 @data_dir_option
+@doc_dir_option
 @llm_provider_option
-def import_kg(database: str = "duckdb", data_dir: str = None, llm_provider: str = "openai"):
+def import_kg(database: str = "duckdb", data_dir: str = None, doc_dir: str = None, llm_provider: str = "openai"):
     """Run the kg-chat's import command."""
     if not data_dir:
         raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
     config = get_llm_config(llm_provider)
-    impl = get_database_impl(database, data_dir=data_dir, llm_config=config)
+    impl = get_database_impl(database, data_dir=data_dir, doc_dir=doc_dir, llm_config=config)
     impl.load_kg()
 
 

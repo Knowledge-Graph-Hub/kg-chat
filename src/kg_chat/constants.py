@@ -25,3 +25,7 @@ DATALOAD_BATCH_SIZE = 5000  # Adjust the batch size as needed
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USERNAME = "neo4j"
 NEO4J_PASSWORD = "password"
+
+
+VECTOR_STORE = PROJ_DIR / "vector_store"
+VECTOR_DB_PATH = VECTOR_STORE / "chroma.sqlite3"
