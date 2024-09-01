@@ -1,6 +1,7 @@
 """Implementation of the DatabaseInterface for Neo4j."""
 
 import csv
+import logging
 import time
 from pathlib import Path
 from pprint import pprint
@@ -13,9 +14,11 @@ from langchain_ollama import ChatOllama
 from neo4j import GraphDatabase
 
 from kg_chat.config.llm_config import LLMConfig
-from kg_chat.constants import DATALOAD_BATCH_SIZE, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USERNAME
+from kg_chat.constants import DATALOAD_BATCH_SIZE, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USERNAME, VECTOR_DB_PATH
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import create_vectorstore, llm_factory, structure_query
+from kg_chat.utils import create_vectorstore, get_exisiting_vectorstore, llm_factory, structure_query
+
+logger = logging.getLogger(__name__)
 
 
 class Neo4jImplementation(DatabaseInterface):
@@ -24,7 +27,7 @@ class Neo4jImplementation(DatabaseInterface):
     def __init__(
         self,
         data_dir: Union[str, Path],
-        doc_dir: Union[str, Path] = None,
+        doc_dir_or_file: Union[str, Path] = None,
         uri: str = NEO4J_URI,
         username: str = NEO4J_USERNAME,
         password: str = NEO4J_PASSWORD,
@@ -36,12 +39,22 @@ class Neo4jImplementation(DatabaseInterface):
         self.driver = GraphDatabase.driver(uri, auth=(username, password))
         self.graph = Neo4jGraph(url=uri, username=username, password=password)
         self.llm = llm_factory(llm_config)
+        self.tools = []
         self.data_dir = Path(data_dir)
-        if doc_dir:
-            vectorstore = create_vectorstore(doc_dir=doc_dir)
+        if VECTOR_DB_PATH.exists() and get_exisiting_vectorstore():
+            vectorstore = get_exisiting_vectorstore()
             retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
-            rag_tool = create_retriever_tool(retriever, "change_agent_retriever", "Change Agent Retriever")
+            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
             self.tools.append(rag_tool)
+        elif doc_dir_or_file:
+            vectorstore = create_vectorstore(doc_dir_or_file=doc_dir_or_file)
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
+            self.tools.append(rag_tool)
+        else:
+            logger.info("No vectorstore found or documents provided. Skipping RAG tool creation.")
+
+        self.tool_names = [tool.name for tool in self.tools]
 
         self.chain = GraphCypherQAChain.from_llm(
             graph=self.graph,

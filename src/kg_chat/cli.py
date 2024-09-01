@@ -1,6 +1,7 @@
 """Command line interface for kg-chat."""
 
 import logging
+import shutil
 from pathlib import Path
 from pprint import pprint
 from typing import Union
@@ -9,7 +10,7 @@ import click
 
 from kg_chat import __version__
 from kg_chat.app import create_app
-from kg_chat.constants import OPEN_AI_MODEL
+from kg_chat.constants import OPEN_AI_MODEL, VECTOR_DB_PATH, VECTOR_STORE
 from kg_chat.main import KnowledgeGraphChat
 from kg_chat.utils import (
     get_anthropic_models,
@@ -42,10 +43,10 @@ data_dir_option = click.option(
     help="Directory containing the data.",
     required=True,
 )
-doc_dir_option = click.option(
-    "--doc-dir",
+docs_option = click.option(
+    "--docs",
     type=click.Path(exists=True, file_okay=False, dir_okay=True),
-    help="Directory containing the documents.",
+    help="Path to a document or directory of only documents.",
     required=False,
     default=None,
 )
@@ -101,14 +102,19 @@ def list_models():
 @main.command("import")
 @database_options
 @data_dir_option
-@doc_dir_option
+@docs_option
 @llm_provider_option
-def import_kg(database: str = "duckdb", data_dir: str = None, doc_dir: str = None, llm_provider: str = "openai"):
+def import_kg(database: str = "duckdb", data_dir: str = None, docs: str = None, llm_provider: str = "openai"):
     """Run the kg-chat's import command."""
-    if not data_dir:
-        raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
+    if docs and VECTOR_DB_PATH.exists():
+        for item in VECTOR_STORE.iterdir():
+            if item.is_dir():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
+
     config = get_llm_config(llm_provider)
-    impl = get_database_impl(database, data_dir=data_dir, doc_dir=doc_dir, llm_config=config)
+    impl = get_database_impl(database, data_dir=data_dir, doc_dir_or_file=docs, llm_config=config)
     impl.load_kg()
 
 
