@@ -50,12 +50,14 @@ class DuckDBImplementation(DatabaseInterface):
         if VECTOR_DB_PATH.exists() and get_exisiting_vectorstore():
             vectorstore = get_exisiting_vectorstore()
             retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
-            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
+            rag_tool = create_retriever_tool(retriever, "VectorStoreRetriever", "Vector Store Retriever")
+
             self.tools.append(rag_tool)
         elif doc_dir_or_file:
             vectorstore = create_vectorstore(doc_dir_or_file=doc_dir_or_file)
             retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
-            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
+            rag_tool = create_retriever_tool(retriever, "VectorStoreRetriever", "Vector Store Retriever")
+
             self.tools.append(rag_tool)
         else:
             logger.info("No vectorstore found or documents provided. Skipping RAG tool creation.")
@@ -126,7 +128,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         #     tool_names = [tool.name for tool in self.toolkit.get_tools()] + ["kg_retriever"]
 
-        #     structured_query = get_agent_prompt_template().format(
+        #     structured_query = get_sql_agent_prompt_template().format(
         #         input=prompt,
         #         tools=self.tools,
         #         tool_names=tool_names,

@@ -7,6 +7,8 @@ from pathlib import Path
 from pprint import pprint
 from typing import Union
 
+from langchain.agents import Tool
+from langchain.agents.initialize import initialize_agent
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
@@ -16,7 +18,13 @@ from neo4j import GraphDatabase
 from kg_chat.config.llm_config import LLMConfig
 from kg_chat.constants import DATALOAD_BATCH_SIZE, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USERNAME, VECTOR_DB_PATH
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import create_vectorstore, get_exisiting_vectorstore, llm_factory, structure_query
+from kg_chat.utils import (
+    create_vectorstore,
+    get_cypher_agent_prompt_template,
+    get_exisiting_vectorstore,
+    llm_factory,
+    structure_query,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,19 +52,18 @@ class Neo4jImplementation(DatabaseInterface):
         if VECTOR_DB_PATH.exists() and get_exisiting_vectorstore():
             vectorstore = get_exisiting_vectorstore()
             retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
-            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
+            rag_tool = create_retriever_tool(retriever, "VectorStoreRetriever", "Vector Store Retriever")
+
             self.tools.append(rag_tool)
         elif doc_dir_or_file:
             vectorstore = create_vectorstore(doc_dir_or_file=doc_dir_or_file)
             retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
-            rag_tool = create_retriever_tool(retriever, "kg_retriever", "Knowledge Graph Retriever")
+            rag_tool = create_retriever_tool(retriever, "VectorStoreRetriever", "Vector Store Retriever")
             self.tools.append(rag_tool)
         else:
             logger.info("No vectorstore found or documents provided. Skipping RAG tool creation.")
 
-        self.tool_names = [tool.name for tool in self.tools]
-
-        self.chain = GraphCypherQAChain.from_llm(
+        graph_cypher_qa_chain = GraphCypherQAChain.from_llm(
             graph=self.graph,
             llm=self.llm,
             verbose=True,
@@ -64,7 +71,27 @@ class Neo4jImplementation(DatabaseInterface):
             # function_response_system="Respond as a Data Scientist!",
             validate_cypher=True,
         )
+        graph_cypher_qa_chain_tool = Tool(
+            name="GraphCypherQAChain",
+            description="Graph Cypher QA Chain",
+            func=graph_cypher_qa_chain.run,
+        )
+
+        self.tools.append(graph_cypher_qa_chain_tool)
+        self.tool_names = [tool.name for tool in self.tools]
         self.safe_mode = True
+        self.agent_executor = initialize_agent(
+            llm=self.llm,
+            tools=self.tools,
+            prompt=get_cypher_agent_prompt_template(),
+            handle_parsing_errors=True,
+            verbose=True,
+        )
+
+        # self.agent_executor = AgentExecutor(
+        #     agent=self.agent, tools=self.tools, handle_parsing_errors=True, verbose=True
+        # )
+        logger.info("Agent executor created successfully.")
 
     def toggle_safe_mode(self, enabled: bool):
         """Toggle safe mode on or off."""
@@ -146,17 +173,32 @@ class Neo4jImplementation(DatabaseInterface):
 
     def get_human_response(self, prompt: str):
         """Get a human response from the Neo4j database."""
-        human_response = self.chain.invoke({"query": prompt})
-        pprint(human_response["result"])
-        return human_response["result"]
+        # human_response = self.chain.invoke({"query": prompt})
+        human_response = self.agent_executor.invoke(
+            {
+                "input": prompt,
+                "tools": self.tools,
+                "tool_names": self.tool_names,
+            }
+        )
+
+        pprint(human_response["output"])
+        return human_response["output"]
 
     def get_structured_response(self, prompt: str):
         """Get a structured response from the Neo4j database."""
         if isinstance(self.llm, ChatOllama):
             if "show me" in prompt.lower():
                 self.llm.format = "json"
-        response = self.chain.invoke({"query": structure_query(prompt)})
-        return response["result"]
+        # response = self.chain.invoke({"query": structure_query(prompt)})
+        response = self.agent_executor.invoke(
+            {
+                "input": structure_query(prompt),
+                "tools": self.tools,
+                "tool_names": self.tool_names,
+            }
+        )
+        return response["output"]
 
     def create_edges(self, edges):
         """Create relationships between nodes."""
