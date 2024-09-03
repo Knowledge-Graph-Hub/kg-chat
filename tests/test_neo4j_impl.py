@@ -12,8 +12,12 @@ LLM_CONFIG = get_llm_config("openai")
 
 
 @pytest.fixture
-def neo4j_impl():
+@patch("neo4j.GraphDatabase.driver")
+@patch("langchain_community.graphs.Neo4jGraph")
+def neo4j_impl(mock_neo4j_graph, mock_driver):
     """Fixture to initialize Neo4jImplementation with mocks."""
+    mock_neo4j_graph.return_value = MagicMock()
+    mock_driver.return_value = MagicMock()
     return Neo4jImplementation(data_dir=TESTS_INPUT_DIR, llm_config=LLM_CONFIG)
 
 
