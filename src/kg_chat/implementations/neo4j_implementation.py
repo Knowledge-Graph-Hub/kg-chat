@@ -1,6 +1,7 @@
 """Implementation of the DatabaseInterface for Neo4j."""
 
 import csv
+import json
 import logging
 import time
 from pathlib import Path
@@ -8,7 +9,6 @@ from pprint import pprint
 from typing import Union
 
 from langchain.agents import Tool
-from langchain.agents.initialize import initialize_agent
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
@@ -25,6 +25,15 @@ from kg_chat.utils import (
     llm_factory,
     structure_query,
 )
+
+from typing import Any, Optional, Sequence
+from langchain_core.callbacks import BaseCallbackManager
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.tools import BaseTool
+
+from langchain.agents.agent import AgentExecutor
+from langchain.agents.agent_types import AgentType
+from langchain.agents.loading import AGENT_TO_CLASS, load_agent
 
 logger = logging.getLogger(__name__)
 
@@ -74,13 +83,13 @@ class Neo4jImplementation(DatabaseInterface):
         graph_cypher_qa_chain_tool = Tool(
             name="GraphCypherQAChain",
             description="Graph Cypher QA Chain",
-            func=graph_cypher_qa_chain.run,
+            func=graph_cypher_qa_chain.invoke,
         )
 
         self.tools.append(graph_cypher_qa_chain_tool)
         self.tool_names = [tool.name for tool in self.tools]
         self.safe_mode = True
-        self.agent_executor = initialize_agent(
+        self.agent_executor = self.initialize_agent(
             llm=self.llm,
             tools=self.tools,
             prompt=get_cypher_agent_prompt_template(),
@@ -92,6 +101,85 @@ class Neo4jImplementation(DatabaseInterface):
         #     agent=self.agent, tools=self.tools, handle_parsing_errors=True, verbose=True
         # )
         logger.info("Agent executor created successfully.")
+
+    # ! Adoped from langchain.agents.initialize.initialize_agent since it'll be deprecated 1.0 onwards.
+    # ! This works and `create_react_agent` which is the alternative doesn't work.
+    @staticmethod
+    def initialize_agent(
+        tools: Sequence[BaseTool],
+        llm: BaseLanguageModel,
+        agent: Optional[AgentType] = None,
+        callback_manager: Optional[BaseCallbackManager] = None,
+        agent_path: Optional[str] = None,
+        agent_kwargs: Optional[dict] = None,
+        *,
+        tags: Optional[Sequence[str]] = None,
+        **kwargs: Any,
+    ) -> AgentExecutor:
+        """
+        Load an agent executor given tools and LLM.
+
+        :param tools: List of tools this agent has access to.
+        :param llm: Language model to use as the agent.
+        :param agent: Agent type to use. If None and agent_path is also None, will default
+                    to AgentType.ZERO_SHOT_REACT_DESCRIPTION. Defaults to None.
+        :param callback_manager: CallbackManager to use. Global callback manager is used if
+                                not provided. Defaults to None.
+        :param agent_path: Path to serialized agent to use. If None and agent is also None,
+                        will default to AgentType.ZERO_SHOT_REACT_DESCRIPTION. Defaults to None.
+        :param agent_kwargs: Additional keyword arguments to pass to the underlying agent.
+                            Defaults to None.
+        :param tags: Tags to apply to the traced runs. Defaults to None.
+        :param kwargs: Additional keyword arguments passed to the agent executor.
+
+        :returns: An agent executor.
+
+        :raises ValueError: If both `agent` and `agent_path` are specified.
+        :raises ValueError: If `agent` is not a valid agent type.
+        :raises ValueError: If both `agent` and `agent_path` are None.
+        """
+        tags_ = list(tags) if tags else []
+        if agent is None and agent_path is None:
+            agent = AgentType.ZERO_SHOT_REACT_DESCRIPTION
+        if agent is not None and agent_path is not None:
+            raise ValueError(
+                "Both `agent` and `agent_path` are specified, "
+                "but at most only one should be."
+            )
+        if agent is not None:
+            if agent not in AGENT_TO_CLASS:
+                raise ValueError(
+                    f"Got unknown agent type: {agent}. "
+                    f"Valid types are: {AGENT_TO_CLASS.keys()}."
+                )
+            tags_.append(agent.value if isinstance(agent, AgentType) else agent)
+            agent_cls = AGENT_TO_CLASS[agent]
+            agent_kwargs = agent_kwargs or {}
+            agent_obj = agent_cls.from_llm_and_tools(
+                llm, tools, callback_manager=callback_manager, **agent_kwargs
+            )
+        elif agent_path is not None:
+            agent_obj = load_agent(
+                agent_path, llm=llm, tools=tools, callback_manager=callback_manager
+            )
+            try:
+                # TODO: Add tags from the serialized object directly.
+                tags_.append(agent_obj._agent_type)
+            except NotImplementedError:
+                pass
+        else:
+            raise ValueError(
+                "Somehow both `agent` and `agent_path` are None, "
+                "this should never happen."
+            )
+
+        return AgentExecutor.from_agent_and_tools(
+            agent=agent_obj,
+            tools=tools,
+            callback_manager=callback_manager,
+            tags=tags_,
+            **kwargs,
+        )
 
     def toggle_safe_mode(self, enabled: bool):
         """Toggle safe mode on or off."""
@@ -338,3 +426,5 @@ class Neo4jImplementation(DatabaseInterface):
         """Ensure the driver is closed when the object is destroyed."""
         if hasattr(self, "driver"):
             self.driver.close()
+
+
