@@ -1,17 +1,22 @@
 """Implementation of the DatabaseInterface for Neo4j."""
 
 import csv
-import json
 import logging
 import time
 from pathlib import Path
 from pprint import pprint
-from typing import Union
+from typing import Any, Optional, Sequence, Union
 
 from langchain.agents import Tool
+from langchain.agents.agent import AgentExecutor
+from langchain.agents.agent_types import AgentType
+from langchain.agents.loading import AGENT_TO_CLASS, load_agent
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.chains.graph_qa.cypher import GraphCypherQAChain
 from langchain_community.graphs import Neo4jGraph
+from langchain_core.callbacks import BaseCallbackManager
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.tools import BaseTool
 from langchain_ollama import ChatOllama
 from neo4j import GraphDatabase
 
@@ -25,15 +30,6 @@ from kg_chat.utils import (
     llm_factory,
     structure_query,
 )
-
-from typing import Any, Optional, Sequence
-from langchain_core.callbacks import BaseCallbackManager
-from langchain_core.language_models import BaseLanguageModel
-from langchain_core.tools import BaseTool
-
-from langchain.agents.agent import AgentExecutor
-from langchain.agents.agent_types import AgentType
-from langchain.agents.loading import AGENT_TO_CLASS, load_agent
 
 logger = logging.getLogger(__name__)
 
@@ -142,36 +138,23 @@ class Neo4jImplementation(DatabaseInterface):
         if agent is None and agent_path is None:
             agent = AgentType.ZERO_SHOT_REACT_DESCRIPTION
         if agent is not None and agent_path is not None:
-            raise ValueError(
-                "Both `agent` and `agent_path` are specified, "
-                "but at most only one should be."
-            )
+            raise ValueError("Both `agent` and `agent_path` are specified, " "but at most only one should be.")
         if agent is not None:
             if agent not in AGENT_TO_CLASS:
-                raise ValueError(
-                    f"Got unknown agent type: {agent}. "
-                    f"Valid types are: {AGENT_TO_CLASS.keys()}."
-                )
+                raise ValueError(f"Got unknown agent type: {agent}. " f"Valid types are: {AGENT_TO_CLASS.keys()}.")
             tags_.append(agent.value if isinstance(agent, AgentType) else agent)
             agent_cls = AGENT_TO_CLASS[agent]
             agent_kwargs = agent_kwargs or {}
-            agent_obj = agent_cls.from_llm_and_tools(
-                llm, tools, callback_manager=callback_manager, **agent_kwargs
-            )
+            agent_obj = agent_cls.from_llm_and_tools(llm, tools, callback_manager=callback_manager, **agent_kwargs)
         elif agent_path is not None:
-            agent_obj = load_agent(
-                agent_path, llm=llm, tools=tools, callback_manager=callback_manager
-            )
+            agent_obj = load_agent(agent_path, llm=llm, tools=tools, callback_manager=callback_manager)
             try:
                 # TODO: Add tags from the serialized object directly.
                 tags_.append(agent_obj._agent_type)
             except NotImplementedError:
                 pass
         else:
-            raise ValueError(
-                "Somehow both `agent` and `agent_path` are None, "
-                "this should never happen."
-            )
+            raise ValueError("Somehow both `agent` and `agent_path` are None, " "this should never happen.")
 
         return AgentExecutor.from_agent_and_tools(
             agent=agent_obj,
@@ -426,5 +409,3 @@ class Neo4jImplementation(DatabaseInterface):
         """Ensure the driver is closed when the object is destroyed."""
         if hasattr(self, "driver"):
             self.driver.close()
-
-
