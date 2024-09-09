@@ -294,15 +294,15 @@ class DuckDBImplementation(DatabaseInterface):
         with open(edges_filepath, "r") as edges_file:
             header_line = edges_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in edge_column_of_interest}
-
             with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_edges_file:
                 temp_edges_file.write("\t".join(edge_column_of_interest) + "\n")
                 for line in edges_file:
                     columns = line.strip().split("\t")
-                    subject = columns[column_indexes["subject"]]
-                    predicate = columns[column_indexes["predicate"]]
-                    object = columns[column_indexes["object"]]
-                    temp_edges_file.write(f"{subject}\t{predicate}\t{object}\n")
+                    if len(columns) == (max(column_indexes.values()) + 1):
+                        subject = columns[column_indexes["subject"]]
+                        predicate = columns[column_indexes["predicate"]]
+                        object = columns[column_indexes["object"]]
+                        temp_edges_file.write(f"{subject}\t{predicate}\t{object}\n")
                 temp_edges_file.flush()
 
                 # Load data from temporary file into DuckDB
