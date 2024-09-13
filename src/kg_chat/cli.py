@@ -45,7 +45,7 @@ data_dir_option = click.option(
 )
 docs_option = click.option(
     "--docs",
-    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+    type=click.Path(exists=True, file_okay=True, dir_okay=True),
     help="Path to a document or directory of only documents.",
     required=False,
     default=None,
