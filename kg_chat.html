@@ -71,16 +71,20 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-kg_chat.utils">kg_chat.utils module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.assign_color_to_prefix"><code class="docutils literal notranslate"><span class="pre">assign_color_to_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.create_vectorstore"><code class="docutils literal notranslate"><span class="pre">create_vectorstore()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.extract_nodes_edges"><code class="docutils literal notranslate"><span class="pre">extract_nodes_edges()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.generate_random_color"><code class="docutils literal notranslate"><span class="pre">generate_random_color()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_agent_prompt_template"><code class="docutils literal notranslate"><span class="pre">get_agent_prompt_template()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_anthropic_models"><code class="docutils literal notranslate"><span class="pre">get_anthropic_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_cypher_agent_prompt_template"><code class="docutils literal notranslate"><span class="pre">get_cypher_agent_prompt_template()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_database_impl"><code class="docutils literal notranslate"><span class="pre">get_database_impl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_exisiting_vectorstore"><code class="docutils literal notranslate"><span class="pre">get_exisiting_vectorstore()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_lbl_cborg_models"><code class="docutils literal notranslate"><span class="pre">get_lbl_cborg_models()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_llm_config"><code class="docutils literal notranslate"><span class="pre">get_llm_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_ollama_models"><code class="docutils literal notranslate"><span class="pre">get_ollama_models()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_openai_models"><code class="docutils literal notranslate"><span class="pre">get_openai_models()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.get_sql_agent_prompt_template"><code class="docutils literal notranslate"><span class="pre">get_sql_agent_prompt_template()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.llm_factory"><code class="docutils literal notranslate"><span class="pre">llm_factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.split_documents"><code class="docutils literal notranslate"><span class="pre">split_documents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.structure_query"><code class="docutils literal notranslate"><span class="pre">structure_query()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kg_chat.utils.visualize_kg"><code class="docutils literal notranslate"><span class="pre">visualize_kg()</span></code></a></li>
 </ul>
@@ -154,6 +158,7 @@
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_unsafe_operation()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.get_human_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_human_response()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.get_structured_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.initialize_agent"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.initialize_agent()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.is_safe_command"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.is_safe_command()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.load_kg"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.load_kg()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.neo4j_implementation.Neo4jImplementation.show_schema"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.show_schema()</span></code></a></li>
@@ -188,6 +193,7 @@
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.execute_unsafe_operation"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.execute_unsafe_operation()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.get_human_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_human_response()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.get_structured_response"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.get_structured_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.initialize_agent"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.initialize_agent()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.is_safe_command"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.is_safe_command()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.load_kg"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.load_kg()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="kg_chat.implementations.html#kg_chat.implementations.Neo4jImplementation.show_schema"><code class="docutils literal notranslate"><span class="pre">Neo4jImplementation.show_schema()</span></code></a></li>
@@ -313,6 +319,17 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.create_vectorstore">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">create_vectorstore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_dir_or_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.create_vectorstore" title="Link to this definition"></a></dt>
+<dd><p>Create a vectorstore from the documents in the doc_dir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Chroma</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.extract_nodes_edges">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">extract_nodes_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">structured_result</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.extract_nodes_edges" title="Link to this definition"></a></dt>
 <dd><p>Extract nodes and edges from the structured result.</p>
@@ -325,21 +342,27 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="kg_chat.utils.get_agent_prompt_template">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_agent_prompt_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_agent_prompt_template" title="Link to this definition"></a></dt>
-<dd><p>Get the agent prompt.</p>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.get_anthropic_models">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_anthropic_models</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_anthropic_models" title="Link to this definition"></a></dt>
 <dd><p>Get the list of Anthropic models.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_cypher_agent_prompt_template">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_cypher_agent_prompt_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_cypher_agent_prompt_template" title="Link to this definition"></a></dt>
+<dd><p>Get the agent prompt for querying a Neo4J database.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.get_database_impl">
-<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_database_impl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_database_impl" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_database_impl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc_dir_or_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_database_impl" title="Link to this definition"></a></dt>
 <dd><p>Get the database implementation based on the selected database.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_exisiting_vectorstore">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_exisiting_vectorstore</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_exisiting_vectorstore" title="Link to this definition"></a></dt>
+<dd><p>Get the existing vectorstore.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -367,15 +390,32 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.get_sql_agent_prompt_template">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">get_sql_agent_prompt_template</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.get_sql_agent_prompt_template" title="Link to this definition"></a></dt>
+<dd><p>Get the agent prompt.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.llm_factory">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">llm_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.llm_factory" title="Link to this definition"></a></dt>
 <dd><p>Create an LLM instance based on the configuration.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="kg_chat.utils.split_documents">
+<span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">split_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.split_documents" title="Link to this definition"></a></dt>
+<dd><p>Get the local documents.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="kg_chat.utils.structure_query">
 <span class="sig-prename descclassname"><span class="pre">kg_chat.utils.</span></span><span class="sig-name descname"><span class="pre">structure_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kg_chat.utils.structure_query" title="Link to this definition"></a></dt>
 <dd><p>Structure the query to request structured results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
