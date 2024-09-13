@@ -291,9 +291,9 @@ def get_lbl_cborg_models():
         "lbl/cborg-chat:latest",  # LBL-hosted model
         "lbl/cborg-chat-nano:latest",  # LBL-hosted model
         "lbl/cborg-coder:latest",  # LBL-hosted model
-        "openai/chatgpt:latest", # LBL cloud-hosted model
-        "anthropic/claude:latest", # LBL cloud-hosted model
-        "google/gemini:latest", # LBL cloud-hosted model
+        "openai/chatgpt:latest",  # LBL cloud-hosted model
+        "anthropic/claude:latest",  # LBL cloud-hosted model
+        "google/gemini:latest",  # LBL cloud-hosted model
     ]
 
 
