@@ -17,7 +17,7 @@ CBORG_API_KEY = str(getenv("CBORG_API_KEY"))
 OPEN_AI_MODEL = "gpt-4o-mini"
 ANTHROPIC_MODEL = "claude-3-5-sonnet-20240620"
 OLLAMA_MODEL = "llama3.1"  #!  not all models support tools (tool calling)
-CBORG_MODEL = "lbl/llama-3"
+CBORG_MODEL = "anthropic/claude:latest"
 
 DATALOAD_BATCH_SIZE = 5000  # Adjust the batch size as needed
 
@@ -25,3 +25,7 @@ DATALOAD_BATCH_SIZE = 5000  # Adjust the batch size as needed
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USERNAME = "neo4j"
 NEO4J_PASSWORD = "password"
+
+
+VECTOR_STORE = PROJ_DIR / "vector_store"
+VECTOR_DB_PATH = VECTOR_STORE / "chroma.sqlite3"

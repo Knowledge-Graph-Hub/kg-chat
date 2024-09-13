@@ -1,5 +1,6 @@
 """Implementation of the DatabaseInterface for DuckDB."""
 
+import logging
 import tempfile
 import time
 from pathlib import Path
@@ -8,20 +9,29 @@ from typing import Union
 
 import duckdb
 from langchain.agents.agent import AgentExecutor, AgentType
+from langchain.tools.retriever import create_retriever_tool
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_ollama import ChatOllama
 from sqlalchemy import Engine, create_engine
 
 from kg_chat.config.llm_config import LLMConfig
+from kg_chat.constants import VECTOR_DB_PATH
 from kg_chat.interface.database_interface import DatabaseInterface
-from kg_chat.utils import get_agent_prompt_template, llm_factory, structure_query
+from kg_chat.utils import (
+    create_vectorstore,
+    get_exisiting_vectorstore,
+    llm_factory,
+    structure_query,
+)
+
+logger = logging.getLogger(__name__)
 
 
 class DuckDBImplementation(DatabaseInterface):
     """Implementation of the DatabaseInterface for DuckDB."""
 
-    def __init__(self, data_dir: Union[Path, str], llm_config: LLMConfig):
+    def __init__(self, data_dir: Union[Path, str], llm_config: LLMConfig, doc_dir_or_file: Union[Path, str] = None):
         """Initialize the DuckDB database and the Langchain components."""
         if not data_dir:
             raise ValueError("Data directory is required. This typically contains the KGX tsv files.")
@@ -36,6 +46,24 @@ class DuckDBImplementation(DatabaseInterface):
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
+        self.tools = self.toolkit.get_tools()
+        if VECTOR_DB_PATH.exists() and get_exisiting_vectorstore():
+            vectorstore = get_exisiting_vectorstore()
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+            rag_tool = create_retriever_tool(retriever, "VectorStoreRetriever", "Vector Store Retriever")
+
+            self.tools.append(rag_tool)
+        elif doc_dir_or_file:
+            vectorstore = create_vectorstore(doc_dir_or_file=doc_dir_or_file)
+            retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+            rag_tool = create_retriever_tool(retriever, "VectorStoreRetriever", "Vector Store Retriever")
+
+            self.tools.append(rag_tool)
+        else:
+            logger.info("No vectorstore found or documents provided. Skipping RAG tool creation.")
+
+        self.tool_names = [tool.name for tool in self.tools]
+
         self.agent: AgentExecutor = create_sql_agent(
             llm=self.llm,
             verbose=True,
@@ -45,7 +73,6 @@ class DuckDBImplementation(DatabaseInterface):
                 return_intermediate_steps=True,
                 handle_parsing_errors=True,
             ),
-            extra_tools=self.toolkit.get_tools(),
         )
 
     def toggle_safe_mode(self, enabled: bool):
@@ -84,7 +111,13 @@ class DuckDBImplementation(DatabaseInterface):
 
     def get_human_response(self, prompt: str):
         """Get a human response from the database."""
-        response = self.agent.invoke(prompt)
+        response = self.agent.invoke(
+            {
+                "input": prompt,
+                "tools": self.tools,
+                "tool_names": self.tool_names,
+            }
+        )
         return response["output"]
 
     def get_structured_response(self, prompt: str):
@@ -93,16 +126,25 @@ class DuckDBImplementation(DatabaseInterface):
             if "show me" in prompt.lower():
                 self.llm.format = "json"
 
-            structured_query = get_agent_prompt_template().format(
-                input=prompt,
-                tools=self.toolkit.get_tools(),
-                tool_names=[tool.name for tool in self.toolkit.get_tools()],
-                agent_scratchpad=None,
-            )
-        else:
-            structured_query = {"input": structure_query(prompt)}
+        #     tool_names = [tool.name for tool in self.toolkit.get_tools()] + ["kg_retriever"]
 
-        response = self.agent.invoke(structured_query)
+        #     structured_query = get_sql_agent_prompt_template().format(
+        #         input=prompt,
+        #         tools=self.tools,
+        #         tool_names=tool_names,
+        #         agent_scratchpad=None,
+        #     )
+        # else:
+        #     structured_query = {"input": structure_query(prompt)}
+
+        # response = self.agent.invoke(structured_query)
+        response = self.agent.invoke(
+            {
+                "input": structure_query(prompt),
+                "tools": self.tools,
+                "tool_names": self.tool_names,
+            }
+        )
         return response["output"]
 
     def create_edges(self, edges):
@@ -134,8 +176,15 @@ class DuckDBImplementation(DatabaseInterface):
 
     def execute_query_using_langchain(self, prompt: str):
         """Execute a query against the database using Langchain."""
-        result = self.agent.invoke(prompt)
-        return result["output"]
+        # response = self.agent.invoke(prompt)
+        response = self.agent.invoke(
+            {
+                "input": prompt,
+                "tools": self.tools,
+                "tool_names": self.tool_names,
+            }
+        )
+        return response["output"]
 
     def load_kg(self):
         """Load the Knowledge Graph into the database."""
@@ -245,15 +294,15 @@ class DuckDBImplementation(DatabaseInterface):
         with open(edges_filepath, "r") as edges_file:
             header_line = edges_file.readline().strip().split("\t")
             column_indexes = {col: idx for idx, col in enumerate(header_line) if col in edge_column_of_interest}
-
             with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_edges_file:
                 temp_edges_file.write("\t".join(edge_column_of_interest) + "\n")
                 for line in edges_file:
                     columns = line.strip().split("\t")
-                    subject = columns[column_indexes["subject"]]
-                    predicate = columns[column_indexes["predicate"]]
-                    object = columns[column_indexes["object"]]
-                    temp_edges_file.write(f"{subject}\t{predicate}\t{object}\n")
+                    if len(columns) == (max(column_indexes.values()) + 1):
+                        subject = columns[column_indexes["subject"]]
+                        predicate = columns[column_indexes["predicate"]]
+                        object = columns[column_indexes["object"]]
+                        temp_edges_file.write(f"{subject}\t{predicate}\t{object}\n")
                 temp_edges_file.flush()
 
                 # Load data from temporary file into DuckDB

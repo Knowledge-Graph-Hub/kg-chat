@@ -88,7 +88,13 @@ def test_get_human_response(mocker, db_impl):
     mock_invoke.return_value = {"output": "response"}
     prompt = "What is the capital of France?"
     response = db_impl.get_human_response(prompt)
-    mock_invoke.assert_called_once_with(prompt)
+    mock_invoke.assert_called_once_with(
+        {
+            "input": prompt,
+            "tools": db_impl.tools,
+            "tool_names": db_impl.tool_names,
+        }
+    )
     assert response == "response"
 
 
@@ -101,7 +107,13 @@ def test_get_structured_response(mocker, db_impl):
     prompt = "Get all nodes"
     response = db_impl.get_structured_response(prompt)
     # TODO mock_structure_query.assert_called_once_with(prompt)
-    mock_invoke.assert_called_once_with({"input": prompt})
+    mock_invoke.assert_called_once_with(
+        {
+            "input": prompt,
+            "tools": db_impl.tools,
+            "tool_names": db_impl.tool_names,
+        }
+    )
     assert response == "response"
 
 
@@ -142,5 +154,11 @@ def test_execute_query_using_langchain(mocker, db_impl):
     mock_invoke.return_value = {"output": "response"}
     prompt = "Get all nodes"
     response = db_impl.execute_query_using_langchain(prompt)
-    mock_invoke.assert_called_once_with(prompt)
+    mock_invoke.assert_called_once_with(
+        {
+            "input": prompt,
+            "tools": db_impl.tools,
+            "tool_names": db_impl.tool_names,
+        }
+    )
     assert response == "response"
