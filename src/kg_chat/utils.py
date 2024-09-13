@@ -262,7 +262,7 @@ def get_openai_models():
     if OPENAI_KEY != "None":
         openai = OpenAI()
         models_list = sorted(
-            [model for model in openai.models.list() if model.id.startswith("gpt-4") and model.created >= 1706037777],
+            [model for model in openai.models.list() if model.created >= 1706037777],
             key=lambda x: x.created,
             reverse=True,
         )
