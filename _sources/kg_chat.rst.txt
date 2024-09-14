@@ -9,6 +9,7 @@ Subpackages
 
    kg_chat.implementations
    kg_chat.interface
+   kg_chat.schema
 
 Submodules
 ----------

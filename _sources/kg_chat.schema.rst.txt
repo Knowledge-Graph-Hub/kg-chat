@@ -1,0 +1,21 @@
+kg\_chat.schema package
+=======================
+
+Submodules
+----------
+
+kg\_chat.schema.graph\_schema module
+------------------------------------
+
+.. automodule:: kg_chat.schema.graph_schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: kg_chat.schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
