@@ -12,12 +12,12 @@ from langchain.agents.agent import AgentExecutor, AgentType
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
-from langchain_ollama import ChatOllama
 from sqlalchemy import Engine, create_engine
 
 from kg_chat.config.llm_config import LLMConfig
 from kg_chat.constants import VECTOR_DB_PATH
 from kg_chat.interface.database_interface import DatabaseInterface
+from kg_chat.schema.graph_schema import GraphSchema
 from kg_chat.utils import (
     create_vectorstore,
     get_exisiting_vectorstore,
@@ -122,22 +122,9 @@ class DuckDBImplementation(DatabaseInterface):
 
     def get_structured_response(self, prompt: str):
         """Get a structured response from the database."""
-        if isinstance(self.llm, ChatOllama):
-            if "show me" in prompt.lower():
-                self.llm.format = "json"
+        if "show me" in prompt.lower():
+            self.llm.with_structured_output(schema=GraphSchema)
 
-        #     tool_names = [tool.name for tool in self.toolkit.get_tools()] + ["kg_retriever"]
-
-        #     structured_query = get_sql_agent_prompt_template().format(
-        #         input=prompt,
-        #         tools=self.tools,
-        #         tool_names=tool_names,
-        #         agent_scratchpad=None,
-        #     )
-        # else:
-        #     structured_query = {"input": structure_query(prompt)}
-
-        # response = self.agent.invoke(structured_query)
         response = self.agent.invoke(
             {
                 "input": structure_query(prompt),

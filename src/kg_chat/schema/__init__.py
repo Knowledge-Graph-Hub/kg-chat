@@ -1,0 +1,1 @@
+"""Initiate the schema module."""
