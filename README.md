@@ -97,23 +97,28 @@ poetry add kg-chat@latest
     poetry run kg import --data-dir data
     ```
 
-2. **Test Query**: Run a test query. 
+2. **List LLM models**: List the LLM models supported.
+    ```shell
+    poetry run kg list-models
+    ```
+
+3. **Test Query**: Run a test query. 
    > **:warning:** `--data-dir` is a required parameter for all commands. This is the path for the directory which contains the nodes.tsv and edges.tsv file. The filenames are expected to be exactly that.
     ```shell
     poetry run kg test-query --data-dir data
     ```
 
-3. **QnA**: Ask questions about the data.
+4. **QnA**: Ask questions about the data.
     ```shell
     poetry run kg qna "how many nodes do we have here?" --data-dir data
     ```
 
-4. **Chat**: Start an interactive chat session.
+5. **Chat**: Start an interactive chat session.
     ```shell
     poetry run kg chat --data-dir data
     ```
 
-5. **App**: Deploy a local web application.
+6. **App**: Deploy a local web application.
     ```shell
     poetry run kg app --data-dir data
     ```
