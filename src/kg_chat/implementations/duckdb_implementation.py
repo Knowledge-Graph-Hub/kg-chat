@@ -7,12 +7,11 @@ from pathlib import Path
 from pprint import pprint
 from typing import Union
 
-import duckdb
 from langchain.agents.agent import AgentExecutor, AgentType
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.agent_toolkits import SQLDatabaseToolkit, create_sql_agent
 from langchain_community.utilities.sql_database import SQLDatabase
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine, create_engine, text
 
 from kg_chat.config.llm_config import LLMConfig
 from kg_chat.constants import VECTOR_DB_PATH
@@ -40,10 +39,11 @@ class DuckDBImplementation(DatabaseInterface):
         self.database_path = self.data_dir / "database/kg_chat.db"
         if not self.database_path.exists():
             self.database_path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn: duckdb.DuckDBPyConnection = duckdb.connect(database=str(self.database_path))
+        # self.conn: duckdb.DuckDBPyConnection = duckdb.connect(database=str(self.database_path))
         self.llm = llm_factory(llm_config)
         agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
+        self.conn = self.engine.connect()
         self.db = SQLDatabase(self.engine, view_support=True)
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
         self.tools = self.toolkit.get_tools()
@@ -98,14 +98,14 @@ class DuckDBImplementation(DatabaseInterface):
         """Execute a SQL query against the DuckDB database."""
         if self.safe_mode and not self.is_safe_command(query):
             raise ValueError(f"Unsafe command detected: {query}")
-        return self.conn.execute(query).fetchall()
+        return self.conn.execute(text(query)).fetchall()
 
     def clear_database(self):
         """Clear the database."""
 
         def _clear():
-            self.conn.execute("DROP TABLE IF EXISTS edges")
-            self.conn.execute("DROP TABLE IF EXISTS nodes")
+            self.conn.execute(text("DROP TABLE IF EXISTS edges"))
+            self.conn.execute(text("DROP TABLE IF EXISTS nodes"))
 
         return self.execute_unsafe_operation(_clear)
 
@@ -139,7 +139,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         def _create_edges():
             self.conn.executemany(
-                "INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)",
+                text("INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)"),
                 edges,
             )
 
@@ -150,7 +150,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         def _create_nodes():
             self.conn.executemany(
-                "INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)",
+                text("INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)"),
                 nodes,
             )
 
@@ -158,7 +158,7 @@ class DuckDBImplementation(DatabaseInterface):
 
     def show_schema(self):
         """Show the schema of the database."""
-        result = self.conn.execute("PRAGMA show_tables").fetchall()
+        result = self.conn.execute(text("PRAGMA show_tables")).fetchall()
         return pprint(result)
 
     def execute_query_using_langchain(self, prompt: str):
@@ -184,22 +184,26 @@ class DuckDBImplementation(DatabaseInterface):
 
             # Create tables
             self.conn.execute(
-                """
+                text(
+                    """
                 CREATE TABLE nodes (
                     id VARCHAR PRIMARY KEY,
                     category VARCHAR,
                     label VARCHAR
                 )
             """
+                )
             )
             self.conn.execute(
-                """
+                text(
+                    """
                 CREATE TABLE edges (
                     subject VARCHAR,
                     predicate VARCHAR,
                     object VARCHAR
                 )
             """
+                )
             )
 
             # Import nodes
@@ -232,11 +236,11 @@ class DuckDBImplementation(DatabaseInterface):
             # Create indexes for faster querying
             print("Creating indexes...")
             start_time = time.time()
-            self.conn.execute("CREATE INDEX idx_nodes_id ON nodes(id);")
+            self.conn.execute(text("CREATE INDEX idx_nodes_id ON nodes(id);"))
             # self.conn.execute("CREATE INDEX idx_nodes_category ON nodes(category);")
-            self.conn.execute("CREATE INDEX idx_edges_subject ON edges(subject);")
+            self.conn.execute(text("CREATE INDEX idx_edges_subject ON edges(subject);"))
             # self.conn.execute("CREATE INDEX idx_edges_predicate ON edges(predicate);")
-            self.conn.execute("CREATE INDEX idx_edges_object ON edges(object);")
+            self.conn.execute(text("CREATE INDEX idx_edges_object ON edges(object);"))
             elapsed_time_seconds = time.time() - start_time
             if elapsed_time_seconds >= 3600:
                 elapsed_time_hours = elapsed_time_seconds / 3600
@@ -273,7 +277,7 @@ class DuckDBImplementation(DatabaseInterface):
                 temp_nodes_file.flush()
 
                 # Load data from temporary file into DuckDB
-                self.conn.execute(f"COPY nodes FROM '{temp_nodes_file.name}' (DELIMITER '\t', HEADER)")
+                self.conn.execute(text(f"COPY nodes FROM '{temp_nodes_file.name}' (DELIMITER '\t', HEADER)"))
 
     def _import_edges(self):
         edge_column_of_interest = ["subject", "predicate", "object"]
@@ -293,4 +297,4 @@ class DuckDBImplementation(DatabaseInterface):
                 temp_edges_file.flush()
 
                 # Load data from temporary file into DuckDB
-                self.conn.execute(f"COPY edges FROM '{temp_edges_file.name}' (DELIMITER '\t', HEADER)")
+                self.conn.execute(text(f"COPY edges FROM '{temp_edges_file.name}' (DELIMITER '\t', HEADER)"))
