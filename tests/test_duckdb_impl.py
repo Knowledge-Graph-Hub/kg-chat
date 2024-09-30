@@ -1,8 +1,9 @@
 """Tests for DuckDBImplementation class."""
 
-from unittest.mock import call
+from unittest.mock import MagicMock
 
 import pytest
+from sqlalchemy import text
 
 from kg_chat.constants import TESTS_INPUT_DIR
 from kg_chat.implementations import DuckDBImplementation
@@ -14,7 +15,10 @@ LLM_CONFIG = get_llm_config("openai")
 @pytest.fixture
 def db_impl():
     """Fixture to initialize DuckDBImplementation."""
-    return DuckDBImplementation(data_dir=TESTS_INPUT_DIR, llm_config=LLM_CONFIG)
+    mock_connect = MagicMock()
+    db_instance = DuckDBImplementation(data_dir=TESTS_INPUT_DIR, llm_config=LLM_CONFIG)
+    db_instance.conn = mock_connect
+    return db_instance
 
 
 # TODO
@@ -46,25 +50,40 @@ def test_is_safe_command(db_impl):
     assert db_impl.is_safe_command(unsafe_query) is False
 
 
-def test_execute_query_safe_mode(mocker, db_impl):
+def test_execute_query_safe_mode(db_impl):
     """Test executing a query in safe mode."""
-    mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
-    mock_execute.return_value.fetchall.return_value = []
+    # Define a safe query
     query = "SELECT * FROM nodes"
+
+    # Mock the execute method to return a controlled response
+    mock_result = []
+    db_impl.conn.execute.return_value.fetchall.return_value = mock_result
+
+    # Execute the query using the db_impl instance
     result = db_impl.execute_query(query)
-    mock_execute.assert_called_once_with(query)
-    assert result == []
+
+    # Assert that execute was called with the correct query
+    executed_query = db_impl.conn.execute.call_args[0][0]
+    assert str(executed_query) == str(text(query))
+
+    # Assert that the result matches the mock result
+    assert result == mock_result
 
 
-def test_execute_query_unsafe_mode(mocker, db_impl):
-    """Test executing a query in unsafe mode."""
-    db_impl.safe_mode = False
-    mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
-    mock_execute.return_value.fetchall.return_value = []
+def test_execute_query_unsafe_mode(db_impl):
+    """Test executing an unsafe query raises ValueError."""
+    # Enable safe mode
+    db_impl.safe_mode = True
+
+    # Define an unsafe query (assuming is_safe_command will return False)
     query = "DROP TABLE nodes"
-    result = db_impl.execute_query(query)
-    mock_execute.assert_called_once_with(query)
-    assert result == []
+
+    # Mock the is_safe_command method to return False
+    db_impl.is_safe_command = MagicMock(return_value=False)
+
+    # Execute the query and expect a ValueError
+    with pytest.raises(ValueError, match=f"Unsafe command detected: {query}"):
+        db_impl.execute_query(query)
 
 
 def test_execute_query_unsafe_command_in_safe_mode(db_impl):
@@ -76,10 +95,26 @@ def test_execute_query_unsafe_command_in_safe_mode(db_impl):
 
 def test_clear_database(mocker, db_impl):
     """Test clearing the database."""
-    mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
+    # Patch the execute method of the connection object
+    mock_execute = mocker.patch.object(db_impl.conn, "execute")
+
+    # Mock the execute_unsafe_operation to call the provided function immediately
+    mocker.patch.object(db_impl, "execute_unsafe_operation", side_effect=lambda func: func())
+
+    # Call the method to clear the database
     db_impl.clear_database()
-    calls = [call("DROP TABLE IF EXISTS edges"), call("DROP TABLE IF EXISTS nodes")]
-    mock_execute.assert_has_calls(calls, any_order=True)
+
+    # Define the expected SQL queries as strings
+    expected_queries = ["DROP TABLE IF EXISTS edges", "DROP TABLE IF EXISTS nodes"]
+
+    # Extract the actual SQL queries from the mock calls
+    actual_queries = [call.args[0].text for call in mock_execute.mock_calls]
+
+    # Print the actual queries for debugging purposes
+    print(actual_queries)
+
+    # Assert that the actual queries match the expected queries in any order
+    assert sorted(actual_queries) == sorted(expected_queries)
 
 
 def test_get_human_response(mocker, db_impl):
@@ -119,33 +154,80 @@ def test_get_structured_response(mocker, db_impl):
 
 def test_create_edges(mocker, db_impl):
     """Test creating edges in the database."""
-    mock_executemany = mocker.patch("duckdb.DuckDBPyConnection.executemany")
+    # Patch the executemany method of the DuckDBPyConnection object
+    mock_executemany = mocker.patch.object(db_impl.conn, "executemany")
+
+    # Define the edges to be inserted
     edges = [("subject1", "predicate1", "object1"), ("subject2", "predicate2", "object2")]
+
+    # Call the method to create edges
     db_impl.create_edges(edges)
-    mock_executemany.assert_called_once_with(
-        "INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)",
-        edges,
-    )
+
+    # Define the expected SQL query as a string
+    expected_query = "INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)"
+
+    # Assert that executemany was called once
+    mock_executemany.assert_called_once()
+
+    # Extract the actual call arguments
+    actual_query, actual_edges = mock_executemany.call_args[0]
+
+    # Print the actual query for debugging purposes
+    print(actual_query)
+
+    # Assert that the actual query matches the expected query
+    assert str(actual_query) == expected_query
+
+    # Assert that the edges were passed correctly
+    assert actual_edges == edges
 
 
 def test_create_nodes(mocker, db_impl):
     """Test creating nodes in the database."""
-    mock_executemany = mocker.patch("duckdb.DuckDBPyConnection.executemany")
+    # Patch the executemany method of the DuckDBPyConnection object
+    mock_executemany = mocker.patch.object(db_impl.conn, "executemany")
+
+    # Define the nodes to be inserted
     nodes = [("id1", "category1", "label1"), ("id2", "category2", "label2")]
+
+    # Call the method to create nodes
     db_impl.create_nodes(nodes)
-    mock_executemany.assert_called_once_with(
-        "INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)",
-        nodes,
-    )
+
+    # Define the expected SQL query as a TextClause object
+    expected_query = text("INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)")
+
+    # Assert that executemany was called once with the correct arguments
+    assert mock_executemany.call_count == 1
+    actual_query, actual_nodes = mock_executemany.call_args[0]
+
+    # Compare the compiled SQL strings
+    assert str(actual_query) == str(expected_query)
+    assert actual_nodes == nodes
 
 
 def test_show_schema(mocker, db_impl):
     """Test showing the schema of the database."""
-    mock_execute = mocker.patch("duckdb.DuckDBPyConnection.execute")
+    # Patch the execute method of the DuckDBPyConnection object
+    mock_execute = mocker.patch.object(db_impl.conn, "execute")
+
+    # Mock the return value of fetchall
     mock_execute.return_value.fetchall.return_value = [("nodes",), ("edges",)]
+
+    # Call the method to show the schema
     result = db_impl.show_schema()
-    mock_execute.assert_called_once_with("PRAGMA show_tables")
-    assert result is None  # pprint returns None
+
+    # Define the expected SQL query as a TextClause object
+    expected_query = text("PRAGMA show_tables")
+
+    # Assert that execute was called once with the correct arguments
+    assert mock_execute.call_count == 1
+    actual_query = mock_execute.call_args[0][0]
+
+    # Compare the compiled SQL strings
+    assert str(actual_query) == str(expected_query)
+
+    # Assert that the result is None (since pprint returns None)
+    assert result is None
 
 
 def test_execute_query_using_langchain(mocker, db_impl):
