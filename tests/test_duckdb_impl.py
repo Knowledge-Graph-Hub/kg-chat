@@ -170,19 +170,19 @@ def test_create_edges(mocker, db_impl):
     if mock_execute.call_count == 1:
         # Extract the actual call arguments
         actual_query, actual_edges = mock_execute.call_args[0]
-        
+
         # Assert that the actual query matches the expected query
         assert str(actual_query) == expected_query
-        
+
         # Assert that the edges were passed correctly
         assert actual_edges == edges
     else:
         # Assert that execute was called for each edge
         assert mock_execute.call_count == len(edges)
-        
+
         # Extract the actual call arguments
         actual_calls = mock_execute.call_args_list
-        
+
         # Assert that each call has the correct query and parameters
         for i, edge in enumerate(edges):
             actual_query, actual_params = actual_calls[i][0]
@@ -208,25 +208,24 @@ def test_create_nodes(mocker, db_impl):
     if mock_execute.call_count == 1:
         # Extract the actual call arguments
         actual_query, actual_nodes = mock_execute.call_args[0]
-        
+
         # Assert that the actual query matches the expected query
         assert str(actual_query) == expected_query
-        
+
         # Assert that the nodes were passed correctly
         assert actual_nodes == nodes
     else:
         # Assert that execute was called for each node
         assert mock_execute.call_count == len(nodes)
-        
+
         # Extract the actual call arguments
         actual_calls = mock_execute.call_args_list
-        
+
         # Assert that each call has the correct query and parameters
         for i, node in enumerate(nodes):
             actual_query, actual_params = actual_calls[i][0]
             assert str(actual_query) == expected_query
             assert actual_params == node
-
 
 
 def test_show_schema(mocker, db_impl):
