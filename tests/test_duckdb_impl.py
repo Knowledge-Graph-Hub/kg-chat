@@ -154,8 +154,8 @@ def test_get_structured_response(mocker, db_impl):
 
 def test_create_edges(mocker, db_impl):
     """Test creating edges in the database."""
-    # Patch the executemany method of the DuckDBPyConnection object
-    mock_executemany = mocker.patch.object(db_impl.conn, "executemany")
+    # Patch the execute method of the DuckDBPyConnection object
+    mock_execute = mocker.patch.object(db_impl.conn, "execute")
 
     # Define the edges to be inserted
     edges = [("subject1", "predicate1", "object1"), ("subject2", "predicate2", "object2")]
@@ -166,26 +166,34 @@ def test_create_edges(mocker, db_impl):
     # Define the expected SQL query as a string
     expected_query = "INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)"
 
-    # Assert that executemany was called once
-    mock_executemany.assert_called_once()
-
-    # Extract the actual call arguments
-    actual_query, actual_edges = mock_executemany.call_args[0]
-
-    # Print the actual query for debugging purposes
-    print(actual_query)
-
-    # Assert that the actual query matches the expected query
-    assert str(actual_query) == expected_query
-
-    # Assert that the edges were passed correctly
-    assert actual_edges == edges
+    # Check if execute was called once with all edges or multiple times
+    if mock_execute.call_count == 1:
+        # Extract the actual call arguments
+        actual_query, actual_edges = mock_execute.call_args[0]
+        
+        # Assert that the actual query matches the expected query
+        assert str(actual_query) == expected_query
+        
+        # Assert that the edges were passed correctly
+        assert actual_edges == edges
+    else:
+        # Assert that execute was called for each edge
+        assert mock_execute.call_count == len(edges)
+        
+        # Extract the actual call arguments
+        actual_calls = mock_execute.call_args_list
+        
+        # Assert that each call has the correct query and parameters
+        for i, edge in enumerate(edges):
+            actual_query, actual_params = actual_calls[i][0]
+            assert str(actual_query) == expected_query
+            assert actual_params == edge
 
 
 def test_create_nodes(mocker, db_impl):
     """Test creating nodes in the database."""
-    # Patch the executemany method of the DuckDBPyConnection object
-    mock_executemany = mocker.patch.object(db_impl.conn, "executemany")
+    # Patch the execute method of the DuckDBPyConnection object
+    mock_execute = mocker.patch.object(db_impl.conn, "execute")
 
     # Define the nodes to be inserted
     nodes = [("id1", "category1", "label1"), ("id2", "category2", "label2")]
@@ -193,16 +201,32 @@ def test_create_nodes(mocker, db_impl):
     # Call the method to create nodes
     db_impl.create_nodes(nodes)
 
-    # Define the expected SQL query as a TextClause object
-    expected_query = text("INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)")
+    # Define the expected SQL query as a string
+    expected_query = "INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)"
 
-    # Assert that executemany was called once with the correct arguments
-    assert mock_executemany.call_count == 1
-    actual_query, actual_nodes = mock_executemany.call_args[0]
+    # Check if execute was called once with all nodes or multiple times
+    if mock_execute.call_count == 1:
+        # Extract the actual call arguments
+        actual_query, actual_nodes = mock_execute.call_args[0]
+        
+        # Assert that the actual query matches the expected query
+        assert str(actual_query) == expected_query
+        
+        # Assert that the nodes were passed correctly
+        assert actual_nodes == nodes
+    else:
+        # Assert that execute was called for each node
+        assert mock_execute.call_count == len(nodes)
+        
+        # Extract the actual call arguments
+        actual_calls = mock_execute.call_args_list
+        
+        # Assert that each call has the correct query and parameters
+        for i, node in enumerate(nodes):
+            actual_query, actual_params = actual_calls[i][0]
+            assert str(actual_query) == expected_query
+            assert actual_params == node
 
-    # Compare the compiled SQL strings
-    assert str(actual_query) == str(expected_query)
-    assert actual_nodes == nodes
 
 
 def test_show_schema(mocker, db_impl):

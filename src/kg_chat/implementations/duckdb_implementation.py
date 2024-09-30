@@ -138,7 +138,7 @@ class DuckDBImplementation(DatabaseInterface):
         """Create edges in the database."""
 
         def _create_edges():
-            self.conn.executemany(
+            self.conn.execute(
                 text("INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)"),
                 edges,
             )
@@ -149,7 +149,7 @@ class DuckDBImplementation(DatabaseInterface):
         """Create nodes in the database."""
 
         def _create_nodes():
-            self.conn.executemany(
+            self.conn.execute(
                 text("INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)"),
                 nodes,
             )
