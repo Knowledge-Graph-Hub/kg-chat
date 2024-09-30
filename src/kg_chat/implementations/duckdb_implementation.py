@@ -247,7 +247,7 @@ class DuckDBImplementation(DatabaseInterface):
                 print(f"Index creation completed in {elapsed_time_hours:.2f} hours.")
             else:
                 elapsed_time_minutes = elapsed_time_seconds / 60
-                print(f"Index creation completed completed in {elapsed_time_minutes:.2f} minutes.")
+                print(f"Index creation completed in {elapsed_time_minutes:.2f} minutes.")
 
             print("Import process finished.")
 
