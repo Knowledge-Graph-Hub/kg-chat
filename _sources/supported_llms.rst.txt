@@ -1,5 +1,10 @@
 Supported LLMs
 ==============
+The command that will list all the models below is:
+    .. code-block:: bash
+
+        kg-chat list-models
+
 
 * OpenAI [default]
     .. note::
