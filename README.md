@@ -47,7 +47,7 @@ OR
 ```
     vi ~/.bashrc
 ```
-Add the 2 lines exporting the variables above and then
+Add the lines exporting the variables above and then
 ```shell
     source ~/.bash_profile
 ```
