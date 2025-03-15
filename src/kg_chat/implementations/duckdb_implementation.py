@@ -43,8 +43,8 @@ class DuckDBImplementation(DatabaseInterface):
         self.llm = llm_factory(llm_config)
         agent_type = AgentType.ZERO_SHOT_REACT_DESCRIPTION
         self.engine: Engine = create_engine(f"duckdb:///{self.database_path}")
-        self.conn = self.engine.connect()
         self.db = SQLDatabase(self.engine, view_support=True)
+        self.conn = self.engine.connect()
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.llm)
         self.tools = self.toolkit.get_tools()
         if VECTOR_DB_PATH.exists() and get_exisiting_vectorstore():
@@ -98,7 +98,7 @@ class DuckDBImplementation(DatabaseInterface):
         """Execute a SQL query against the DuckDB database."""
         if self.safe_mode and not self.is_safe_command(query):
             raise ValueError(f"Unsafe command detected: {query}")
-        return self.conn.execute(text(query)).fetchall()
+        return self.conn.execute(query).fetchall()
 
     def clear_database(self):
         """Clear the database."""
@@ -139,7 +139,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         def _create_edges():
             self.conn.executemany(
-                text("INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)"),
+                "INSERT INTO edges (subject, predicate, object) VALUES (?, ?, ?)",
                 edges,
             )
 
@@ -150,7 +150,7 @@ class DuckDBImplementation(DatabaseInterface):
 
         def _create_nodes():
             self.conn.executemany(
-                text("INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)"),
+                "INSERT INTO nodes (id, category, label) VALUES (?, ?, ?)",
                 nodes,
             )
 
@@ -158,7 +158,7 @@ class DuckDBImplementation(DatabaseInterface):
 
     def show_schema(self):
         """Show the schema of the database."""
-        result = self.conn.execute(text("PRAGMA show_tables")).fetchall()
+        result = self.conn.execute("PRAGMA show_tables").fetchall()
         return pprint(result)
 
     def execute_query_using_langchain(self, prompt: str):
@@ -186,23 +186,23 @@ class DuckDBImplementation(DatabaseInterface):
             self.conn.execute(
                 text(
                     """
-                CREATE TABLE nodes (
-                    id VARCHAR PRIMARY KEY,
-                    category VARCHAR,
-                    label VARCHAR
-                )
-            """
+                    CREATE TABLE nodes (
+                        id VARCHAR PRIMARY KEY,
+                        category VARCHAR,
+                        label VARCHAR
+                    )
+                """
                 )
             )
             self.conn.execute(
                 text(
                     """
-                CREATE TABLE edges (
-                    subject VARCHAR,
-                    predicate VARCHAR,
-                    object VARCHAR
-                )
-            """
+                    CREATE TABLE edges (
+                        subject VARCHAR,
+                        predicate VARCHAR,
+                        object VARCHAR
+                    )
+                """
                 )
             )
 
@@ -247,7 +247,7 @@ class DuckDBImplementation(DatabaseInterface):
                 print(f"Index creation completed in {elapsed_time_hours:.2f} hours.")
             else:
                 elapsed_time_minutes = elapsed_time_seconds / 60
-                print(f"Index creation completed in {elapsed_time_minutes:.2f} minutes.")
+                print(f"Index creation completed completed in {elapsed_time_minutes:.2f} minutes.")
 
             print("Import process finished.")
 
